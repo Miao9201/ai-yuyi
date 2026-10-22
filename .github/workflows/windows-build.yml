@@ -1,0 +1,34 @@
+name: AI语忆 Windows 构建
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: 安装测试依赖
+        run: python -m pip install -r requirements.txt
+      - name: 虚构导入资料测试
+        run: python -m unittest test_import_persona
+      - name: 构建 AI语忆
+        shell: powershell
+        run: ./packaging/build-portable.ps1 -SourceRoot . -OutputRoot dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AIYuYi-Windows
+          path: |
+            dist/*.exe
+            dist/*.zip
+            dist/SHA256SUMS.txt
+          if-no-files-found: error

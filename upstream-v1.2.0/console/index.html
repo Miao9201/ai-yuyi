@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI语忆</title>
+<style>
+  :root{
+    color-scheme:dark;
+    --bg:#14161a; --panel:#1c1f25; --panel2:#23272f; --line:#2e333c;
+    --txt:#e6e8ec; --dim:#9aa1ad; --accent:#ff8fab; --accent2:#7dd3fc;
+    --ok:#5fd39a; --warn:#f0b45f; --err:#ff6b6b;
+  }
+  *{box-sizing:border-box}
+  *{scrollbar-width:thin;scrollbar-color:#4b515d #171a20}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:#171a20}
+  ::-webkit-scrollbar-thumb{background:#4b515d;border:2px solid #171a20;border-radius:8px}
+  ::-webkit-scrollbar-thumb:hover{background:#626b79}
+  ::-webkit-scrollbar-button{display:none}
+  body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.6 "Segoe UI","Microsoft YaHei",system-ui,sans-serif}
+  button,input,select,textarea{font:inherit;color:inherit}
+  header{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:10}
+  header h1{font-size:16px;margin:0;font-weight:600;letter-spacing:.5px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--err);display:inline-block}
+  .dot.on{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+  .meta{color:var(--dim);font-size:12px}
+  nav{display:flex;gap:6px;padding:10px 20px 0;flex-wrap:wrap}
+  nav button{background:transparent;border:1px solid transparent;padding:7px 14px;border-radius:8px 8px 0 0;color:var(--dim);cursor:pointer}
+  nav button.active{background:var(--panel);border-color:var(--line);border-bottom-color:var(--panel);color:var(--txt)}
+  main{padding:18px 20px 60px;max-width:1240px}
+  .grid{display:grid;gap:14px}
+  .cards{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .card .k{color:var(--dim);font-size:12px;margin-bottom:6px}
+  .card .v{font-size:20px;font-weight:600;overflow-wrap:anywhere}
+  .btn{background:var(--panel2);border:1px solid var(--line);padding:7px 14px;border-radius:8px;cursor:pointer}
+  .btn:disabled{opacity:.45;cursor:default}
+  .note:empty{display:none}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#2a1420;font-weight:600}
+  .btn.danger{border-color:#5b2b2b;color:#ffb4b4}
+  #btnReplyToggle.danger{background:#bb3544;border-color:#d44b5a;color:white}
+  .btn.sm{padding:4px 9px;font-size:12px;border-radius:6px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .split{display:grid;grid-template-columns:280px 1fr;gap:14px}
+  .list{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .list .item{display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}
+  .list .item:hover{background:var(--panel2)}
+  .list .item.active{background:#2b2430;border-left:3px solid var(--accent)}
+  .list .item .n{font-weight:600}
+  .list .item .s{color:var(--dim);font-size:12px}
+  .memory-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  textarea{width:100%;min-height:440px;background:#101216;border:1px solid var(--line);border-radius:10px;padding:12px;resize:vertical;font-family:Consolas,"Microsoft YaHei",monospace;font-size:13px;line-height:1.65}
+  input[type=text],input[type=number],input[type=password],select{background:#101216;border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-width:110px}
+  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+  th{color:var(--dim);font-weight:500;font-size:12px;background:var(--panel2)}
+  td input[type=number]{width:90px;min-width:0}
+  .tabs-inline{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .chip{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:12px}
+  .chip.active{background:var(--accent);color:#2a1420;border-color:var(--accent);font-weight:600}
+  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+  .thumb{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;position:relative}
+  .thumb img{width:100%;height:104px;object-fit:contain;background:#0c0e11;border-radius:6px;display:block}
+  .thumb .u{font-size:11px;color:var(--dim);text-align:center;margin-top:4px}
+  .thumb .ops{display:flex;gap:4px;margin-top:4px;justify-content:center}
+  .thumb select{font-size:11px;padding:2px 4px;min-width:0;width:100%}
+  pre{background:#101216;border:1px solid var(--line);border-radius:10px;padding:14px;overflow:auto;max-height:62vh;font:12.5px/1.55 Consolas,monospace;white-space:pre-wrap}
+  .note{color:var(--dim);font-size:12px}
+  .hide{display:none!important}
+  .toast{position:fixed;right:20px;bottom:20px;background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--ok);border-radius:10px;padding:12px 16px;max-width:420px;box-shadow:0 8px 30px #0008;z-index:99}
+  .toast.err{border-left-color:var(--err)}
+  .kbd{background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12px}
+[hidden]{display:none!important}.btn.success{background:#278754;border-color:#36af70;color:white}.api-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.api-fields label{display:flex;flex-direction:column;gap:7px}.api-fields input{width:100%}a.btn{color:var(--txt);text-decoration:none;display:inline-block}
+.memory-split{display:grid;grid-template-columns:minmax(240px,0.85fr) minmax(300px,1.4fr);gap:14px}.memory-split textarea{width:100%;min-height:180px}.memory-item{display:block;width:100%;text-align:left;margin-bottom:8px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;color:var(--txt);cursor:pointer}.memory-item.active{border-color:var(--accent)}@media(max-width:760px){.memory-split{grid-template-columns:1fr}header{flex-wrap:wrap}.api-fields{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <span class="dot" id="dot"></span>
+  <h1 id="personaTitle">AI语忆</h1>
+  <span class="meta" id="headMeta">连接中…</span>
+  <span style="flex:1"></span>
+  <button class="btn sm" id="btnLocate">定位微信</button>
+  <button class="btn sm danger" id="btnReplyToggle" title="停止所有用户的回复">停止回复</button>
+  <button class="btn sm" id="btnRefresh">刷新状态</button>
+</header>
+<div class="card" style="margin:14px 20px 0">
+  <strong id="desktopStatus">正在读取收发状态…</strong>
+  <div class="note" id="transportNote">正在读取连接方式…</div>
+  <div id="qrPanel" hidden style="margin-top:18px;text-align:center;background:white;padding:20px;border-radius:12px;color:#222">
+    <strong>用微信扫码连接</strong><br>
+    <img id="loginQr" alt="微信机器人授权二维码" style="width:280px;max-width:90%;margin:12px"><br>
+    <span>请在手机确认，二维码过期会自动更新。</span>
+  </div>
+</div>
+
+<nav>
+  <button data-tab="overview" class="active">总览</button>
+  <button data-tab="personas">人设</button>
+  <button data-tab="memory">记忆</button>
+  <button data-tab="accounts">用户</button>
+  <button data-tab="config">参数</button>
+  <button data-tab="api">API配置</button>
+  <button data-tab="logs">日志</button>
+  <button data-tab="stickers" hidden>表情包</button>
+  <button data-tab="life" hidden>生活线</button>
+</nav>
+
+<main>
+<section id="tab-api" class="hide"><div class="card">
+<h2>API 配置</h2><p class="note">支持兼容 Chat Completions 的接口；识图需模型支持。</p>
+<div class="api-fields"><label>接口基础地址<input id="apiBaseUrl" type="text" inputmode="url" placeholder="https://api.example.com/v1"></label>
+<label>API Key<input id="apiKey" type="password" autocomplete="new-password" placeholder="输入密钥，已有密钥可留空保留"></label>
+<label>聊天模型<input id="apiChatModel" type="text" list="apiModelOptions" placeholder="输入模型名称"></label>
+<label>识图模型<input id="apiVisionModel" type="text" list="apiModelOptions" placeholder="输入支持图片的模型名称"></label>
+<label>随机程度（0—2）<input id="apiTemperature" type="number" min="0" max="2" step="0.1"></label>
+<label>请求超时（秒）<input id="apiTimeout" type="number" min="5" max="300" step="1"></label></div><datalist id="apiModelOptions"></datalist>
+<p id="apiReplyTarget" class="note"></p><p id="apiConfigStatus" role="status">正在读取配置…</p>
+<div class="row"><button id="btnApiModels" class="btn">读取可用模型</button><button id="btnApiTest" class="btn">检测接口</button><button id="btnApiSave" class="btn primary">保存并应用</button><button id="btnApiReload" class="btn">重新读取</button><button id="btnApiDeepSeek" class="btn">填入 DeepSeek 默认值</button></div>
+<p class="note">密钥本机加密保存；保存配置会重启正在运行的服务。</p></div></section>
+  <section id="tab-accounts" class="hide">
+    <div class="card">
+      <h2>微信用户</h2>
+      <p class="note">每个用户独立扫码，聊天与记忆分开保存。</p>
+      <p class="note">所有用户共用本机 API，调用费用由你承担。</p>
+      <div class="row">
+        <input id="accountLabel" type="text" maxlength="80" placeholder="朋友备注，如：小林" aria-label="新用户备注">
+        <button class="btn primary" id="btnCreateAccount">+ 新增用户</button>
+        <button class="btn" id="btnReloadAccounts">刷新状态</button>
+      </div>
+      <div id="accountsList" style="margin-top:16px">加载中…</div>
+    </div>
+    <div class="card" id="accountQrPanel" hidden style="text-align:center;margin-top:16px">
+      <div class="row"><h2 id="accountQrTitle">微信授权</h2><span style="flex:1"></span><button class="btn sm" id="btnCloseAccountQr">关闭二维码</button></div>
+      <p id="accountQrState">正在准备二维码…</p>
+      <img id="accountQrImage" alt="这位朋友的微信授权二维码" hidden style="width:280px;max-width:90%;background:white;padding:14px;border-radius:10px">
+      <p><a id="accountQrDownload" class="btn" hidden download="wechat-bot-authorization.png">保存二维码给这位朋友</a></p>
+      <p class="note">请用这位用户的微信扫码，勿重复绑定主账号。</p>
+    </div>
+  </section>
+  <!-- 总览 -->
+  <section id="tab-overview">
+    <div class="grid cards" id="cards"></div>
+    <div class="card" style="margin-top:14px">
+      <div class="k">最近日志</div>
+      <pre id="miniLog" style="max-height:30vh;margin:6px 0 0">加载中…</pre>
+    </div>
+  </section>
+
+  <!-- 人设 -->
+  <section id="tab-personas" class="hide">
+    <div class="split">
+      <div>
+        <div class="row" style="margin-bottom:10px">
+          <button class="btn primary sm" id="btnNewPersona">+ 新建人设</button>
+          <button class="btn sm" id="btnReloadPersonas">刷新</button>
+        </div>
+        <div class="list" id="personaList"></div>
+        <p class="note">保存后用于后续回复。</p>
+      </div>
+      <div>
+        <div class="row" style="margin-bottom:8px">
+          <input type="text" id="personaName" placeholder="人设名（文件名）" style="flex:1">
+          <span class="note" id="personaStat"></span>
+        </div>
+        <textarea id="personaBody" placeholder="填写身份、关系和说话方式。"></textarea>
+        <div class="row" style="margin-top:10px">
+          <button class="btn primary" id="btnSavePersona">保存</button>
+          <button class="btn" id="btnSaveDefault">保存并设为默认</button>
+          <button class="btn" id="btnRenamePersona">重命名</button>
+          <button class="btn danger" id="btnDeletePersona">删除</button>
+        </div>
+      </div>
+    </div>
+    <details class="card" style="margin-top:16px">
+      <summary>从聊天记录导入人设</summary>
+      <p class="note">仅在本机创建新的人设资料库，原文件不变。导入资料不在记忆管理中显示；回复时会将相关片段发送到你配置的模型接口。</p>
+      <div class="row"><input id="importSource" type="text" placeholder="聊天记录JSON的本机完整路径" style="flex:1" aria-label="聊天记录JSON路径"><button class="btn" id="importAnalyze">读取参与者</button></div>
+      <div class="api-fields" style="margin-top:12px">
+        <label>模仿谁<select id="importTarget"></select></label>
+        <label>哪一位是你<select id="importSelf"></select></label>
+        <label>人设名称<input id="importName" type="text" maxlength="80"></label>
+        <label>怎样称呼你<input id="importAddress" type="text" maxlength="80"></label>
+        <label>性别设定<input id="importGender" type="text" maxlength="80" placeholder="按用户设定"></label>
+        <label>与你的关系<input id="importRelationship" type="text" maxlength="80" placeholder="按用户设定"></label>
+      </div>
+      <p><label><input id="importMedia" type="checkbox">允许在你主动索要时发送记录中的图片、表情包</label></p>
+      <button class="btn primary" id="importRun" disabled>导入为新人设</button><span class="note" id="importStatus" role="status" style="margin-left:12px"></span>
+    </details>
+  </section>
+
+  <!-- 参数 -->
+  <section id="tab-config" class="hide">
+    <div class="row" style="margin-bottom:10px">
+      <input type="text" id="cfgFilter" placeholder="搜索键名…" style="flex:1;max-width:320px">
+      <button class="btn sm" id="btnReloadConfig">刷新</button>
+      <span class="note">保存后生效；密钥留空则保留。</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:38%">项目</th><th>值</th></tr></thead>
+      <tbody id="cfgBody"></tbody>
+    </table>
+    <div class="row" style="margin-top:12px">
+      <button class="btn primary" id="btnSaveConfig">保存参数</button>
+      <span class="note" id="cfgHint"></span>
+    </div>
+  </section>
+
+<section id="tab-memory" class="hide" aria-labelledby="memoryTitle">
+  <div class="card memory-card">
+    <div class="row">
+      <h2 id="memoryTitle">记忆管理</h2>
+      <span style="flex:1"></span>
+      <button class="btn sm" id="memoryReload" type="button">刷新记忆</button>
+    </div>
+    <p class="note">只管理本软件内的对话和手动补充，导入资料不在此显示。</p>
+    <div class="row" style="margin:12px 0">
+      <label for="memoryScope">用户与人设</label>
+      <select id="memoryScope" aria-label="用户与人设"></select>
+    </div>
+    <p class="note" id="memoryScopeNote" role="status" aria-live="polite"></p>
+    <form class="row" id="memorySearchForm" style="margin-bottom:14px">
+      <input id="memoryQuery" type="text" maxlength="200" placeholder="搜索记忆" aria-label="搜索记忆" style="flex:1;max-width:360px">
+      <select id="memoryOrigin" aria-label="来源筛选">
+        <option value="all">全部来源</option><option value="live">AI对话</option><option value="manual">手动补充</option>
+      </select>
+      <select id="memoryStatus" aria-label="记录状态">
+        <option value="active">正在使用</option><option value="deleted">已删除</option><option value="all">全部状态</option>
+      </select>
+      <button class="btn" id="memorySearch" type="submit">搜索</button>
+      <button class="btn primary" id="memoryNew" type="button">+ 新增记忆</button>
+    </form>
+    <div class="split memory-split">
+      <div>
+        <div class="note" id="memoryCount" role="status" aria-live="polite"></div>
+        <div class="list" id="memoryList" aria-label="记忆记录" style="margin-top:8px;max-height:620px;overflow:auto"></div>
+        <div class="row" style="margin-top:10px">
+          <button class="btn sm" id="memoryPrevious" type="button">上一页</button>
+          <span class="note" id="memoryPage"></span>
+          <button class="btn sm" id="memoryNext" type="button">下一页</button>
+        </div>
+      </div>
+      <div id="memoryEditor">
+        <p class="note" id="memoryEntryMeta">选择一条记录开始编辑，或新增一条记忆。</p>
+        <div id="memoryTextFields">
+          <label for="memoryText">记忆内容</label>
+          <textarea id="memoryText" maxlength="8000" placeholder="写下需要记住的事实、偏好或补充信息。" style="min-height:230px"></textarea>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <label id="memoryPinLabel"><input id="memoryPinned" type="checkbox"> 固定记忆</label>
+          <span class="note" id="memoryLength"></span>
+        </div>
+        <p class="note" id="memoryLimitNote"></p>
+        <div class="row" style="margin-top:10px">
+          <button class="btn primary" id="memorySave" type="button">保存</button>
+          <button class="btn" id="memoryDiscard" type="button">重置编辑</button>
+          <button class="btn danger" id="memoryDelete" type="button">删除</button>
+          <button class="btn" id="memoryRestore" type="button" hidden>恢复记录</button>
+          <button class="btn" id="memoryUndo" type="button">撤销上次操作</button>
+          <span class="note" id="memoryDraftState" role="status" aria-live="polite"></span>
+        </div>
+        <p class="note">删除后可恢复。</p>
+      </div>
+    </div>
+    <details id="memoryTopics" style="margin-top:22px;border-top:1px solid var(--line);padding-top:12px">
+      <summary>触发条件与近期记忆</summary>
+      <p class="note">按当前用户与人设显示。</p>
+      <button class="btn sm" id="memoryTopicsReload" type="button">刷新话题状态</button>
+      <div id="memoryTopicsBody" class="note" style="margin-top:10px" aria-live="polite">展开后读取当前人设的话题状态。</div>
+    </details>
+  </div>
+</section>
+
+  <!-- 生活线 -->
+  <section id="tab-life" class="hide">
+    <div class="card">
+      <div class="row">
+        <div class="k" style="margin:0">她自己的日子</div>
+        <span style="flex:1"></span>
+        <button class="btn sm" id="btnReloadLife">刷新</button>
+      </div>
+      <p class="note" style="margin:8px 0 0">
+        下面所有内容都能自己改：人物、关系、性格，以及她身上要发生的事（分几拍讲、每拍发生什么）。
+        改完机器人不用重启，下一轮就生效。
+      </p>
+      <div id="lifeUsers" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="row">
+        <div class="k" style="margin:0">人物（配角）</div>
+        <span style="flex:1"></span>
+        <button class="btn sm" id="btnNewCast">+ 新增人物</button>
+      </div>
+      <div id="lifeCast" style="margin-top:10px"></div>
+      <div id="castForm" class="hide" style="margin-top:12px;border-top:1px solid #2a2f3a;padding-top:12px">
+        <div class="row" style="gap:8px;flex-wrap:wrap">
+          <input id="castName" placeholder="名字（必填）" style="width:140px">
+          <input id="castRole" placeholder="身份 / 关系（如：室友、老板、妹妹）" style="width:220px">
+          <input id="castRelation" placeholder="和你什么关系（如：大学同学）" style="width:200px">
+        </div>
+        <textarea id="castTrait" placeholder="性格、口癖、跟她相处的方式（越具体越像真人）" style="width:100%;height:70px;margin-top:8px"></textarea>
+        <div class="row" style="margin-top:8px">
+          <button class="btn sm" id="btnSaveCast">保存</button>
+          <button class="btn sm" id="btnCancelCast">取消</button>
+          <span class="note" id="castHint"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="row">
+        <div class="k" style="margin:0">故事 / 事件（每段讲完就不再主动提）</div>
+        <span style="flex:1"></span>
+        <button class="btn sm" id="btnNewArc">+ 新建故事</button>
+      </div>
+      <div id="lifeArcs" style="margin-top:10px"></div>
+      <div id="arcForm" class="hide" style="margin-top:12px;border-top:1px solid #2a2f3a;padding-top:12px">
+        <div class="note" style="margin-bottom:8px">懒得自己写？描述一句想让她经历的事，让 AI 生成三拍草稿（生成后可以随便改）</div>
+        <div class="row" style="gap:8px;align-items:flex-start">
+          <textarea id="arcIdea" placeholder="比如：被同事当面夸了一句 / 抢到最后一杯奶茶 / 和室友为开空调拌嘴" style="flex:1;height:52px"></textarea>
+          <button class="btn sm" id="btnGenArc" style="white-space:nowrap">AI 帮我写</button>
+        </div>
+                <div class="row" style="gap:8px;flex-wrap:wrap">
+
+          <input id="arcTitle" placeholder="这段故事叫什么（必填）" style="width:280px">
+          <select id="arcKind">
+            <option value="conflict">冲突（吵架、被为难）</option>
+            <option value="accident">意外（倒霉事）</option>
+            <option value="daily">日常（小事）</option>
+            <option value="curiosity">新鲜事（看到的/查到的）</option>
+            <option value="small_conflict">小矛盾（拌两句嘴）</option>
+            <option value="praise">被夸 / 表扬</option>
+            <option value="lucky">幸运的事</option>
+            <option value="money">钱的事</option>
+          </select>
+        </div>
+        <div class="note" style="margin-top:8px">出场人物（可多选，不选就是她自己一个人）</div>
+        <div id="arcCastPick" class="tabs-inline" style="margin-top:6px"></div>
+        <div class="note" style="margin-top:10px">每一拍发生什么（一行一拍，建议 2-4 拍：起因 → 变化 → 收尾）</div>
+        <textarea id="arcBeats" placeholder="起因：……
+变化：……
+收尾：……" style="width:100%;height:120px;margin-top:6px"></textarea>
+        <div class="row" style="margin-top:8px">
+          <button class="btn sm" id="btnSaveArc">保存故事</button>
+          <button class="btn sm" id="btnCancelArc">取消</button>
+          <span class="note" id="arcHint"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 表情包 -->
+  <section id="tab-stickers" class="hide">
+    <div class="card">
+      <div class="row">
+        <div class="k" style="margin:0">总计 <b id="stTotal">0</b> 张 · <span id="stCats">0</span> 类</div>
+        <span style="flex:1"></span>
+        <input type="text" id="newCat" placeholder="新分类名" style="width:130px">
+        <button class="btn sm" id="btnAddCat">添加分类</button>
+        <button class="btn sm" id="btnResetUsage">重置使用记录</button>
+      </div>
+      <div class="tabs-inline" id="catChips" style="margin:12px 0 0"></div>
+      <div class="row" style="margin-top:12px">
+        <input type="file" id="uploadInput" accept=".png,.jpg,.jpeg,.gif,.webp" multiple>
+        <span class="note">上传到当前分类（支持多选，同名自动加序号）</span>
+      </div>
+      <div class="thumbs" id="thumbs" style="margin-top:12px"></div>
+      <p class="note" id="stHint" style="margin-bottom:0">角标是「发过几次」，数字越小越冷门。轮换算法会优先挑冷门的。</p>
+    </div>
+  </section>
+
+  <!-- 日志 -->
+  <section id="tab-logs" class="hide">
+    <div class="row" style="margin-bottom:10px">
+      <button class="btn sm" id="btnReloadLogs">刷新</button>
+      <label class="note">行数 <input type="number" id="logLines" value="400" min="20" max="2000" style="width:90px"></label>
+      <label class="note"><input type="checkbox" id="logAuto"> 每 2 秒自动刷新</label>
+    </div>
+    <pre id="logBody">加载中…</pre>
+  </section>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+let state = { personas: [], currentTab: 'overview', activePersona: null, activeCat: null, stickerData: null };
+
+function toast(msg, isErr) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (isErr ? ' err' : '');
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), isErr ? 6000 : 2600);
+}
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  let data = null;
+  try { data = await r.json(); } catch { data = {}; }
+  if (!r.ok || data.ok === false) {const e=new Error(data.error || ('HTTP ' + r.status));e.status=r.status;throw e;}
+  return data;
+}
+const post = (path, body) => api(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body || {}) });
+
+// ── tabs ──
+$$('nav button').forEach((b) => b.onclick = () => {
+  $$('nav button').forEach((x) => x.classList.remove('active'));
+  b.classList.add('active');
+  state.currentTab = b.dataset.tab;
+  $$('main > section').forEach((s) => s.classList.add('hide'));
+  $('#tab-' + state.currentTab).classList.remove('hide');
+  if (state.currentTab === 'personas') loadPersonas();
+  if (state.currentTab === 'accounts') loadAccounts();
+  if (state.currentTab === 'config') loadConfig();
+  if (state.currentTab === 'stickers') loadStickers();
+  if (state.currentTab === 'memory') loadMemory();
+  if (state.currentTab === 'api') loadApiConfig();
+  if (state.currentTab === 'life') loadLife();
+  if (state.currentTab === 'logs') loadLogs();
+  location.hash=state.currentTab;
+});
+
+// ── 用户 ──
+state.accountQr='';let accountsLoading=false;
+async function changeAccount(id,changes){
+  try{await post('/api/accounts/'+id,changes);await loadAccounts();toast('已更新用户');}
+  catch(e){toast(e.message,true);}
+}
+async function loadAccounts(){
+  if(accountsLoading)return;accountsLoading=true;
+  try{
+    const result=await api('/api/accounts'),list=$('#accountsList');
+    if(!list.dataset.ready){list.textContent='';list.dataset.ready='1';}
+    const activeIds=new Set(result.accounts.map(r=>'account-'+(r.id||'primary')));for(const el of list.children)if(!activeIds.has(el.id))el.remove();
+    for(const row of result.accounts){
+      const key=row.id||'primary';let card=document.getElementById('account-'+key);
+      if(!card){
+        card=document.createElement('div');card.id='account-'+key;card.className='card';card.style.marginTop='10px';
+        card.innerHTML='<div class="row"><strong class="account-name"></strong><span class="account-role note"></span><span style="flex:1"></span><div class="account-actions row"></div></div><p class="account-status note"></p>';
+        list.appendChild(card);
+        if(!row.primary){
+          const actions=card.querySelector('.account-actions');
+          const select=document.createElement('select');select.setAttribute('aria-label','该用户的人设');
+          for(const p of result.personas){const opt=document.createElement('option');opt.value=p.id;opt.textContent=p.name;select.appendChild(opt);}
+          select.onchange=()=>changeAccount(row.id,{persona:select.value});actions.appendChild(select);
+          const button=(label,handler)=>{const b=document.createElement('button');b.className='btn sm';b.textContent=label;b.onclick=handler;actions.appendChild(b);return b;};
+          button('查看二维码',()=>{state.accountQr=row.id;$('#accountQrPanel').hidden=false;loadAccounts();});
+          button('改备注',()=>{const value=prompt('用户备注',card.querySelector('.account-name').textContent);if(value?.trim())changeAccount(row.id,{label:value});});
+          button('删除',async()=>{if(!confirm('删除这个用户并断开授权？聊天历史会保留在本机，不影响主账号。'))return;try{await post('/api/accounts/'+row.id+'/delete',{});if(state.accountQr===row.id){state.accountQr='';$('#accountQrPanel').hidden=true;}await loadAccounts();toast('已删除用户');}catch(e){toast(e.message,true);}});
+          const toggle=button('暂停',()=>changeAccount(row.id,{enabled:toggle.dataset.enabled!=='true'}));toggle.classList.add('account-toggle');
+          button('重新授权',async()=>{if(!confirm('仅重新连接这位朋友的微信，原聊天记录会保留。继续？'))return;try{await post('/api/accounts/'+row.id+'/reauthorize',{});state.accountQr=row.id;$('#accountQrPanel').hidden=false;loadAccounts();}catch(e){toast(e.message,true);}});
+        }
+      }
+      card.querySelector('.account-name').textContent=row.label;
+      card.querySelector('.account-role').textContent=row.primary?'主账号':'独立账号';
+      card.querySelector('.account-status').textContent=row.status?.detail||row.status?.state||'等待启动';
+      if(!row.primary){const toggle=card.querySelector('.account-toggle');toggle.dataset.enabled=String(row.enabled);toggle.textContent=row.enabled?'暂停':'恢复';const select=card.querySelector('select');if(document.activeElement!==select)select.value=row.persona;}
+      if(state.accountQr===row.id){
+        $('#accountQrTitle').textContent=row.label+' · 微信授权';
+        const s=row.status||{},valid=s.state==='awaiting_scan'&&s.qr&&s.expiresAt>Date.now();
+        $('#accountQrState').textContent=(s.detail||'等待启动')+(valid?' · 约 '+Math.max(0,Math.ceil((s.expiresAt-Date.now())/1000))+' 秒后更新':'');
+        const img=$('#accountQrImage'),download=$('#accountQrDownload');img.hidden=!valid;download.hidden=!valid;
+        if(valid){const url='/api/accounts/'+row.id+'/qr?v='+s.qrVersion;if(img.getAttribute('src')!==url)img.src=url;download.href=url;}
+      }
+    }
+  }catch(e){toast('读取用户失败：'+e.message,true);}
+  finally{accountsLoading=false;}
+}
+$('#btnCreateAccount').onclick=async()=>{
+  const label=$('#accountLabel').value.trim();if(!label)return toast('请先填写朋友备注',true);
+  const button=$('#btnCreateAccount');button.disabled=true;
+  try{const r=await post('/api/accounts',{label});$('#accountLabel').value='';state.accountQr=r.account.id;$('#accountQrPanel').hidden=false;await loadAccounts();toast('已新增，正在准备这位朋友的授权二维码');}
+  catch(e){toast(e.message,true);}finally{button.disabled=false;}
+};
+$('#btnReloadAccounts').onclick=loadAccounts;
+$('#btnCloseAccountQr').onclick=()=>{state.accountQr='';$('#accountQrPanel').hidden=true;};
+
+// ── 总览 ──
+async function loadState() {
+  try {
+    const s = await api('/api/state');
+    $('#personaTitle').textContent='AI语忆';
+    document.title='AI语忆';
+    const ilink=s.desktop?.transport==='ilink';
+    $('#btnLocate').hidden=ilink;
+    $('#transportNote').textContent=ilink?'电脑需保持开机联网，微信无需前台。':'请保持目标微信聊天在前台。';
+    $('#qrPanel').hidden=!(ilink&&s.bot.running&&s.desktop?.qr);
+    if(!$('#qrPanel').hidden&&$('#loginQr').dataset.version!==String(s.desktop.qrVersion)){
+      $('#loginQr').dataset.version=String(s.desktop.qrVersion);$('#loginQr').src='/api/ilink/qr?v='+encodeURIComponent(s.desktop.qrVersion);
+    }
+    $('#desktopStatus').textContent = s.desktop?.detail || '尚未启动';
+    $('#dot').className = 'dot' + (s.bot.running ? ' on' : '');
+    $('#headMeta').textContent = s.bot.running&&s.enabled ? '运行中' : s.bot.running ? '正在停止' : '已停止';
+    state.replyEnabled=!!s.enabled;
+    const toggle=$('#btnReplyToggle');toggle.textContent=s.enabled?'停止回复':'开始回复';toggle.className='btn sm '+(s.enabled?'danger':'success');toggle.title=s.enabled?'停止所有用户的回复':'启动所有已启用用户的回复';
+    const phaseNames={queued:'等待生成',generating:'生成中',prepared:'等待发送',pasting:'正在粘贴',pasted:'核对输入',entering:'发送确认中',sending:'发送中',sent:'已发送',uncertain:'发送待核对',failed:'本轮失败'};
+    $('#cards').innerHTML = [
+      ['机器人', s.bot.running ? '运行中' : '已停止'],
+      ['人设', `${s.personas.count} 个${s.personas.current ? ' · ' + s.personas.current : ''}`],
+      ['回复对象', s.desktop?.contact || '未绑定微信'],
+      ['当前模型', s.config.model || '—'],
+      ['引擎版本', s.desktop?.version || '1.2.0'],
+      ['收发方式', ilink?'iLink 后台连接':'前台文字识别'],
+      ['当前／最近任务', s.desktop?.event ? `#${s.desktop.event} · ${phaseNames[s.desktop.phase]||s.desktop.state}` : '无待发任务'],
+      ['当前人设', s.profile ? `${s.profile.name} · ${s.profile.gender}` : '—'],
+      ['与你的关系', s.profile ? `${s.profile.relationship} · 称呼${s.profile.address}` : '—'],
+      ...(s.companion?.mode==='role'?[
+        ['说话方式','当前人设文件'],['记忆范围','本角色的新对话'],['表情素材',`${s.companion.emoji}个内置素材`],
+      ]:s.companion?[
+        ['学习重点',`${s.companion.focus} · ${s.companion.examples}组接话范例`],
+        ['可检索的往事',`${s.companion.memories}段 · ${s.companion.messages}条记录`],
+        ['她发过的素材',`${s.companion.emoji}个表情 · ${s.companion.images}张图片`],
+      ]:[]),
+    ].map(([k, v]) => `<div class="card"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
+    const lg = await api('/api/logs?lines=24');
+    $('#miniLog').textContent = lg.text || '(空)';
+    return s;
+  } catch (e) { toast('读取状态失败：' + e.message, true); }
+}
+let serviceActionBusy=false;
+async function serviceAction(action){
+  if(serviceActionBusy)return;serviceActionBusy=true;
+  $('#btnReplyToggle').disabled=true;
+  try{await post('/api/bot/'+action);await loadState();toast(action==='stop'?'已停止回复':'已开始回复');}
+  catch(e){toast(e.message,true);}finally{await loadState();serviceActionBusy=false;$('#btnReplyToggle').disabled=false;}
+}
+$('#btnRefresh').onclick=async()=>{const s=await loadState();if(state.currentTab==='accounts')await loadAccounts();if(s)toast('状态已刷新：'+(s.enabled?(s.desktop?.detail||'运行中'):'回复已停止'));};
+$('#btnReplyToggle').onclick=()=>serviceAction(state.replyEnabled?'stop':'start');
+$('#btnLocate').onclick=async()=>{try{await post('/api/desktop/locate');}catch(e){toast(e.message,true);}};
+
+// ── 人设 ──
+async function loadPersonas(select) {
+  try {
+    const r = await api('/api/personas');
+    state.personas = r.items;
+    $('#personaList').innerHTML = r.items.map((p) => `
+      <div class="item ${p.name === state.activePersona ? 'active' : ''}" data-name="${esc(p.name)}">
+        <div><div class="n">${esc(p.title || p.name)} ${p.isDefault ? '<span style="color:var(--accent)">●默认</span>' : ''}</div>
+        <div class="s">${esc(p.name)} · ${p.chars} 字</div></div>
+      </div>`).join('') || '<div class="item"><span class="s">还没有人设</span></div>';
+    $$('#personaList .item').forEach((el) => el.onclick = () => openPersona(el.dataset.name));
+    const target = select || state.activePersona || (r.items.find((x) => x.isDefault) || r.items[0] || {}).name;
+    if (target) await openPersona(target);
+  } catch (e) { toast('读取人设失败：' + e.message, true); }
+}
+async function openPersona(name) {
+  if (!name) return;
+  try {
+    const r = await api('/api/personas/' + encodeURIComponent(name));
+    state.activePersona = name;
+    $('#personaName').value = name;
+    $('#personaBody').value = r.content;
+    $('#personaStat').textContent = `${r.content.length} 字`;
+    $$('#personaList .item').forEach((el) => el.classList.toggle('active', el.dataset.name === name));
+  } catch (e) { toast('打不开：' + e.message, true); }
+}
+$('#personaBody').oninput = () => { $('#personaStat').textContent = `${$('#personaBody').value.length} 字`; };
+$('#btnNewPersona').onclick = () => {
+  state.activePersona = null;
+  $('#personaName').value = '';
+  $('#personaBody').value = '---\ntitle: 新的人设\n---\n\n你说的话，从这个人的嘴里出来。\n';
+  $('#personaName').focus();
+};
+$('#btnReloadPersonas').onclick = () => loadPersonas();
+async function savePersona(asDefault) {
+  const name = $('#personaName').value.trim();
+  if (!name) return toast('先起个人设名', true);
+  try {
+    await post('/api/personas/save', { name, content: $('#personaBody').value });
+    if (asDefault) await post('/api/personas/default', { name });
+    toast(asDefault ? '已保存并设为默认' : '已保存');
+    await loadPersonas(name);
+  } catch (e) { toast('保存失败：' + e.message, true); }
+}
+$('#btnSavePersona').onclick = () => savePersona(false);
+$('#btnSaveDefault').onclick = () => savePersona(true);
+$('#btnRenamePersona').onclick = async () => {
+  const from = state.activePersona;
+  if (!from) return toast('先选一个人设', true);
+  const to = prompt('新名字：', from);
+  if (!to || to === from) return;
+  try { await post('/api/personas/rename', { from, to }); toast('已重命名'); loadPersonas(to); }
+  catch (e) { toast('重命名失败：' + e.message, true); }
+};
+$('#btnDeletePersona').onclick = async () => {
+  const name = state.activePersona;
+  if (!name) return;
+  if (!confirm(`删除人设「${name}」？不可恢复。`)) return;
+  try { await post('/api/personas/delete', { name }); toast('已删除'); state.activePersona = null; loadPersonas(); }
+  catch (e) { toast('删除失败：' + e.message, true); }
+};
+
+// ── 参数 ──
+let cfgItems = [];
+async function loadConfig() {
+  try {
+    const r = await api('/api/config');
+    cfgItems = r.items;
+    renderConfig();
+  } catch (e) { toast('读取配置失败：' + e.message, true); }
+}
+function renderConfig() {
+  const q = $('#cfgFilter').value.trim().toLowerCase();
+  const rows = cfgItems.filter((it) => !q
+    || it.key.toLowerCase().includes(q)
+    || (it.zh || '').toLowerCase().includes(q)
+    || (it.desc || '').toLowerCase().includes(q));
+  $('#cfgBody').innerHTML = rows.map((it) => {
+    const id = 'cfg_' + it.key;
+    const v = it.value;
+    let input;
+    if (it.kind === 'bool') {
+      input = `<input type="checkbox" id="${id}" ${v ? 'checked' : ''}>`;
+    } else if (it.kind === 'number') {
+      input = `<input type="number" step="any" id="${id}" value="${v}">`;
+    } else if (it.kind === 'text') {
+      input = `<textarea id="${id}" style="min-height:70px;font-family:Consolas,monospace">${esc(Array.isArray(v) ? v.join('\n') : (v ?? ''))}</textarea>`;
+    } else if (it.kind === 'secret') {
+      input = `<input type="password" id="${id}" placeholder="${v ? '已设置（留空不改）' : '未设置'}" style="width:320px">`;
+    } else if (it.options && it.options.length) {
+      input = `<select id="${id}">${it.options.map((o) => `<option value="${esc(o.value)}" ${String(v) === String(o.value) ? 'selected' : ''}>${esc(o.label)}</option>`).join('')}</select>`;
+    } else if (it.key === 'imageGenSize') {
+      input = `<select id="${id}">${['1K', '2K', '3K', '4K'].map((o) => `<option ${String(v) === o ? 'selected' : ''}>${o}</option>`).join('')}</select>`;
+    } else if (it.key === 'imageGenRatio') {
+      input = `<select id="${id}">${['1:1', '3:4', '4:3', '16:9', '9:16', '2:3', '3:2', '21:9'].map((o) => `<option ${String(v) === o ? 'selected' : ''}>${o}</option>`).join('')}</select>`;
+    } else {
+      input = `<input type="text" id="${id}" value="${esc(v ?? '')}" style="width:360px">`;
+    }
+    const title = it.zh ? `<div><b>${esc(it.zh)}</b></div><div class="note" style="font-size:11px">${esc(it.desc || '')}</div>`
+      : '<div class="note" style="font-size:11px">（暂无中文说明）</div>';
+    return `<tr><td>${title}<code style="font-size:11px;opacity:.55">${esc(it.key)}</code></td><td>${input}</td></tr>`;
+  }).join('') || '<tr><td colspan="2" class="note">没有匹配的项目</td></tr>';
+}
+$('#cfgFilter').oninput = renderConfig;
+$('#btnReloadConfig').onclick = loadConfig;
+$('#btnSaveConfig').onclick = async () => {
+  const patch = {};
+  for (const it of cfgItems) {
+    const el = document.getElementById('cfg_' + it.key);
+    if (!el) continue;
+    if (it.kind === 'bool') patch[it.key] = el.checked;
+    else if (it.kind === 'number') patch[it.key] = Number(el.value);
+    else if (it.kind === 'text') patch[it.key] = el.value.split('\n').map((s) => s.trim()).filter(Boolean);
+    else if (it.kind === 'secret') { if (el.value.trim()) patch[it.key] = el.value.trim(); }
+    else patch[it.key] = el.value;
+  }
+  try { const r = await post('/api/config', { patch }); toast(`已保存 ${r.changed.length} 项`); loadConfig(); }
+  catch (e) { toast('保存失败：' + e.message, true); }
+};
+
+// ── 生活线（可 DIY：人物 + 故事模板）──
+let lifeData = null;
+let castEditing = null;   // null=新增，否则是人物 id
+let arcEditing = null;    // null=新增，否则是故事 id
+let arcCastSel = [];
+
+async function loadLife() {
+  try {
+    lifeData = await api('/api/life');
+    renderLife();
+  } catch (e) { toast('读取生活线失败：' + e.message, true); }
+}
+
+function renderLife() {
+  const d = lifeData;
+  if (!d) return;
+  if (!d.users.length) {
+    $('#lifeUsers').innerHTML = '<p class="note">还没有可用用户（白名单为空时先给她发一条消息）。</p>';
+    $('#lifeCast').innerHTML = '';
+    $('#lifeArcs').innerHTML = '';
+    return;
+  }
+  const u = d.users[0];
+
+  // 当前故事 + 已讲完
+  $('#lifeUsers').innerHTML = `
+    <div style="margin-bottom:6px"><span class="note">用户</span> ${esc(u.uid.slice(0, 12))}…</div>
+    ${u.arc ? `
+      <div style="margin-top:6px">
+        <div><b>${esc(u.arc.title)}</b> <span class="note">（${esc(u.arc.kind)}，第 ${u.arc.stage + 1}/${u.arc.total} 拍，开始于 ${u.arc.ageMinutes} 分钟前）</span></div>
+        <div class="note" style="margin-top:4px">下一拍：${esc(u.arc.next || '（最后一拍）')}</div>
+        ${u.arc.progress.length ? `<div class="note" style="margin-top:4px">已讲过：${u.arc.progress.map((p) => esc(p)).join(' / ')}</div>` : ''}
+        <div class="row" style="margin-top:8px">
+          <button class="btn sm" data-life-drop="${esc(u.uid)}">丢弃这段</button>
+        </div>
+      </div>` : '<p class="note" style="margin:8px 0 0">眼下没在讲故事。</p>'}
+    ${u.closed.length ? `<div class="note" style="margin-top:10px">已讲完（不会再主动提）：${u.closed.map((c) => esc(c.title)).join('、')}</div>` : ''}
+    <div class="row" style="margin-top:10px">
+      <button class="btn sm" data-life-reset="${esc(u.uid)}">清空生活线（人物和故事模板也一起清）</button>
+    </div>`;
+
+  // 人物
+  $('#lifeCast').innerHTML = u.cast.map((c) => `
+    <div class="row" style="align-items:flex-start;border-bottom:1px solid #232833;padding:8px 0">
+      <div style="flex:1">
+        <div><b>${esc(c.name)}</b> <span class="note">${esc(c.role)}${c.relation ? ' · ' + esc(c.relation) : ''}</span></div>
+        <div class="note" style="font-size:12px">${esc(c.trait || '（还没写性格）')}</div>
+      </div>
+      <button class="btn sm" data-cast-edit="${esc(c.id)}">编辑</button>
+      <button class="btn sm" data-cast-del="${esc(c.id)}">删除</button>
+    </div>`).join('');
+
+  // 故事模板
+  const customIds = new Set((u.arcs || []).map((a) => a.id));
+  $('#lifeArcs').innerHTML = (d.allTemplates || []).map((a) => `
+    <div class="row" style="align-items:flex-start;border-bottom:1px solid #232833;padding:8px 0">
+      <div style="flex:1">
+        <div><b>${esc(a.title)}</b> <span class="note">（${esc(a.kind)} · ${(a.beats || []).length} 拍${a.custom ? ' · 自定义' : ''}）</span></div>
+        <div class="note" style="font-size:12px">${(a.beats || []).map((b, i) => `${i + 1}. ${esc(b)}`).join('<br>')}</div>
+      </div>
+      <button class="btn sm" data-arc-start="${esc(a.id)}">讲这段</button>
+      ${customIds.has(a.id) ? `<button class="btn sm" data-arc-edit="${esc(a.id)}">编辑</button>
+      <button class="btn sm" data-arc-del="${esc(a.id)}">删除</button>` : ''}
+    </div>`).join('');
+
+  // 事件绑定
+  $('#lifeUsers').querySelectorAll('[data-life-drop]').forEach((b) => b.onclick = async () => {
+    try { await post('/api/life/drop', { uid: b.dataset.lifeDrop }); toast('已丢弃这段故事'); loadLife(); } catch (e) { toast(e.message, true); }
+  });
+  $('#lifeUsers').querySelectorAll('[data-life-reset]').forEach((b) => b.onclick = async () => {
+    if (!confirm('清空后人物和自定义故事都会没，确定？')) return;
+    try { await post('/api/life/reset', { uid: b.dataset.lifeReset }); toast('已清空'); loadLife(); } catch (e) { toast(e.message, true); }
+  });
+  $('#lifeCast').querySelectorAll('[data-cast-edit]').forEach((b) => b.onclick = () => openCastForm(b.dataset.castEdit));
+  $('#lifeCast').querySelectorAll('[data-cast-del]').forEach((b) => b.onclick = async () => {
+    if (!confirm('删掉这个人物？')) return;
+    try { await post('/api/life/cast/delete', { uid: u.uid, id: b.dataset.castDel }); toast('已删除'); loadLife(); } catch (e) { toast(e.message, true); }
+  });
+  $('#lifeArcs').querySelectorAll('[data-arc-start]').forEach((b) => b.onclick = async () => {
+    try { const r = await post('/api/life/new', { uid: u.uid, templateId: b.dataset.arcStart }); toast(`开始讲：${r.title}`); loadLife(); } catch (e) { toast(e.message, true); }
+  });
+  $('#lifeArcs').querySelectorAll('[data-arc-edit]').forEach((b) => b.onclick = () => openArcForm(b.dataset.arcEdit));
+  $('#lifeArcs').querySelectorAll('[data-arc-del]').forEach((b) => b.onclick = async () => {
+    if (!confirm('删掉这个自定义故事？')) return;
+    try { await post('/api/life/arcs/delete', { uid: u.uid, id: b.dataset.arcDel }); toast('已删除'); loadLife(); } catch (e) { toast(e.message, true); }
+  });
+}
+
+function currentUid() { return (lifeData?.users?.[0]?.uid) || ''; }
+
+// 人物表单
+function openCastForm(id) {
+  castEditing = id || null;
+  const c = id ? lifeData.users[0].cast.find((x) => x.id === id) : null;
+  $('#castName').value = c?.name || '';
+  $('#castRole').value = c?.role || '';
+  $('#castRelation').value = c?.relation || '';
+  $('#castTrait').value = c?.trait || '';
+  $('#castHint').textContent = c ? '正在修改：' + c.name : '新人物';
+  $('#castForm').classList.remove('hide');
+}
+$('#btnNewCast').onclick = () => openCastForm(null);
+$('#btnCancelCast').onclick = () => { $('#castForm').classList.add('hide'); castEditing = null; };
+$('#btnSaveCast').onclick = async () => {
+  const uid = currentUid();
+  if (!uid) return toast('没有可用用户', true);
+  const member = {
+    id: castEditing || undefined,
+    name: $('#castName').value.trim(),
+    role: $('#castRole').value.trim(),
+    relation: $('#castRelation').value.trim(),
+    trait: $('#castTrait').value.trim()
+  };
+  try {
+    await post('/api/life/cast/save', { uid, member });
+    toast(castEditing ? '已保存' : '已新增人物');
+    $('#castForm').classList.add('hide');
+    castEditing = null;
+    loadLife();
+  } catch (e) { toast(e.message, true); }
+};
+
+// 故事表单
+function renderArcCastPick(sel) {
+  const cast = lifeData.users[0].cast;
+  $('#arcCastPick').innerHTML = cast.map((c) => `<span class="chip ${sel.includes(c.id) ? 'active' : ''}" data-pick="${esc(c.id)}">${esc(c.name)}</span>`).join('') || '<span class="note">先加人物</span>';
+  $$('#arcCastPick .chip').forEach((el) => el.onclick = () => {
+    const id = el.dataset.pick;
+    arcCastSel = arcCastSel.includes(id) ? arcCastSel.filter((x) => x !== id) : [...arcCastSel, id];
+    renderArcCastPick(arcCastSel);
+  });
+}
+function openArcForm(id) {
+  arcEditing = id || null;
+  const a = id ? lifeData.users[0].arcs.find((x) => x.id === id) : null;
+  $('#arcTitle').value = a?.title || '';
+  $('#arcKind').value = a?.kind || 'daily';
+  $('#arcBeats').value = (a?.beats || ['起因：', '变化：', '收尾：']).join('\n');
+  arcCastSel = a ? [...(a.cast || [])] : [];
+  renderArcCastPick(arcCastSel);
+  $('#arcHint').textContent = a ? '正在修改：' + a.title : '新故事';
+  $('#arcForm').classList.remove('hide');
+}
+$('#btnNewArc').onclick = () => openArcForm(null);
+$('#btnCancelArc').onclick = () => { $('#arcForm').classList.add('hide'); arcEditing = null; };
+$('#btnGenArc').onclick = async () => {
+  const uid = currentUid();
+  if (!uid) return toast('没有可用用户', true);
+  const btn = $('#btnGenArc');
+  btn.disabled = true;
+  btn.textContent = '生成中…';
+  try {
+    const r = await post('/api/life/arcs/generate', { uid, idea: $('#arcIdea').value.trim(), kind: $('#arcKind').value });
+    const d = r.draft;
+    $('#arcTitle').value = d.title || '';
+    $('#arcKind').value = d.kind || 'daily';
+    $('#arcBeats').value = (d.beats || []).join('\n');
+    arcCastSel = d.cast || [];
+    renderArcCastPick(arcCastSel);
+    toast('草稿生成好了，改完点保存');
+  } catch (e) { toast(e.message, true); }
+  btn.disabled = false;
+  btn.textContent = 'AI 帮我写';
+};
+
+$('#btnSaveArc').onclick = async () => {
+  const uid = currentUid();
+  if (!uid) return toast('没有可用用户', true);
+  const arc = {
+    id: arcEditing || undefined,
+    title: $('#arcTitle').value.trim(),
+    kind: $('#arcKind').value,
+    cast: arcCastSel,
+    beats: $('#arcBeats').value.split(/\r?\n/).map((s) => s.trim()).filter(Boolean)
+  };
+  try {
+    await post('/api/life/arcs/save', { uid, arc });
+    toast(arcEditing ? '已保存故事' : '已新建故事');
+    $('#arcForm').classList.add('hide');
+    arcEditing = null;
+    loadLife();
+  } catch (e) { toast(e.message, true); }
+};
+
+$('#btnReloadLife').onclick = loadLife;
+
+// ── 表情包 ──
+async function loadStickers() {
+  try {
+    const d = await api('/api/stickers');
+    state.stickerData = d;
+    $('#stTotal').textContent = d.total;
+    $('#stCats').textContent = d.categories.length;
+    if (!state.activeCat || !d.categories.some((c) => c.name === state.activeCat)) state.activeCat = (d.categories[0] || {}).name || null;
+    $('#catChips').innerHTML = d.categories.map((c) => `<span class="chip ${c.name === state.activeCat ? 'active' : ''}" data-cat="${esc(c.name)}">${esc(c.name)} ${c.count}</span>`).join('');
+    $$('#catChips .chip').forEach((el) => el.onclick = () => { state.activeCat = el.dataset.cat; loadStickers(); });
+    renderThumbs();
+  } catch (e) { toast('读取表情包失败：' + e.message, true); }
+}
+function renderThumbs() {
+  const d = state.stickerData;
+  if (!d) return;
+  const cat = d.categories.find((c) => c.name === state.activeCat);
+  if (!cat) { $('#thumbs').innerHTML = '<div class="note">还没有分类</div>'; return; }
+  const cats = d.categories.map((c) => c.name);
+  $('#thumbs').innerHTML = cat.items.map((it) => `
+    <div class="thumb">
+      <img loading="lazy" src="/api/stickers/file?category=${encodeURIComponent(cat.name)}&file=${encodeURIComponent(it.file)}" alt="">
+      <div class="u">${it.used == null ? '未发过' : '发过 ' + it.used + ' 次'} · ${Math.round(it.bytes / 1024)}KB</div>
+      <div class="ops">
+        <select data-move="${esc(it.file)}">
+          <option value="">移动到…</option>
+          ${cats.filter((c) => c !== cat.name).map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join('')}
+        </select>
+        <button class="btn sm danger" data-del="${esc(it.file)}">删</button>
+      </div>
+    </div>`).join('') || '<div class="note">这个分类是空的</div>';
+  $$('#thumbs select[data-move]').forEach((sel) => sel.onchange = async () => {
+    if (!sel.value) return;
+    try { await post('/api/stickers/move', { from: cat.name, to: sel.value, file: sel.dataset.move }); toast('已移动'); loadStickers(); }
+    catch (e) { toast('移动失败：' + e.message, true); }
+  });
+  $$('#thumbs button[data-del]').forEach((b) => b.onclick = async () => {
+    if (!confirm('删除这张表情包？')) return;
+    try { await post('/api/stickers/delete', { category: cat.name, file: b.dataset.del }); toast('已删除'); loadStickers(); }
+    catch (e) { toast('删除失败：' + e.message, true); }
+  });
+}
+$('#btnAddCat').onclick = async () => {
+  const name = $('#newCat').value.trim();
+  if (!name) return toast('输入分类名', true);
+  try {
+    await fetch('/api/stickers/upload?category=' + encodeURIComponent(name) + '&name=placeholder.png', { method: 'POST', body: new Blob(['']) });
+  } catch {}
+  // 空文件会被拒，这里改用建目录的接口：上传一张 1x1 png 更麻烦，直接提示用上传
+  toast('分类会在你上传第一张图时自动创建，直接把图传到「新分类名」即可');
+};
+$('#uploadInput').onchange = async (e) => {
+  const files = [...e.target.files];
+  if (!files.length) return;
+  let cat = state.activeCat;
+  if (!cat) {
+    cat = prompt('上传到哪个分类？（输入新名字会自动创建）');
+    if (!cat) return;
+  }
+  for (const f of files) {
+    try {
+      await fetch('/api/stickers/upload?category=' + encodeURIComponent(cat) + '&name=' + encodeURIComponent(f.name), { method: 'POST', body: f })
+        .then(async (r) => { const j = await r.json(); if (!r.ok || j.ok === false) throw new Error(j.error || r.status); });
+    } catch (err) { toast(`${f.name} 上传失败：${err.message}`, true); }
+  }
+  e.target.value = '';
+  toast('上传完成');
+  loadStickers();
+};
+$('#btnResetUsage').onclick = async () => {
+  if (!confirm('清空「发过几次」记录？轮换会从头开始。')) return;
+  try { await post('/api/stickers/reset-usage'); toast('已重置'); loadStickers(); } catch (e) { toast(e.message, true); }
+};
+
+// ── 日志 ──
+let logTimer = null;
+async function loadLogs() {
+  try {
+    const n = Math.max(20, Math.min(2000, Number($('#logLines').value) || 400));
+    const r = await api('/api/logs?lines=' + n);
+    const pre = $('#logBody');
+    const atBottom = pre.scrollTop + pre.clientHeight >= pre.scrollHeight - 40;
+    pre.textContent = r.text || '(空)';
+    if (atBottom) pre.scrollTop = pre.scrollHeight;
+  } catch (e) { toast('读取日志失败：' + e.message, true); }
+}
+$('#btnReloadLogs').onclick = loadLogs;
+$('#logAuto').onchange = (e) => {
+  if (logTimer) { clearInterval(logTimer); logTimer = null; }
+  if (e.target.checked) logTimer = setInterval(loadLogs, 2000);
+};
+
+function esc(s) { return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+loadState();
+window.addEventListener('DOMContentLoaded',()=>{const tab=location.hash.slice(1);const button=$('nav button[data-tab="'+(tab==='topics'?'memory':tab)+'"]');if(button)button.click();});
+setInterval(() => { if (state.currentTab === 'overview') loadState(); }, 5000);
+setInterval(() => { if (state.currentTab === 'accounts') loadAccounts(); }, 3000);
+</script>
+<script src="/api-ui.js"></script>
+<script src="/memory-ui.js"></script>
+<script src="/import-ui.js"></script>
+</body>
+</html>
