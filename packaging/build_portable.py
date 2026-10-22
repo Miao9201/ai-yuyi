@@ -33,7 +33,7 @@ def source_files(source):
         if relative.is_absolute() or '..' in relative.parts or ':' in lower:
             raise ValueError('Unsafe manifest path: ' + item)
         parts = set(p.lower() for p in relative.parts)
-        if parts.intersection({'private', '__pycache__', '.git', 'runtime', 'node_modules'}) or lower.endswith(('.log', '.dpapi', '.pyc', '.har', '.sqlite', '.db')) or relative.name.lower() == '.env':
+        if parts.intersection({'private', '__pycache__', '.git', 'runtime', 'node_modules','dist','work','build'}) or lower.endswith(('.log', '.dpapi', '.pyc', '.har', '.sqlite', '.sqlite3', '.db', '.exe', '.dll', '.pyd', '.zip')) or relative.name.lower().startswith('.env'):
             raise ValueError('Private/runtime path in public source manifest: ' + item)
         if 'data' in parts and lower.removeprefix('templates/') not in {'data/config.json', 'data/persona-profiles/linmuwan.json', 'data/media-catalog-linmuwan.json', 'upstream-v1.2.0/data/config.json'}:
             raise ValueError('Only reviewed configuration defaults may appear under data/: ' + item)
@@ -60,7 +60,7 @@ def main():
     parser.add_argument('--cache', default='')
     args = parser.parse_args()
     source, output = args.source.resolve(), args.output.resolve()
-    if source == output or source in output.parents or output in source.parents:
+    if source == output or output in source.parents:
         raise ValueError('Source and output must be separate directories.')
     # Copy only reviewed manifest entries, including when invoked from a clean source checkout.
     files = source_files(source)
