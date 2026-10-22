@@ -30,6 +30,33 @@ jobs:
         env:
           YUYI_TEST_WEBVIEW_RUNTIME: ${{ github.workspace }}/dist/YuYiAI/runtime/webview2
         run: python packaging/test_packaging.py
+      - name: 完整安装包验收
+        shell: powershell
+        run: |
+          $installed = Join-Path $env:RUNNER_TEMP 'YuYiAI-install-verified'
+          $setup = (Resolve-Path 'dist/语忆AI-Setup.exe').Path
+          $result = Start-Process -FilePath $setup -ArgumentList @('/quiet', '/target', ('"{0}"' -f $installed), '/no-launch', '/no-shortcut') -Wait -PassThru -WindowStyle Hidden
+          if ($result.ExitCode -ne 0) { throw '完整安装失败，请检查安装日志。' }
+          Set-Location -LiteralPath $installed
+          $verify = @'
+          from pathlib import Path
+          import hashlib,json,subprocess
+          import PIL,numpy,jieba,qrcode,settings,runtime_paths
+          root=Path.cwd()
+          manifest=json.loads((root/'PUBLIC-SOURCE-MANIFEST.json').read_text(encoding='utf-8'))['files']
+          for name,digest in manifest.items():
+              assert hashlib.sha256((root/name).read_bytes()).hexdigest()==digest,name
+          assert not settings.load_config()['enabled']
+          assert not settings.KEYFILE.exists()
+          assert not (root/'private').exists()
+          assert not (root/'data/ilink-auth.dpapi').exists()
+          assert {p.name for p in (root/'upstream-v1.2.0/personas').glob('*.md')}=={'linmuwan.md'}
+          assert (root/'语忆AI.exe').is_file()
+          subprocess.run([runtime_paths.node_executable(),'--version'],check=True)
+          print('Complete installer: source hashes, bundled imports and clean default state verified.')
+          '@
+          & (Join-Path $installed 'runtime/python/python.exe') -B -c $verify
+          if ($LASTEXITCODE -ne 0) { throw '完整安装内容核验失败。' }
       - uses: actions/upload-artifact@v4
         with:
           name: YuYiAI-Windows
