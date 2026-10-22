@@ -1,5 +1,5 @@
 /**
- * AI语忆 —— 微信 iLink Bot 客户端主程序
+ * 语忆AI —— 微信 iLink Bot 客户端主程序
  *
  * 模式：
  *   --mode=echo   收到什么回什么（验证链路）
@@ -1197,7 +1197,7 @@ async function handleCommand(state, msg, text) {
     if (!arg) {
       if (!all.length) {
         await sendText(state, userId,
-          '还没有任何人设。在 AI语忆/personas/ 目录下放 .md 文件即可，格式见 README。');
+          '还没有任何人设。在 语忆AI/personas/ 目录下放 .md 文件即可，格式见 README。');
         return true;
       }
       const lines = ['可用人设：'];
@@ -1231,7 +1231,7 @@ async function handleCommand(state, msg, text) {
 
   if (cmd === '/help' || cmd === '/?') {
     await sendText(state, userId,
-      ['AI语忆 控制指令：',
+      ['语忆AI 控制指令：',
         '',
         '【调整她】',
         '/状态           看当前设置（含忙碌模式状态）',
@@ -1602,7 +1602,7 @@ async function main() {
   const stickers = await listStickers();
 
   console.log('');
-  console.log('  AI语忆  ·  微信 iLink Bot');
+  console.log('  语忆AI  ·  微信 iLink Bot');
   console.log('  ─────────────────────────────────────────');
   console.log(`  模式     : ${MODE}${MODE === 'chat' ? '（直连 API，轻量）' : MODE === 'dsh' ? '（DSH headless，带工具）' : ''}`);
   console.log(`  协议地址 : ${ILINK_BASE_URL}`);
@@ -2549,7 +2549,7 @@ async function main() {
         try {
           if (MODE === 'echo') {
             await sendText(state, userId, text
-              ? `收到：${text}\n\n—— AI语忆 echo 模式，链路正常`
+              ? `收到：${text}\n\n—— 语忆AI echo 模式，链路正常`
               : '这个模式目前只处理文字消息。');
             state.handled++;
           } else if (MODE === 'dsh' || MODE === 'chat') {

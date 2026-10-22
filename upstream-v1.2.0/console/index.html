@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI语忆</title>
+<title>语忆AI</title>
 <style>
   :root{
     color-scheme:dark;
@@ -79,7 +79,7 @@
 <body>
 <header>
   <span class="dot" id="dot"></span>
-  <h1 id="personaTitle">AI语忆</h1>
+  <h1 id="personaTitle">语忆AI</h1>
   <span class="meta" id="headMeta">连接中…</span>
   <span style="flex:1"></span>
   <button class="btn sm" id="btnLocate">定位微信</button>
@@ -481,8 +481,8 @@ $('#btnCloseAccountQr').onclick=()=>{state.accountQr='';$('#accountQrPanel').hid
 async function loadState() {
   try {
     const s = await api('/api/state');
-    $('#personaTitle').textContent='AI语忆';
-    document.title='AI语忆';
+    $('#personaTitle').textContent='语忆AI';
+    document.title='语忆AI';
     const ilink=s.desktop?.transport==='ilink';
     $('#btnLocate').hidden=ilink;
     $('#transportNote').textContent=ilink?'电脑需保持开机联网，微信无需前台。':'请保持目标微信聊天在前台。';

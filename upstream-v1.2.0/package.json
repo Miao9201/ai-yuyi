@@ -1,9 +1,9 @@
 {
-  "name": "ai-yuyi",
+  "name": "yuyi-ai",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "AI语忆本地微信 iLink 连接运行时",
+  "description": "语忆AI本地微信 iLink 连接运行时",
   "scripts": {
     "start": "node src/index.js",
     "echo": "node src/index.js --mode=echo",

@@ -162,7 +162,7 @@ async function main(){
   const originalTones=Object.fromEntries(Object.entries(MOODS).map(([key,mood])=>[key,mood.tone]));
   let cred=JSON.parse(await python('ilink_bot.py',['--credential-load'])||'null');
   if(!cred)cred=await login(notice,allowed);
-  cred.baseUrl=trustedBase(cred.baseUrl);api.setBotAgent('AIYuYi/1.2.0');
+  cred.baseUrl=trustedBase(cred.baseUrl);api.setBotAgent('YuYiAI/1.2.0');
   const id=createHash('sha256').update(cred.userId).digest('hex').slice(0,16);
   const queue=new Queue(path.join(scope.directory,`ilink-queue-${id}.json`),cred.userId);
   const state={cred,contextTokens:new Map(),handled:0,cfg:{},companionMode:true};

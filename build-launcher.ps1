@@ -10,9 +10,9 @@ if (-not (Test-Path -LiteralPath $pythonExecutable)) { throw '未找到本机 py
 $runtimePathFile = Join-Path $appDirectory 'desktop-python-path.txt'
 try {
     [IO.File]::WriteAllText($runtimePathFile, $pythonExecutable, [Text.UTF8Encoding]::new($false))
-    & $compiler /nologo /target:winexe /optimize+ /reference:System.Windows.Forms.dll "/resource:$runtimePathFile,python-path" "/out:$appDirectory\AI语忆.exe" "$appDirectory\desktop-launcher.cs"
+    & $compiler /nologo /target:winexe /optimize+ /reference:System.Windows.Forms.dll "/resource:$runtimePathFile,python-path" "/out:$appDirectory\语忆AI.exe" "$appDirectory\desktop-launcher.cs"
     if ($LASTEXITCODE -ne 0) { throw 'EXE 编译失败' }
 } finally {
     if (Test-Path -LiteralPath $runtimePathFile) { Remove-Item -LiteralPath $runtimePathFile }
 }
-Write-Output (Join-Path $appDirectory 'AI语忆.exe')
+Write-Output (Join-Path $appDirectory '语忆AI.exe')
