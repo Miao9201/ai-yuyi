@@ -1,4 +1,6 @@
 import importlib.util
+import hashlib
+import io
 import json
 import os
 import shutil
@@ -23,6 +25,16 @@ def module(name, path):
 
 
 class PackagingTests(unittest.TestCase):
+    def test_launcher_does_not_attach_to_another_installation_on_reused_port(self):
+        runtime = module('runtime_paths_test', APP/'runtime_paths.py')
+        with patch.dict(sys.modules, {'settings':types.SimpleNamespace(DATA=APP/'data'),'v12_bridge':types.SimpleNamespace(UPSTREAM=APP/'upstream-v1.2.0'),'runtime_paths':runtime}):
+            launcher=module('launcher_identity_test',APP/'launcher.py')
+        own=hashlib.sha256(os.path.normcase(str(APP.resolve())).encode('utf-8')).hexdigest()
+        for identity,expected in ((own,True),('other-installation',False),(None,False)):
+            response=io.BytesIO(json.dumps({'appId':'ai-yuyi','instanceId':identity}).encode())
+            with patch.object(launcher.urllib.request,'urlopen',return_value=response):
+                self.assertEqual(launcher.ours('http://127.0.0.1:7788'),expected)
+
     def test_manifest_allows_only_reviewed_unchanged_files(self):
         builder = module('portable_builder', APP / 'packaging' / 'build_portable.py')
         with tempfile.TemporaryDirectory() as directory:

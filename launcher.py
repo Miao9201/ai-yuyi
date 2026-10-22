@@ -1,5 +1,6 @@
 """Open the adapted upstream v1.2.0 console on loopback."""
 import json
+import hashlib
 import os
 import socket
 import subprocess
@@ -15,7 +16,9 @@ from runtime_paths import node_executable, python_executable
 def ours(url):
     try:
         with urllib.request.urlopen(url+'/api/state',timeout=1) as response:
-            return json.load(response).get('appId') in {'ai-yuyi', 'ai-yuyi'}
+            state = json.load(response)
+            identity = hashlib.sha256(os.path.normcase(str(Path(__file__).resolve().parent)).encode('utf-8')).hexdigest()
+            return state.get('appId') == 'ai-yuyi' and state.get('instanceId') == identity
     except Exception:return False
 
 

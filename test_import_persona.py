@@ -61,5 +61,24 @@ class ImportPersonaTests(unittest.TestCase):
         other=memory.context_for({'persona':'other_role','owner':'test-owner','text':'月亮画展','history':[]})
         self.assertNotIn('紫色的画',other['context'])
 
+    def test_optional_null_voice_and_media_metadata_do_not_block_text_import(self):
+        self.messages[0]['refs']=None
+        self.messages.extend([
+            {'id':'voice-untranscribed','kind':'voice','sender_id':'target-fixture','transcription':None,'sent_at':'2025-06-01T20:03:00+08:00'},
+            {'id':'voice-transcribed','kind':'voice','sender_id':'target-fixture','text':'那幅画是紫色的','transcription':None,'refs':None,'sent_at':'2025-06-01T20:04:00+08:00'},
+        ])
+        self.source.write_text(json.dumps({'messages':self.messages}),encoding='utf-8')
+        before=self.source.read_bytes()
+        result=importer.import_persona(self.body)
+        self.assertEqual(result['indexed_messages'],3)
+        self.assertEqual(result['image_assets'],1)
+        self.assertEqual(self.source.read_bytes(),before)
+
+    def test_unrecognized_optional_media_references_are_ignored(self):
+        self.messages[2]['refs']=[None,'unsupported',{'kind':'image','uri':42},{'kind':'image','uri':'media/art.png'}]
+        self.source.write_text(json.dumps({'messages':self.messages}),encoding='utf-8')
+        result=importer.import_persona(self.body)
+        self.assertEqual(result['image_assets'],1)
+
 
 if __name__=='__main__':unittest.main()

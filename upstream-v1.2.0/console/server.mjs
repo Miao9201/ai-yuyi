@@ -10,6 +10,7 @@ import path from 'node:path';
 import { spawn, execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
+import {installationId, localOperationTimeout, readLogTail as tail} from './local-helpers.mjs';
 import {
   loadLife, saveLife, activeArc, startArc, dropArc, resetLife, DEFAULT_CAST, ARCS,
   allTemplates, saveCastMember, deleteCastMember, saveArcTemplate, deleteArcTemplate,
@@ -20,6 +21,7 @@ import { chatComplete, readApiKey } from '../src/chat.js';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
 const DESKTOP_ROOT = path.resolve(ROOT, '..');
+const INSTANCE_ID = installationId(DESKTOP_ROOT);
 const desktopKeys = new Set(['defaultPersona','chatModel','chatBaseUrl','chatTemperature','taskTimeoutMs','stripActions','sceneEnabled','sceneTtlMinutes','sceneMaxTurns','emotionEnabled','emotionDriftChance','defianceChance','forgetEnabled','topicTtlHours','topicBanHours','historyRecentTurns','historyOlderChars','visionEnabled','visionModelDeepseek']);
 const runFile = promisify(execFile);
 async function desktopControl(action) {
@@ -27,7 +29,7 @@ async function desktopControl(action) {
 }
 function localOperation(script,action,body={}){
   return new Promise((resolve,reject)=>{
-    const child=execFile(process.env.WX_DESKTOP_PYTHON||'python',['-X','utf8',path.join(DESKTOP_ROOT,script),action],{cwd:DESKTOP_ROOT,windowsHide:true,timeout:script==='import_persona.py'&&action==='import'?600000:65000,maxBuffer:2*1024*1024},(error,stdout)=>{
+    const child=execFile(process.env.WX_DESKTOP_PYTHON||'python',['-X','utf8',path.join(DESKTOP_ROOT,script),action],{cwd:DESKTOP_ROOT,windowsHide:true,timeout:localOperationTimeout(script,action),maxBuffer:2*1024*1024},(error,stdout)=>{
       let result;try{result=JSON.parse(stdout);}catch{return reject(Error('账号管理暂时不可用'));}
       if(error||result.error){const e=Error(result.error||'本地操作失败');e.statusCode=result.status||400;return reject(e);}
       resolve(result);
@@ -162,13 +164,6 @@ function stickerStats() {
   }
   out.sort((a, b) => b.count - a.count);
   return { total, categories: out, seq: loadUsage().seq || 0 };
-}
-function tail(file, lines) {
-  try {
-    const text = fs.readFileSync(file, 'utf8');
-    const arr = text.split(/\r?\n/);
-    return arr.slice(Math.max(0, arr.length - lines)).join('\n');
-  } catch { return ''; }
 }
 
 // 配置项的类型（用于面板渲染和写入校验）
@@ -341,6 +336,7 @@ route('GET', /^\/api\/state$/, async (req, res) => {
   return json(res, 200, {
     ok: true,
     appId: cfg.desktopAdapterEnabled ? 'ai-yuyi' : 'wx-bridge',
+    instanceId: INSTANCE_ID,
     desktop: cfg.desktopAdapterEnabled ? {...desktopStatus(),version:'1.2.0',transport:localTransport(),contact:identity?identity.name:(localSettings().contact||'未设置'),contactSource:identity?.source} : null,
     profile: cfg.desktopAdapterEnabled ? desktopProfile() : null,
     companion: cfg.desktopAdapterEnabled ? companionStats() : null,
@@ -780,7 +776,9 @@ route('POST', /^\/api\/bot\/stop$/, async (req, res) => {
 });
 
 route('GET', /^\/api\/logs$/, (req, res, m, url) => {
-  const lines = Math.min(2000, Math.max(20, Number(url.searchParams.get('lines') || 300)));
+  const requested = Number(url.searchParams.get('lines') || 300);
+  if (!Number.isFinite(requested)) return bad(res,400,'日志行数无效');
+  const lines = Math.min(2000, Math.max(20, requested));
   const text = loadConfig().desktopAdapterEnabled ? tail(LOG_PATH,Math.ceil(lines/2))+'\n—— 微信收发 ——\n'+tail(path.join(DESKTOP_ROOT,'data','run.log'),Math.ceil(lines/2)) : tail(LOG_PATH,lines);
   return json(res, 200, { ok: true, text });
 });

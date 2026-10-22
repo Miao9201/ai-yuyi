@@ -44,9 +44,11 @@ def clean_messages(messages,target=TARGET,self_id=SELF,target_name='私密角色
     for m in messages:
         sender=m.get('sender_id');category=m.get('category');kind=m.get('kind')
         if sender not in (target,self_id) or category=='system':continue
-        if kind=='voice' and m.get('transcription',{}).get('needs_review'):continue
+        transcription=m.get('transcription')
+        if not isinstance(transcription,dict):transcription={}
+        if kind=='voice' and transcription.get('needs_review'):continue
         if category=='quote':text=str(m.get('display_text','')).split('\n引用')[0]
-        elif kind in ('text','voice'):text=m.get('text') or m.get('transcription',{}).get('text') or ''
+        elif kind in ('text','voice'):text=m.get('text') or transcription.get('text') or ''
         else:continue
         text=str(text).strip()
         if not text or text.startswith('<') or contains_credential(text) or re.search(r'撤回了?一条消息|通话时长|对方已取消|拍了拍',text):continue
@@ -56,7 +58,7 @@ def clean_messages(messages,target=TARGET,self_id=SELF,target_name='私密角色
         if not at:
             at=datetime.fromtimestamp(m.get('sent_at_unix_ms',0)/1000,timezone(timedelta(hours=8))).isoformat()
         rows.append({'id':str(m['id']),'at':at,'role':target_name if sender==target else self_name,'text':text[:1600],
-                     'machine_transcript':kind=='voice' and not m.get('transcription',{}).get('human_verified',False)})
+                     'machine_transcript':kind=='voice' and not transcription.get('human_verified',False)})
     return sorted(rows,key=lambda r:r['at'])
 
 
@@ -207,9 +209,11 @@ def collect_media(messages,root,target=TARGET,self_id=SELF,target_name='私密�
     root=Path(root).resolve();items={};clean={r['id']:r for r in clean_messages(messages,target,self_id,target_name,self_name)}
     for pos,m in enumerate(messages):
         if m.get('sender_id')!=target:continue
-        for ref in m.get('refs',[]):
+        refs=m.get('refs')
+        for ref in refs if isinstance(refs,list) else []:
+            if not isinstance(ref,dict):continue
             kind=ref.get('kind');uri=ref.get('uri','')
-            if kind not in ('emoji','image') or not uri:continue
+            if kind not in ('emoji','image') or not isinstance(uri,str) or not uri:continue
             file=(root/uri).resolve()
             if not file.is_relative_to(root/'media') or not file.is_file() or file.suffix.lower() not in ('.png','.gif','.jpg','.jpeg','.webp') or file.stat().st_size>25*1024*1024:continue
             if uri not in items:
