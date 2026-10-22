@@ -8,4 +8,4 @@ param(
 $ErrorActionPreference = 'Stop'
 if (-not $NodeExecutable) { $NodeExecutable = (Get-Command node -ErrorAction Stop).Source }
 & $PythonExecutable (Join-Path $PSScriptRoot 'build_portable.py') --source $SourceRoot --output $OutputRoot --node $NodeExecutable --cache $CacheRoot
-if ($LASTEXITCODE -ne 0) { throw '便携版/安装包构建失败，请查看上面的错误。' }
+if ($LASTEXITCODE -ne 0) { throw 'AIYuYi package build failed. See the error above.' }
