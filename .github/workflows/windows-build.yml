@@ -31,7 +31,7 @@ jobs:
           YUYI_TEST_WEBVIEW_RUNTIME: ${{ github.workspace }}/dist/YuYiAI/runtime/webview2
         run: python packaging/test_packaging.py
       - name: 完整安装包验收
-        shell: powershell
+        shell: pwsh
         run: |
           $installed = Join-Path $env:RUNNER_TEMP 'YuYiAI-install-verified'
           $setup = (Resolve-Path 'dist/语忆AI-Setup.exe').Path
