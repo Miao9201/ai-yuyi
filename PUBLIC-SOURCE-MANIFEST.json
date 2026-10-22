@@ -5,7 +5,7 @@
   "files": {
     ".clean-release-source": "69525a7e375a29dca5dae9fab8743f690eb309aa06d8535fe4c15309365e2198",
     ".gitattributes": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
-    ".github/workflows/windows-build.yml": "4675041f8e6316768ffe93db40643323cbcb1bc2578ab99cfb5722d1c4212323",
+    ".github/workflows/windows-build.yml": "9cb86e5deaaf160217c29a15021070a640a4d349c34ad4cf3474bdcf15c3dd86",
     ".gitignore": "684587679521ec45d2a2b4d0106136a02ed2916402c4bf2fd5a74bf65315c917",
     "CHANGELOG.md": "d914d03a4972e529cedd88486bcd3d5205cd371de3fe64a06e39861b9502649e",
     "CONTRIBUTING.md": "dff745dd226f17d78065dd7e601df334186da1e05efbe07092f6077e440df89f",

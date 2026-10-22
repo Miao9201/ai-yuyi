@@ -37,13 +37,14 @@ jobs:
           $setup = (Resolve-Path 'dist/语忆AI-Setup.exe').Path
           $result = Start-Process -FilePath $setup -ArgumentList @('/quiet', '/target', ('"{0}"' -f $installed), '/no-launch', '/no-shortcut') -Wait -PassThru -WindowStyle Hidden
           if ($result.ExitCode -ne 0) { throw '完整安装失败，请检查安装日志。' }
+          $env:YUYI_REVIEW_MANIFEST = (Resolve-Path 'PUBLIC-SOURCE-MANIFEST.json').Path
           Set-Location -LiteralPath $installed
           $verify = @'
           from pathlib import Path
-          import hashlib,json,subprocess
+          import hashlib,json,os,subprocess
           import PIL,numpy,jieba,qrcode,settings,runtime_paths
           root=Path.cwd()
-          manifest=json.loads((root/'PUBLIC-SOURCE-MANIFEST.json').read_text(encoding='utf-8'))['files']
+          manifest=json.loads(Path(os.environ['YUYI_REVIEW_MANIFEST']).read_text(encoding='utf-8'))['files']
           for name,digest in manifest.items():
               assert hashlib.sha256((root/name).read_bytes()).hexdigest()==digest,name
           assert not settings.load_config()['enabled']
