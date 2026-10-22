@@ -10,7 +10,7 @@ Windows 本地运行的微信 AI 聊天工具。通过微信 AI 会话聊天，�
 
 第一次使用按以下顺序操作：
 
-1. 打开软件，浏览器进入本机控制台。
+1. 打开软件，直接打开独立管理窗口。
 2. 在 **API配置** 填入兼容 Chat Completions 的 HTTPS 地址、模型名称和自己的 API Key，检测后保存。
 3. 点绿色 **开始回复**，出现二维码后，用你希望聊天的微信扫码并确认授权。
 4. 在微信新出现的 **AI 会话** 中先发一句话，确认收到回复。
@@ -55,7 +55,8 @@ Windows 本地运行的微信 AI 聊天工具。通过微信 AI 会话聊天，�
 
 ```powershell
 python -m pip install -r requirements.txt
-python launcher.py
+powershell -NoProfile -ExecutionPolicy Bypass -File build-launcher.ps1
+.\START.cmd
 ```
 
 首次默认不启动自动回复，需要自行配置 API 和微信授权。源码目录中的默认数据模板均为空白，不含可用密钥或授权。

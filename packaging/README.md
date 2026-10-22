@@ -2,12 +2,12 @@
 
 发布包内置官方 Python 3.12.10（64 位）、Node.js 和 Pillow / numpy / jieba / qrcode。
 用户无需安装 Python、Node.js 或运行命令；双击 `语忆AI-Setup.exe` 即安装到当前用户的
-`%LOCALAPPDATA%\Programs\AIYuYi`，创建桌面快捷方式并打开本地控制台。
+`%LOCALAPPDATA%\Programs\AIYuYi`，创建桌面快捷方式并打开独立管理窗口。
 便携版解压后双击 `语忆AI.exe`。升级保留既有 `data`、`private` 和设置。
 
 仅支持 Windows 10/11 64 位。安装无需管理员权限。安装完成后不依赖下载目录；
-联网仅用于微信登录和用户配置的模型接口。程序首次使用仍需用户自己的登录与 API 配置。
-默认浏览器打不开时，启动器会尝试系统已有的 Microsoft Edge；都不可用时会显示本地网址。
+若系统已安装 WebView2，联网仅用于微信登录和用户配置的模型接口；缺少该组件时首次启动需联网安装。程序首次使用仍需用户自己的登录与 API 配置。
+管理界面由微软 WebView2 在软件窗口内显示，启动不会打开外部浏览器。若系统缺少该组件，首次启动会使用包内经过微软签名验证的安装程序联网准备；安装失败会显示错误，不会更改原有配置。
 
 ## 构建
 
@@ -30,12 +30,12 @@
 构建机需要 Python 3.12（64 位，含 pip）、Node.js 和 .NET Framework 的 C# 编译器。
 `-PythonExecutable`、`-NodeExecutable`、`-CacheRoot` 可指定构建机路径。
 源码和输出必须独立，输出目录必须为空。构建不安装系统依赖、不修改全局 Python。
-首次构建从官方 Python / Node 网站以及 PyPI 获取运行时和依赖；用户安装过程全离线。
+首次构建从官方 Python / Node 网站以及 PyPI 获取运行时和依赖；应用文件安装过程离线；系统缺少 WebView2 时首次启动需联网准备微软组件。
 SHA256 清单随产物输出，运行时版本、官方来源和摘要写入 `RUNTIME-MANIFEST.json`。
 
 产物：`YuYiAI/`、`语忆AI-portable.zip`、`语忆AI-Setup.exe`、`SHA256SUMS.txt`。
 构建器会在移除 PATH 中 Python 和 Node 的情况下检查内置解释器和四个依赖导入。
-完整控制台与微信流程还需针对独立构建目录另做验收。
+完整管理窗口与微信流程还需针对独立构建目录另做验收。
 
 测试安装命令（普通用户无需这些参数）：
 

@@ -6,7 +6,7 @@ import subprocess
 import sys
 import time
 import urllib.request
-import webbrowser
+from pathlib import Path
 from settings import DATA
 from v12_bridge import UPSTREAM
 from runtime_paths import node_executable, python_executable
@@ -20,17 +20,10 @@ def ours(url):
 
 
 def open_console(url):
-    try:
-        if webbrowser.open(url):
-            return
-    except (OSError, webbrowser.Error):
-        pass
-    for variable in ('ProgramFiles(x86)', 'ProgramFiles', 'LOCALAPPDATA'):
-        edge = os.path.join(os.environ.get(variable, ''), 'Microsoft', 'Edge', 'Application', 'msedge.exe')
-        if os.path.isfile(edge):
-            subprocess.Popen([edge, url], creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
-            return
-    raise RuntimeError('控制台已启动，请在浏览器打开：' + url)
+    executable = Path(__file__).resolve().with_name('语忆AI.exe')
+    if not executable.is_file():
+        raise RuntimeError('桌面启动程序不完整，请重新安装完整版本。')
+    subprocess.Popen([str(executable), '--url', url], cwd=executable.parent)
 
 
 def main(open_browser=True):
@@ -69,7 +62,17 @@ def main(open_browser=True):
 
 
 if __name__=='__main__':
-    try:main()
+    try:
+        if sys.argv[1:] == ['--console-url']:
+            print(main(open_browser=False), flush=True)
+        elif not sys.argv[1:]:
+            main()
+        else:
+            raise ValueError('无法识别的启动参数')
     except Exception as exc:
-        import ctypes
-        ctypes.windll.user32.MessageBoxW(None,str(exc),'语忆AI',0x10)
+        if sys.argv[1:] == ['--console-url']:
+            print(str(exc), file=sys.stderr)
+        else:
+            import ctypes
+            ctypes.windll.user32.MessageBoxW(None,str(exc),'语忆AI',0x10)
+        sys.exit(1)

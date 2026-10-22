@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 [assembly: AssemblyTitle("语忆AI安装程序")]
 [assembly: AssemblyProduct("语忆AI")]
-[assembly: AssemblyVersion("1.2.0.0")]
+[assembly: AssemblyVersion("1.1.0.0")]
 
 internal static class Installer
 {

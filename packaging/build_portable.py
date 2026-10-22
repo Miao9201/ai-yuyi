@@ -64,7 +64,7 @@ def main():
         raise ValueError('Source and output must be separate directories.')
     # Copy only reviewed manifest entries, including when invoked from a clean source checkout.
     files = source_files(source)
-    missing = {'launcher.py', 'runtime_paths.py', 'desktop-launcher.cs', 'packaging/installer.cs'} - {relative for _, relative in files}
+    missing = {'launcher.py', 'runtime_paths.py', 'desktop-launcher.cs', 'packaging/installer.cs', 'packaging/prepare_webview.py'} - {relative for _, relative in files}
     if missing:
         raise ValueError('Manifest is missing required application files: ' + ', '.join(sorted(missing)))
     if sys.version_info[:2] != (3, 12) or sys.maxsize < 2**32:
@@ -109,8 +109,10 @@ def main():
         urllib.request.urlretrieve(node_license_url, node_license)
     shutil.copy2(node_license, node_root / 'LICENSE')
     compiler = Path(os.environ['WINDIR']) / 'Microsoft.NET' / 'Framework64' / 'v4.0.30319' / 'csc.exe'
-    run(compiler, '/nologo', '/target:winexe', '/optimize+', '/reference:System.Windows.Forms.dll', '/out:' + str(portable / '语忆AI.exe'), source / 'desktop-launcher.cs')
-    runtime_info = {'python': {'version': '3.12.10', 'url': PYTHON_URL, 'archiveSha256': digest(python_zip)}, 'node': {'version': node_version, 'sha256': digest(node_root / 'node.exe'), 'licenseUrl': node_license_url}, 'dependencies': DEPENDENCIES}
+    webview = portable / 'runtime' / 'webview2'
+    run(sys.executable, '-X', 'utf8', source / 'packaging' / 'prepare_webview.py', '--destination', webview, '--cache', cache)
+    run(compiler, '/nologo', '/target:winexe', '/platform:x64', '/optimize+', '/reference:System.Windows.Forms.dll', '/reference:System.Drawing.dll', '/reference:System.Core.dll', '/reference:' + str(webview / 'Microsoft.Web.WebView2.Core.dll'), '/reference:' + str(webview / 'Microsoft.Web.WebView2.WinForms.dll'), '/out:' + str(portable / '语忆AI.exe'), source / 'desktop-launcher.cs')
+    runtime_info = {'python': {'version': '3.12.10', 'url': PYTHON_URL, 'archiveSha256': digest(python_zip)}, 'node': {'version': node_version, 'sha256': digest(node_root / 'node.exe'), 'licenseUrl': node_license_url}, 'webview2': json.loads((webview / 'WEBVIEW-MANIFEST.json').read_text(encoding='utf-8')), 'dependencies': DEPENDENCIES}
     (portable / 'RUNTIME-MANIFEST.json').write_text(json.dumps(runtime_info, ensure_ascii=False, indent=2), encoding='utf-8')
     env = os.environ.copy()
     env.update(PATH=str(Path(os.environ['WINDIR']) / 'System32'), PYTHONPATH='', PYTHONHOME='')

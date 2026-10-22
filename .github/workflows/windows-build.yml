@@ -24,6 +24,10 @@ jobs:
       - name: 构建 语忆AI
         shell: powershell
         run: ./packaging/build-portable.ps1 -SourceRoot . -OutputRoot dist
+      - name: 验证桌面启动与安装升级
+        env:
+          YUYI_TEST_WEBVIEW_RUNTIME: ${{ github.workspace }}/dist/YuYiAI/runtime/webview2
+        run: python packaging/test_packaging.py
       - uses: actions/upload-artifact@v4
         with:
           name: YuYiAI-Windows
