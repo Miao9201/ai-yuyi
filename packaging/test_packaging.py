@@ -26,7 +26,7 @@ class PackagingTests(unittest.TestCase):
     def test_manifest_allows_only_reviewed_unchanged_files(self):
         builder = module('portable_builder', APP / 'packaging' / 'build_portable.py')
         with tempfile.TemporaryDirectory() as directory:
-            source = Path(directory)
+            source = Path(directory).resolve()
             (source / '.clean-release-source').touch()
             script = source / 'launcher.py'
             script.write_text('print(1)', encoding='utf-8')

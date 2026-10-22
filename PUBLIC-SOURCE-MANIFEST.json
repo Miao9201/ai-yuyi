@@ -38,7 +38,7 @@
     "packaging/installer.cs": "2531ed97b8f28c64ec233c7e53ed5f689051bfaa2b02b8a7e63e5bf56b4f9005",
     "packaging/prepare_webview.py": "6871b37d38a93b915f600fcf0c2434dc88ad1b20b75ff867c9aa11d00be7e199",
     "packaging/review_source.py": "a727aa705394df5c764c1a22dd4330ced10182481a9bb5440d4f9189707b574d",
-    "packaging/test_packaging.py": "14e8d4e304e3a29f9a73ccb03c7a4d38dc0e5cff49698c6db4a7bf16cf7ff6da",
+    "packaging/test_packaging.py": "bd8b51ddfbba910220be4d6737230b9a0c755ab34bbdcec543da6f6383870ed9",
     "persona.py": "0d43252e05bb01e916001f74c7552a5a55c14a97ae8bb36a160e0aa55867e53c",
     "requirements.txt": "dc9c0cfc0aa16f72d27cad00b0fbfa2ca22ca58e305497f841527b718f47aa6c",
     "runtime_paths.py": "804fabd067eb569945c0e4fa5f48bd533f3c5fd531c2073ddd496879454931e1",
