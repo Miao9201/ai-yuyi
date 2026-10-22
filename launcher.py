@@ -72,4 +72,4 @@ if __name__=='__main__':
     try:main()
     except Exception as exc:
         import ctypes
-        ctypes.windll.user32.MessageBoxW(None,str(exc),'AI语忆',0x10)
+        ctypes.windll.user32.MessageBoxW(None,str(exc),'语忆AI',0x10)

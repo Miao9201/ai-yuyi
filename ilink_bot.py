@@ -87,7 +87,7 @@ class WorkerPool:
 def main():
     kernel=ctypes.windll.kernel32
     kernel.CreateMutexW.restype=ctypes.c_void_p
-    handle=kernel.CreateMutexW(None,False,'Local\\AIYuYiBot_SingleWorker')
+    handle=kernel.CreateMutexW(None,False,'Local\\YuYiAIBot_SingleWorker')
     if not handle:raise OSError('无法创建工作进程锁')
     if kernel.GetLastError()==183:
         kernel.CloseHandle(ctypes.c_void_p(handle));return

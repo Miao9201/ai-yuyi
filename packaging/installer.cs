@@ -5,8 +5,8 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Windows.Forms;
 
-[assembly: AssemblyTitle("AI语忆安装程序")]
-[assembly: AssemblyProduct("AI语忆")]
+[assembly: AssemblyTitle("语忆AI安装程序")]
+[assembly: AssemblyProduct("语忆AI")]
 [assembly: AssemblyVersion("1.2.0.0")]
 
 internal static class Installer
@@ -69,12 +69,22 @@ internal static class Installer
                     finally { if (File.Exists(temporary)) File.Delete(temporary); }
                 }
             }
-            string executable = Path.Combine(target, "AI语忆.exe");
+            string executable = Path.Combine(target, "语忆AI.exe");
+            // Existing pinned shortcuts may still point at the previous executable name.
+            string legacyExecutable = Path.Combine(target, "AI语忆.exe");
+            if (File.Exists(legacyExecutable) && File.Exists(executable)) File.Copy(executable, legacyExecutable, true);
             if (Array.IndexOf(args, "/no-shortcut") < 0)
             {
                 Type shellType = Type.GetTypeFromProgID("WScript.Shell");
                 object shell = Activator.CreateInstance(shellType);
-                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "AI语忆.lnk");
+                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "语忆AI.lnk");
+                string legacyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "AI语忆.lnk");
+                if (File.Exists(legacyPath) && !File.Exists(path))
+                {
+                    object previous = shellType.InvokeMember("CreateShortcut", BindingFlags.InvokeMethod, null, shell, new object[] { legacyPath });
+                    string previousTarget = (string)previous.GetType().InvokeMember("TargetPath", BindingFlags.GetProperty, null, previous, null);
+                    if (String.Equals(previousTarget, legacyExecutable, StringComparison.OrdinalIgnoreCase)) File.Move(legacyPath, path);
+                }
                 object link = shellType.InvokeMember("CreateShortcut", BindingFlags.InvokeMethod, null, shell, new object[] { path });
                 link.GetType().InvokeMember("TargetPath", BindingFlags.SetProperty, null, link, new object[] { executable });
                 link.GetType().InvokeMember("WorkingDirectory", BindingFlags.SetProperty, null, link, new object[] { target });
@@ -82,7 +92,7 @@ internal static class Installer
             }
             if (Array.IndexOf(args, "/no-launch") < 0)
                 Process.Start(new ProcessStartInfo(executable) { WorkingDirectory = target, UseShellExecute = true });
-            if (!quiet) MessageBox.Show("AI语忆安装完成。桌面快捷方式可再次打开控制台。\n升级时已有配置和聊天数据均会保留。", "AI语忆", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (!quiet) MessageBox.Show("语忆AI安装完成。桌面快捷方式可再次打开控制台。\n升级时已有配置和聊天数据均会保留。", "语忆AI", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return 0;
         }
         catch (Exception error)
@@ -93,7 +103,7 @@ internal static class Installer
                     DateTime.UtcNow.ToString("O") + Environment.NewLine + error.ToString() + Environment.NewLine);
             }
             catch { /* A failed diagnostic write must not replace the installation error. */ }
-            if (!quiet) MessageBox.Show("安装未完成：" + error.Message + "\n请关闭正在运行的程序后重试。", "AI语忆", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!quiet) MessageBox.Show("安装未完成：" + error.Message + "\n请关闭正在运行的程序后重试。", "语忆AI", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return 1;
         }
     }

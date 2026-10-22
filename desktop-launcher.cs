@@ -4,9 +4,9 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-[assembly: AssemblyTitle("AI语忆")]
-[assembly: AssemblyProduct("AI语忆")]
-[assembly: AssemblyDescription("打开 AI语忆 本地管理界面")]
+[assembly: AssemblyTitle("语忆AI")]
+[assembly: AssemblyProduct("语忆AI")]
+[assembly: AssemblyDescription("打开 语忆AI 本地管理界面")]
 [assembly: AssemblyVersion("1.2.0.0")]
 
 internal static class DesktopLauncher
@@ -45,7 +45,7 @@ internal static class DesktopLauncher
         catch (Exception error)
         {
             if (Array.IndexOf(args, "--no-dialog") < 0)
-                MessageBox.Show(error.Message, "AI语忆", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(error.Message, "语忆AI", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return 1;
         }
     }

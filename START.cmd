@@ -1,8 +1,8 @@
 @echo off
 chcp 65001 >nul
 cd /d "%~dp0"
-if exist "%~dp0AI语忆.exe" (
-    start "" "%~dp0AI语忆.exe"
+if exist "%~dp0语忆AI.exe" (
+    start "" "%~dp0语忆AI.exe"
     exit /b
 )
 if exist "%~dp0runtime\python\pythonw.exe" (

@@ -1,4 +1,4 @@
-# AI语忆
+# 语忆AI
 
 Windows 本地运行的微信 AI 聊天工具。通过微信 AI 会话聊天，无需保持电脑微信在前台。默认人设为虚构角色 **林慕婉**。
 
@@ -6,7 +6,7 @@ Windows 本地运行的微信 AI 聊天工具。通过微信 AI 会话聊天，�
 
 ## 下载安装
 
-在本仓库 **Releases** 下载 `AIYuYi-Setup.exe`，运行后打开桌面上的 **AI语忆**。安装版自带 Python 和 Node，无需自己安装运行环境；另有 `AIYuYi-portable.zip`，整包解压后打开其中的 `AI语忆.exe`。
+在本仓库 **Releases** 下载 `YuYiAI-Setup.exe`，运行后打开桌面上的 **语忆AI**。安装版自带 Python 和 Node，无需自己安装运行环境；另有 `YuYiAI-portable.zip`，整包解压后打开其中的 `语忆AI.exe`。
 
 第一次使用按以下顺序操作：
 
@@ -39,7 +39,7 @@ Windows 本地运行的微信 AI 聊天工具。通过微信 AI 会话聊天，�
 
 可使用第三方工具 [Alpha](https://github.com/xunchahaha/alpha-releases) 将自己的微信会话导出成可读取的 **JSON**。导出时选择普通 `json`，保留说话人标识；需要图片与表情包时同时导出媒体，并保留 JSON 与 `media/` 的相对目录。
 
-这里的 JSON 是普通导出文件，不是微信官方加密备份。AI语忆不能直接读取微信官方加密备份、数据库、HTML、Excel 或其他工具的任意 JSON 格式。具体字段与操作见 [导入、风格与媒体](docs/导入风格与媒体.md)。Alpha 的版本、兼容性与功能开放以其官方说明为准，本项目不附带 Alpha，也不要求打开其 HTTP API。
+这里的 JSON 是普通导出文件，不是微信官方加密备份。语忆AI不能直接读取微信官方加密备份、数据库、HTML、Excel 或其他工具的任意 JSON 格式。具体字段与操作见 [导入、风格与媒体](docs/导入风格与媒体.md)。Alpha 的版本、兼容性与功能开放以其官方说明为准，本项目不附带 Alpha，也不要求打开其 HTTP API。
 
 ## 隐私
 

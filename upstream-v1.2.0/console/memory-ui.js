@@ -1,4 +1,4 @@
-/* AI语忆 memory editor. Loads only on explicit navigation, search or refresh. */
+/* 语忆AI memory editor. Loads only on explicit navigation, search or refresh. */
 (() => {
   'use strict';
   const root = document.getElementById('tab-memory');

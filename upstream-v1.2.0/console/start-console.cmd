@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 >nul
-title AI语忆
+title 语忆AI
 cd /d "%~dp0.."
 
 rem Keep this file pure ASCII. cmd.exe parses it with the system codepage,
@@ -18,7 +18,7 @@ if not errorlevel 1 (
 )
 
 echo.
-echo   AI语忆  -  http://127.0.0.1:7788
+echo   语忆AI  -  http://127.0.0.1:7788
 echo   Close this window to stop the console.
 echo.
 start "" http://127.0.0.1:7788

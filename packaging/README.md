@@ -1,9 +1,9 @@
-# AI语忆 Windows 完整离线安装包
+# 语忆AI Windows 完整离线安装包
 
 发布包内置官方 Python 3.12.10（64 位）、Node.js 和 Pillow / numpy / jieba / qrcode。
-用户无需安装 Python、Node.js 或运行命令；双击 `AI语忆-Setup.exe` 即安装到当前用户的
+用户无需安装 Python、Node.js 或运行命令；双击 `语忆AI-Setup.exe` 即安装到当前用户的
 `%LOCALAPPDATA%\Programs\AIYuYi`，创建桌面快捷方式并打开本地控制台。
-便携版解压后双击 `AI语忆.exe`。升级保留既有 `data`、`private` 和设置。
+便携版解压后双击 `语忆AI.exe`。升级保留既有 `data`、`private` 和设置。
 
 仅支持 Windows 10/11 64 位。安装无需管理员权限。安装完成后不依赖下载目录；
 联网仅用于微信登录和用户配置的模型接口。程序首次使用仍需用户自己的登录与 API 配置。
@@ -33,14 +33,14 @@
 首次构建从官方 Python / Node 网站以及 PyPI 获取运行时和依赖；用户安装过程全离线。
 SHA256 清单随产物输出，运行时版本、官方来源和摘要写入 `RUNTIME-MANIFEST.json`。
 
-产物：`AIYuYi/`、`AI语忆-portable.zip`、`AI语忆-Setup.exe`、`SHA256SUMS.txt`。
+产物：`YuYiAI/`、`语忆AI-portable.zip`、`语忆AI-Setup.exe`、`SHA256SUMS.txt`。
 构建器会在移除 PATH 中 Python 和 Node 的情况下检查内置解释器和四个依赖导入。
 完整控制台与微信流程还需针对独立构建目录另做验收。
 
 测试安装命令（普通用户无需这些参数）：
 
 ```powershell
-./AI语忆-Setup.exe /quiet /target D:\build\install-test /no-launch /no-shortcut
+./语忆AI-Setup.exe /quiet /target D:\build\install-test /no-launch /no-shortcut
 ```
 
 暂未提供自动卸载；退出程序后可手动移除安装目录和快捷方式。

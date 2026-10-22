@@ -10,4 +10,4 @@ if (-not $NodeExecutable) { $NodeExecutable = (Get-Command node -ErrorAction Sto
 $packageArguments = @('-X', 'utf8', (Join-Path $PSScriptRoot 'build_portable.py'), '--source', $SourceRoot, '--output', $OutputRoot, '--node', $NodeExecutable)
 if ($CacheRoot) { $packageArguments += @('--cache', $CacheRoot) }
 & $PythonExecutable @packageArguments
-if ($LASTEXITCODE -ne 0) { throw 'AIYuYi package build failed. See the error above.' }
+if ($LASTEXITCODE -ne 0) { throw 'YuYiAI package build failed. See the error above.' }

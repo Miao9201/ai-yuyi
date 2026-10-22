@@ -74,7 +74,7 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     cache = Path(args.cache).resolve() if args.cache else output / 'download-cache'
     cache.mkdir(parents=True, exist_ok=True)
-    portable = output / 'AIYuYi'
+    portable = output / 'YuYiAI'
     portable.mkdir()
     for path, relative in files:
         destination = portable / relative
@@ -109,20 +109,20 @@ def main():
         urllib.request.urlretrieve(node_license_url, node_license)
     shutil.copy2(node_license, node_root / 'LICENSE')
     compiler = Path(os.environ['WINDIR']) / 'Microsoft.NET' / 'Framework64' / 'v4.0.30319' / 'csc.exe'
-    run(compiler, '/nologo', '/target:winexe', '/optimize+', '/reference:System.Windows.Forms.dll', '/out:' + str(portable / 'AI语忆.exe'), source / 'desktop-launcher.cs')
+    run(compiler, '/nologo', '/target:winexe', '/optimize+', '/reference:System.Windows.Forms.dll', '/out:' + str(portable / '语忆AI.exe'), source / 'desktop-launcher.cs')
     runtime_info = {'python': {'version': '3.12.10', 'url': PYTHON_URL, 'archiveSha256': digest(python_zip)}, 'node': {'version': node_version, 'sha256': digest(node_root / 'node.exe'), 'licenseUrl': node_license_url}, 'dependencies': DEPENDENCIES}
     (portable / 'RUNTIME-MANIFEST.json').write_text(json.dumps(runtime_info, ensure_ascii=False, indent=2), encoding='utf-8')
     env = os.environ.copy()
     env.update(PATH=str(Path(os.environ['WINDIR']) / 'System32'), PYTHONPATH='', PYTHONHOME='')
     run(python_root / 'python.exe', '-B', '-c', "import sys,PIL,numpy,jieba,qrcode,runtime_paths;print('Standalone imports OK',sys.version.split()[0]);print(runtime_paths.node_executable())", cwd=portable, env=env)
     run(node_root / 'node.exe', '--version', env=env)
-    archive_path = output / 'AI语忆-portable.zip'
+    archive_path = output / '语忆AI-portable.zip'
     with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(portable.rglob('*')):
             if path.is_file() and '__pycache__' not in path.parts:
                 archive.write(path, path.relative_to(portable).as_posix())
-    run(compiler, '/nologo', '/target:winexe', '/optimize+', '/reference:System.Windows.Forms.dll', '/reference:System.IO.Compression.dll', '/reference:System.IO.Compression.FileSystem.dll', '/resource:' + str(archive_path) + ',payload.zip', '/out:' + str(output / 'AI语忆-Setup.exe'), source / 'packaging' / 'installer.cs')
-    assets = [archive_path, output / 'AI语忆-Setup.exe']
+    run(compiler, '/nologo', '/target:winexe', '/optimize+', '/reference:System.Windows.Forms.dll', '/reference:System.IO.Compression.dll', '/reference:System.IO.Compression.FileSystem.dll', '/resource:' + str(archive_path) + ',payload.zip', '/out:' + str(output / '语忆AI-Setup.exe'), source / 'packaging' / 'installer.cs')
+    assets = [archive_path, output / '语忆AI-Setup.exe']
     (output / 'SHA256SUMS.txt').write_text(''.join(digest(path) + '  ' + path.name + '\n' for path in assets), encoding='utf-8')
     print(json.dumps({'portable': str(portable), 'zip': str(archive_path), 'installer': str(assets[1])}, ensure_ascii=False))
 

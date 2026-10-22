@@ -12,7 +12,7 @@ from settings import DATA,ROOT,KEYFILE,load_config,save_config
 def running():
     kernel=ctypes.windll.kernel32
     kernel.OpenMutexW.restype=ctypes.c_void_p
-    handle=kernel.OpenMutexW(0x100000,False,'Local\\AIYuYiBot_SingleWorker')
+    handle=kernel.OpenMutexW(0x100000,False,'Local\\YuYiAIBot_SingleWorker')
     if handle:kernel.CloseHandle(ctypes.c_void_p(handle))
     return bool(handle)
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * AI语忆 启动器（带 PID 管理）
+ * 语忆AI 启动器（带 PID 管理）
  *
  * 存在的理由：之前重启桥时用 `Stop-Process node -Force` 杀掉所有 node 进程，
  * 把 DSH Web（3080 端口）一起杀了，导致用户那边老是断联。
@@ -47,9 +47,9 @@ function isAlive(pid) {
 
 function status() {
   const pid = readPid();
-  if (!pid) { console.log('AI语忆: 未运行（无 PID 记录）'); return 1; }
-  if (!isAlive(pid)) { console.log(`AI语忆: 已退出（PID ${pid} 不存在，记录已过期）`); return 1; }
-  console.log(`AI语忆: 运行中  PID=${pid}`);
+  if (!pid) { console.log('语忆AI: 未运行（无 PID 记录）'); return 1; }
+  if (!isAlive(pid)) { console.log(`语忆AI: 已退出（PID ${pid} 不存在，记录已过期）`); return 1; }
+  console.log(`语忆AI: 运行中  PID=${pid}`);
   const log = existsSync(LOG_FILE) ? readFileSync(LOG_FILE, 'utf8') : '';
   const lines = log.split('\n').filter((l) => l.trim());
   console.log('最后日志: ' + (lines[lines.length - 1] || '(空)'));
@@ -114,7 +114,7 @@ function start() {
   closeSync(outFd);
   closeSync(errFd);
 
-  console.log(`已启动 AI语忆（mode=${mode}）PID=${child.pid}`);
+  console.log(`已启动 语忆AI（mode=${mode}）PID=${child.pid}`);
   console.log(`日志: ${LOG_FILE}`);
   console.log(`停止: node launch.js --stop`);
   return 0;
