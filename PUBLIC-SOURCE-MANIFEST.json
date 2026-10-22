@@ -33,7 +33,7 @@
     "memory_editing.py": "321723a41733e66261d984b2dd813e77865fcbcdb7406d214024cdd63bf802d8",
     "memory_editor.py": "17f21d9ba644e0413d8ef68da7b9a95fd6bdc144a758ba1a5d187cc46d1dc455",
     "packaging/README.md": "d5412a84a72d8df31e4d5baa5119576e43ab352da2cdc7d8211fab11f6c093b2",
-    "packaging/build-portable.ps1": "2242c359b0a597923c3b13cc285e48eae16bb6cd572e0a3a1183f64a5557d4ef",
+    "packaging/build-portable.ps1": "c5149f1035bf38c1d4e81cd1a68e62422de51a69634f5275f93eb1c6d4d1adc7",
     "packaging/build_portable.py": "3b00f74de3b793e1759f26555d76e2f647a28cd3fc914820c0e5fdf39e0f7a57",
     "packaging/installer.cs": "1a3ab380d14b74a99f43463998219e93e4e10917c5f1dcda35ea9b7e001c7f9f",
     "packaging/review_source.py": "a727aa705394df5c764c1a22dd4330ced10182481a9bb5440d4f9189707b574d",
