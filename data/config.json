@@ -1,0 +1,8 @@
+{
+  "contact": "用户",
+  "model": "deepseek-chat",
+  "api_base_url": "https://api.deepseek.com",
+  "poll_seconds": 2.5,
+  "enabled": false,
+  "transport": "ilink"
+}

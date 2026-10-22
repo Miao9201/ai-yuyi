@@ -1,0 +1,4473 @@
+{
+  "builtin": true,
+  "source_root": "builtin",
+  "media_subdir": "stickers",
+  "items": [
+    {
+      "id": "l_44e27740a24e",
+      "uri": "stickers/伤心难过/伤心难过_1.jpg",
+      "kind": "emoji",
+      "caption": "伤心难过表情",
+      "tags": [
+        "伤心难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_cfc2df94ee38",
+      "uri": "stickers/伤心难过/伤心难过_2.jpg",
+      "kind": "emoji",
+      "caption": "伤心难过表情",
+      "tags": [
+        "伤心难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_42a5896cde14",
+      "uri": "stickers/伤心难过/伤心难过_3.jpg",
+      "kind": "emoji",
+      "caption": "伤心难过表情",
+      "tags": [
+        "伤心难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_aa413ebb658b",
+      "uri": "stickers/卖萌搞笑/web01_002.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_23b10c3f645c",
+      "uri": "stickers/卖萌搞笑/web01_003.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_19e309e59e4b",
+      "uri": "stickers/卖萌搞笑/web01_007.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b5fab799ef40",
+      "uri": "stickers/卖萌搞笑/web01_008.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_7d6d465ec087",
+      "uri": "stickers/卖萌搞笑/web02_009.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6e696e49ece9",
+      "uri": "stickers/卖萌搞笑/web02_010.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6a50b239fd58",
+      "uri": "stickers/卖萌搞笑/web02_015.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_3da8a6539bb2",
+      "uri": "stickers/卖萌搞笑/web02_016.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b58b6faffcdc",
+      "uri": "stickers/卖萌搞笑/web03_019.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_f0931907f809",
+      "uri": "stickers/卖萌搞笑/web04_025.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a331d7128b4e",
+      "uri": "stickers/卖萌搞笑/web04_027.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_5101a4a41828",
+      "uri": "stickers/卖萌搞笑/web05_032.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b96b88e0b167",
+      "uri": "stickers/卖萌搞笑/web06_037.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_0154fd4dc08f",
+      "uri": "stickers/卖萌搞笑/web06_041.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_fde4c50eb401",
+      "uri": "stickers/卖萌搞笑/web06_043.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_8281651c5c4c",
+      "uri": "stickers/卖萌搞笑/web07_045.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ffed22c08c07",
+      "uri": "stickers/卖萌搞笑/web07_047.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_469d1c8bc7eb",
+      "uri": "stickers/卖萌搞笑/web07_049.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_44c1c4813b2a",
+      "uri": "stickers/卖萌搞笑/web07_052.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_0c74141f8c97",
+      "uri": "stickers/卖萌搞笑/web08_053.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_73575ca43ab5",
+      "uri": "stickers/卖萌搞笑/web08_054.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b7d650678e11",
+      "uri": "stickers/卖萌搞笑/web08_056.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_17a4518df7cb",
+      "uri": "stickers/卖萌搞笑/web08_057.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_28ee9361fa1e",
+      "uri": "stickers/卖萌搞笑/web08_060.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_d3a713d8df77",
+      "uri": "stickers/卖萌搞笑/web09_064.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_291726b6702f",
+      "uri": "stickers/卖萌搞笑/web09_066.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_789c151bf1c7",
+      "uri": "stickers/卖萌搞笑/web09_067.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_333928a48f5b",
+      "uri": "stickers/卖萌搞笑/web10_071.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_7cf43f092c3c",
+      "uri": "stickers/卖萌搞笑/web10_074.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_4a43bea41b49",
+      "uri": "stickers/卖萌搞笑/web10_075.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_d8b6eef7de78",
+      "uri": "stickers/卖萌搞笑/web11_077.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a4aaf555544c",
+      "uri": "stickers/卖萌搞笑/web12_086.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_3520993a4862",
+      "uri": "stickers/卖萌搞笑/web12_087.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_48034f06015e",
+      "uri": "stickers/卖萌搞笑/web12_088.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b15a7eeef850",
+      "uri": "stickers/卖萌搞笑/web12_089.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c67a27c21bd2",
+      "uri": "stickers/卖萌搞笑/web12_090.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_014a5d631248",
+      "uri": "stickers/卖萌搞笑/web12_091.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_77fbbcd2800c",
+      "uri": "stickers/卖萌搞笑/web13_095.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e5d24d277883",
+      "uri": "stickers/卖萌搞笑/web13_099.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_f41b715299cc",
+      "uri": "stickers/卖萌搞笑/web14_101.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_adda794f324c",
+      "uri": "stickers/卖萌搞笑/web14_102.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_8506da49eee9",
+      "uri": "stickers/卖萌搞笑/web14_103.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a2df17056e8c",
+      "uri": "stickers/卖萌搞笑/web14_105.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_004b08274820",
+      "uri": "stickers/卖萌搞笑/web15_109.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c1c7ea6ff945",
+      "uri": "stickers/卖萌搞笑/web15_110.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_293bc19424a2",
+      "uri": "stickers/卖萌搞笑/web17_120.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_649f4efa3506",
+      "uri": "stickers/卖萌搞笑/web17_121.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_81a11bc1014d",
+      "uri": "stickers/卖萌搞笑/web17_124.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_04fbb7608849",
+      "uri": "stickers/卖萌搞笑/web19_134.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_85647f539131",
+      "uri": "stickers/卖萌搞笑/web19_135.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_13e995898e43",
+      "uri": "stickers/卖萌搞笑/web19_136.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_dfdbca54e537",
+      "uri": "stickers/卖萌搞笑/web19_137.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_0dc288cd41a7",
+      "uri": "stickers/卖萌搞笑/web19_139.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_71661cd5f0da",
+      "uri": "stickers/卖萌搞笑/web19_140.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_29d02c5739ac",
+      "uri": "stickers/卖萌搞笑/web19_141.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_651d257c8554",
+      "uri": "stickers/卖萌搞笑/web20_143.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_72f60a27451d",
+      "uri": "stickers/卖萌搞笑/web21_150.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_17471664c207",
+      "uri": "stickers/卖萌搞笑/web21_152.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c9ea95aa6db7",
+      "uri": "stickers/卖萌搞笑/web22_153.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b37f214428a8",
+      "uri": "stickers/卖萌搞笑/web22_155.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b307cf3ef654",
+      "uri": "stickers/卖萌搞笑/web22_157.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9e2f94aeda95",
+      "uri": "stickers/卖萌搞笑/web22_158.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_fcabd3c63efc",
+      "uri": "stickers/卖萌搞笑/卖萌搞笑_1.gif",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_7bc76fbe8731",
+      "uri": "stickers/卖萌搞笑/卖萌搞笑_2.jpg",
+      "kind": "emoji",
+      "caption": "卖萌搞笑表情",
+      "tags": [
+        "卖萌搞笑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c556689d21e8",
+      "uri": "stickers/喜欢暧昧/喜欢暧昧_1.jpg",
+      "kind": "emoji",
+      "caption": "喜欢暧昧表情",
+      "tags": [
+        "喜欢暧昧"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_12d1ca257ce2",
+      "uri": "stickers/喜欢暧昧/喜欢暧昧_2.gif",
+      "kind": "emoji",
+      "caption": "喜欢暧昧表情",
+      "tags": [
+        "喜欢暧昧"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_2ba7854d2d49",
+      "uri": "stickers/喜欢暧昧/喜欢暧昧_3.jpg",
+      "kind": "emoji",
+      "caption": "喜欢暧昧表情",
+      "tags": [
+        "喜欢暧昧"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_41cfe7bd22ac",
+      "uri": "stickers/喜欢暧昧/喜欢暧昧_4.jpg",
+      "kind": "emoji",
+      "caption": "喜欢暧昧表情",
+      "tags": [
+        "喜欢暧昧"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_dbf6f5146297",
+      "uri": "stickers/喜欢暧昧/喜欢暧昧_5.jpg",
+      "kind": "emoji",
+      "caption": "喜欢暧昧表情",
+      "tags": [
+        "喜欢暧昧"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c124a2f8fe89",
+      "uri": "stickers/喜欢暧昧/喜欢暧昧_6.jpg",
+      "kind": "emoji",
+      "caption": "喜欢暧昧表情",
+      "tags": [
+        "喜欢暧昧"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_3cd08e10550e",
+      "uri": "stickers/夸赞/011.webp",
+      "kind": "emoji",
+      "caption": "夸赞表情",
+      "tags": [
+        "夸赞"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_2a3352987125",
+      "uri": "stickers/夸赞/20180630195131_scxpf.jpg",
+      "kind": "emoji",
+      "caption": "夸赞表情",
+      "tags": [
+        "夸赞"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_84314c2c23e6",
+      "uri": "stickers/夸赞/66f8971e162c9fc849aabd21f577e8fd99906360152fb-CxvIom_fw658.webp",
+      "kind": "emoji",
+      "caption": "夸赞表情",
+      "tags": [
+        "夸赞"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_36d21239d047",
+      "uri": "stickers/夸赞/67f6a86687da9ZCZ.jpg",
+      "kind": "emoji",
+      "caption": "夸赞表情",
+      "tags": [
+        "夸赞"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_5e26172fd707",
+      "uri": "stickers/夸赞/68052e8abeca3760.jpg",
+      "kind": "emoji",
+      "caption": "夸赞表情",
+      "tags": [
+        "夸赞"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ae1e44802ff4",
+      "uri": "stickers/夸赞/684dae221c181NwN.jpg",
+      "kind": "emoji",
+      "caption": "夸赞表情",
+      "tags": [
+        "夸赞"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_574b07be1866",
+      "uri": "stickers/夸赞/7015.png_860.png",
+      "kind": "emoji",
+      "caption": "夸赞表情",
+      "tags": [
+        "夸赞"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_740448f8ee1e",
+      "uri": "stickers/夸赞/web01_005.jpg",
+      "kind": "emoji",
+      "caption": "夸赞表情",
+      "tags": [
+        "夸赞"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_117274d5b4ae",
+      "uri": "stickers/夸赞/web05_029.gif",
+      "kind": "emoji",
+      "caption": "夸赞表情",
+      "tags": [
+        "夸赞"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_1a5fc929ffbf",
+      "uri": "stickers/夸赞/web13_094.gif",
+      "kind": "emoji",
+      "caption": "夸赞表情",
+      "tags": [
+        "夸赞"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9424546ee5eb",
+      "uri": "stickers/害怕/096.webp",
+      "kind": "emoji",
+      "caption": "害怕表情",
+      "tags": [
+        "害怕"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9e49d30c2212",
+      "uri": "stickers/害怕/aLSdz1nVc07L5qj.jpg",
+      "kind": "emoji",
+      "caption": "害怕表情",
+      "tags": [
+        "害怕"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_dcb8c3dfbb1c",
+      "uri": "stickers/害怕/LySnNn7HqJqN2d.jpg",
+      "kind": "emoji",
+      "caption": "害怕表情",
+      "tags": [
+        "害怕"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_04f2c22ca5e5",
+      "uri": "stickers/害怕/web17_122.jpg",
+      "kind": "emoji",
+      "caption": "害怕表情",
+      "tags": [
+        "害怕"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_35d8858067ca",
+      "uri": "stickers/平常/web02_011.gif",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6e5664ee993e",
+      "uri": "stickers/平常/web03_022.gif",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6ab78245d673",
+      "uri": "stickers/平常/web05_034.gif",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_885dc3ff06cb",
+      "uri": "stickers/平常/web07_046.gif",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_680ea8260ae4",
+      "uri": "stickers/平常/web09_065.gif",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_8449d9beb4f4",
+      "uri": "stickers/平常/web09_068.gif",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_168b44afde47",
+      "uri": "stickers/平常/web11_078.jpg",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_adeaf58fcde1",
+      "uri": "stickers/平常/web13_100.gif",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b796c3e6871e",
+      "uri": "stickers/平常/web16_114.gif",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_4c713f09db19",
+      "uri": "stickers/平常/web19_138.jpg",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_89013b274075",
+      "uri": "stickers/平常/web21_146.jpg",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_1591be1216d1",
+      "uri": "stickers/平常/web21_151.jpg",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_57edc9592a9c",
+      "uri": "stickers/平常/平常_1.jpg",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_2201dc7152e8",
+      "uri": "stickers/平常/平常_2.jpg",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_29b5646b0610",
+      "uri": "stickers/平常/平常_3.jpg",
+      "kind": "emoji",
+      "caption": "平常表情",
+      "tags": [
+        "平常"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e071ef109aa8",
+      "uri": "stickers/开心/015.webp",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_4a43b18e9f2e",
+      "uri": "stickers/开心/091.webp",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6277edfc999f",
+      "uri": "stickers/开心/11-240204110551.gif",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_aaa61b93f1ea",
+      "uri": "stickers/开心/11K888piCt4T.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_3b99b45b3385",
+      "uri": "stickers/开心/20200412173734_UVnsw.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_f6290ed79e1c",
+      "uri": "stickers/开心/20200412173736_VnnEh.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_2a25c9559cfa",
+      "uri": "stickers/开心/20200412173737_3URKr.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_0ae7d55c25e8",
+      "uri": "stickers/开心/20200412173737_iuQ4f.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_94b27fc69dbc",
+      "uri": "stickers/开心/20200412173737_Tci3v.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_1e0eb793743a",
+      "uri": "stickers/开心/20210921234324_0badc.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9af6f90e6bd6",
+      "uri": "stickers/开心/20230219020355_dada6.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ebb53b5ef9dd",
+      "uri": "stickers/开心/2628.png_860.png",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_bb47c2f7e418",
+      "uri": "stickers/开心/2YSGdpmjt6EMZPN.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_124308d8bfb1",
+      "uri": "stickers/开心/5446.png_860.png",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_cdc45c48bcad",
+      "uri": "stickers/开心/55w888piCNIV.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_064ee225317a",
+      "uri": "stickers/开心/568.png!detail.oblique.png",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6e48229b4a23",
+      "uri": "stickers/开心/5c743f44d688d43f5ce1c6f73b1ed21b0ff43be0.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_1a93c1be424d",
+      "uri": "stickers/开心/681192d0208c4rsX.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_86864ff591db",
+      "uri": "stickers/开心/7061a425ab18972b984337cca0cd7b899e510a37.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_77d932365163",
+      "uri": "stickers/开心/799.gif!detail.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_cfeab07742f2",
+      "uri": "stickers/开心/7a9793cdb91ad258af6c615b79017ea7667934a53882-pC8ZaS_fw658.webp",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_00dcb1acabf0",
+      "uri": "stickers/开心/80y888piCTMk.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_8fa062fb5285",
+      "uri": "stickers/开心/8655-5989bf786296b85bf4b8a89d5a5acf74.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_24a602b61206",
+      "uri": "stickers/开心/9388.png_860.png",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_3608371f9446",
+      "uri": "stickers/开心/EWSq85ezUVwpzGp.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_1b1c0e0984e6",
+      "uri": "stickers/开心/GgSOQXp4TdZLBo5.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_0e6ef7148dac",
+      "uri": "stickers/开心/gVS22Da6UQXXOm6.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e95f18d72752",
+      "uri": "stickers/开心/v2-57a5fe701d2385df51d82794697bd28d_r.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_f0cd86a7c9d2",
+      "uri": "stickers/开心/v2-bea11d4d726580f99e85305710107d13_r.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_2248b8f9548d",
+      "uri": "stickers/开心/v2-e8087e59725a2bd7627e282bc1dd47a0_r.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_afd64aac95e4",
+      "uri": "stickers/开心/web02_014.gif",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e5a30b15bfdc",
+      "uri": "stickers/开心/web04_028.png",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ffb69e685563",
+      "uri": "stickers/开心/web06_040.gif",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_503bc10b3315",
+      "uri": "stickers/开心/web09_061.gif",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_23c4e3249433",
+      "uri": "stickers/开心/web13_097.gif",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a4a6c7429136",
+      "uri": "stickers/开心/web13_098.gif",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c108ed9cca31",
+      "uri": "stickers/开心/web17_118.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_38f48b65d30a",
+      "uri": "stickers/开心/web20_142.gif",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_dbc92399549d",
+      "uri": "stickers/开心/web22_160.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_bd73307e7d8a",
+      "uri": "stickers/开心/开心_1.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_64efc397e261",
+      "uri": "stickers/开心/开心_2.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_22cfb25d3ca8",
+      "uri": "stickers/开心/开心_3.jpg",
+      "kind": "emoji",
+      "caption": "开心表情",
+      "tags": [
+        "开心"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ab3b81cbdf17",
+      "uri": "stickers/无聊/20220729015922_ccb1b.jpg",
+      "kind": "emoji",
+      "caption": "无聊表情",
+      "tags": [
+        "无聊"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_d4c5e2cc91f6",
+      "uri": "stickers/无语/20230324044542_2f62d.thumb.400_0.jpg",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6d0bfff3a248",
+      "uri": "stickers/无语/5462.png_860.png",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_dcdff3a0a0f0",
+      "uri": "stickers/无语/6b64e4550923dd547982736d9709b3de9d8248bf.jpg",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e9dcf15eaa81",
+      "uri": "stickers/无语/aLSdy3nPu0WPvNb.jpg",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_eb58e1401bdb",
+      "uri": "stickers/无语/web03_017.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_778ed2adc562",
+      "uri": "stickers/无语/web03_018.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c7b0820b7343",
+      "uri": "stickers/无语/web03_020.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_cc3bb1ec7531",
+      "uri": "stickers/无语/web03_023.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_7a6cc86e9a9d",
+      "uri": "stickers/无语/web03_024.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_3f1837dbd83b",
+      "uri": "stickers/无语/web05_036.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_f9dcd0710c34",
+      "uri": "stickers/无语/web08_059.jpg",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ac453071ddcc",
+      "uri": "stickers/无语/web09_063.jpg",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a032939162dd",
+      "uri": "stickers/无语/web11_079.jpg",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c4dc403da6a7",
+      "uri": "stickers/无语/web11_081.jpg",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_dee3c21c1168",
+      "uri": "stickers/无语/web12_085.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_59efcd36a9b4",
+      "uri": "stickers/无语/web13_096.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_4af6ed0b52d0",
+      "uri": "stickers/无语/web16_113.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c5645d497b6a",
+      "uri": "stickers/无语/web21_148.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_5d6d2233db74",
+      "uri": "stickers/无语/web22_154.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_d88645bd75ba",
+      "uri": "stickers/无语/web22_156.gif",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9669c17fd842",
+      "uri": "stickers/无语/web22_159.jpg",
+      "kind": "emoji",
+      "caption": "无语表情",
+      "tags": [
+        "无语"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_4063573c56f5",
+      "uri": "stickers/渴望/1976e791f603738d5f604727f51bb051f819ec03.jpg",
+      "kind": "emoji",
+      "caption": "渴望表情",
+      "tags": [
+        "渴望"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_15505a41f77b",
+      "uri": "stickers/渴望/web01_004.gif",
+      "kind": "emoji",
+      "caption": "渴望表情",
+      "tags": [
+        "渴望"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e8c28a611d98",
+      "uri": "stickers/渴望/web07_051.gif",
+      "kind": "emoji",
+      "caption": "渴望表情",
+      "tags": [
+        "渴望"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e720865173fa",
+      "uri": "stickers/渴望/web11_080.jpg",
+      "kind": "emoji",
+      "caption": "渴望表情",
+      "tags": [
+        "渴望"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9ae0af37c90f",
+      "uri": "stickers/渴望/web14_104.jpg",
+      "kind": "emoji",
+      "caption": "渴望表情",
+      "tags": [
+        "渴望"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6b5b0e1f7c88",
+      "uri": "stickers/渴望/web17_119.jpg",
+      "kind": "emoji",
+      "caption": "渴望表情",
+      "tags": [
+        "渴望"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_267bbb167919",
+      "uri": "stickers/渴望/web17_123.jpg",
+      "kind": "emoji",
+      "caption": "渴望表情",
+      "tags": [
+        "渴望"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_af41e53b0cd8",
+      "uri": "stickers/渴望/web20_144.gif",
+      "kind": "emoji",
+      "caption": "渴望表情",
+      "tags": [
+        "渴望"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_564457da0c42",
+      "uri": "stickers/生气/013.webp",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a82d8b104567",
+      "uri": "stickers/生气/073.webp",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_5020193a9272",
+      "uri": "stickers/生气/090.webp",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_498a8d111deb",
+      "uri": "stickers/生气/093.webp",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e9dc9553bd8f",
+      "uri": "stickers/生气/133.png!detail.oblique.png",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b04fe5f31b90",
+      "uri": "stickers/生气/169.webp",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e88a6fc3d6ad",
+      "uri": "stickers/生气/20180808022140_2HxCB.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9bbc83951e1d",
+      "uri": "stickers/生气/20200907235845_aXBPk.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_7ba31ef4de13",
+      "uri": "stickers/生气/20220318115503_84413.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_34ef08035b7c",
+      "uri": "stickers/生气/20221108233928_f1ae5.thumb.400_0.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_57572769686e",
+      "uri": "stickers/生气/27y888piCsMz.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_470249876c87",
+      "uri": "stickers/生气/5222-iieqapu1010982.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_583a40740b82",
+      "uri": "stickers/生气/544.png!detail.oblique.png",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_1d226ec80058",
+      "uri": "stickers/生气/562.webp",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_633f3b8a3ae5",
+      "uri": "stickers/生气/63125415345670Ix.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_545b6b0b5e92",
+      "uri": "stickers/生气/633f290de1340eSR.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_08e7e72e5210",
+      "uri": "stickers/生气/6356e2a03cafdKbo.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_403e6917ed08",
+      "uri": "stickers/生气/67cc4f46a7dc80oq.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_3754c4feb2bd",
+      "uri": "stickers/生气/67f1f016624fddT5.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_de80739a173c",
+      "uri": "stickers/生气/67f7fca52a3dfmxe.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_845800d12269",
+      "uri": "stickers/生气/682b63d849f85fc4.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_0eeeb08004f0",
+      "uri": "stickers/生气/69154eff1a375dBv.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ebda4e015dce",
+      "uri": "stickers/生气/71S888piCVvp.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6e6ac4836d4a",
+      "uri": "stickers/生气/7450.png_860.png",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_dbdb6b390839",
+      "uri": "stickers/生气/7712.png_860.png",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_18a8c9ed2276",
+      "uri": "stickers/生气/8766.png_860.png",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c7f5f3844658",
+      "uri": "stickers/生气/DWSG3aPfd5Y1Yj.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6bd974abe2b9",
+      "uri": "stickers/生气/n6S05J4Lc9AVXmv.thumb.1000_0.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_1d806f1127df",
+      "uri": "stickers/生气/oVSDE8a1TgAaLML.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_4444dec4cbef",
+      "uri": "stickers/生气/v2-28904625aaea1ac60eae421cf4d2f562_r.png",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_75066eb73904",
+      "uri": "stickers/生气/v2-5ba4fed154055439d00e195497d17ef1_r.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_0166b2164a9f",
+      "uri": "stickers/生气/v2-91777cb4341fc7a004eb71c974c83428_b.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ed46a70eea84",
+      "uri": "stickers/生气/v2-9fd559de9473a271fbd15bee988dfda4_b.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_5e3dd6fcb1f3",
+      "uri": "stickers/生气/v2-d336f6793ea3d3a17243872d7c15dda7_hd.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_0aea57586dda",
+      "uri": "stickers/生气/w700d1q75cms.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_10a1490487f8",
+      "uri": "stickers/生气/web01_001.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_46fd83607dbd",
+      "uri": "stickers/生气/web02_012.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_00179e4b2717",
+      "uri": "stickers/生气/web02_013.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_7dbab64f877f",
+      "uri": "stickers/生气/web03_021.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_1b8780d2a3d4",
+      "uri": "stickers/生气/web05_031.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_607998093eee",
+      "uri": "stickers/生气/web05_033.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a79d70385bd7",
+      "uri": "stickers/生气/web08_058.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_5953cd77a0f1",
+      "uri": "stickers/生气/web10_073.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ed861d8c225f",
+      "uri": "stickers/生气/web10_076.gif",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e71830084e61",
+      "uri": "stickers/生气/web21_145.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ba884e53f47b",
+      "uri": "stickers/生气/wgSJzGJ6H98NLJN.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_876f94c06441",
+      "uri": "stickers/生气/生气_1.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_eb0d59c5476c",
+      "uri": "stickers/生气/生气_2.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_48602d2968df",
+      "uri": "stickers/生气/生气_3.jpg",
+      "kind": "emoji",
+      "caption": "生气表情",
+      "tags": [
+        "生气"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b85f6ef5bbf4",
+      "uri": "stickers/疑惑/146.webp",
+      "kind": "emoji",
+      "caption": "疑惑表情",
+      "tags": [
+        "疑惑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e90929ab4039",
+      "uri": "stickers/疑惑/20191013013453_LrJEd.jpg",
+      "kind": "emoji",
+      "caption": "疑惑表情",
+      "tags": [
+        "疑惑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_5583391c0ec6",
+      "uri": "stickers/疑惑/20220324165300_026fd.jpg",
+      "kind": "emoji",
+      "caption": "疑惑表情",
+      "tags": [
+        "疑惑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e1b0327912e1",
+      "uri": "stickers/疑惑/6848696def6f9lGl.jpg",
+      "kind": "emoji",
+      "caption": "疑惑表情",
+      "tags": [
+        "疑惑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ce26b31610f1",
+      "uri": "stickers/疑惑/8gSZYLyjtgnZ3bl.thumb.1000_0.jpg",
+      "kind": "emoji",
+      "caption": "疑惑表情",
+      "tags": [
+        "疑惑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_2d78c325e125",
+      "uri": "stickers/疑惑/web01_006.jpg",
+      "kind": "emoji",
+      "caption": "疑惑表情",
+      "tags": [
+        "疑惑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_f270a97d1cdd",
+      "uri": "stickers/疑惑/web06_042.gif",
+      "kind": "emoji",
+      "caption": "疑惑表情",
+      "tags": [
+        "疑惑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_1c8c3c2e8d45",
+      "uri": "stickers/疑惑/web07_048.gif",
+      "kind": "emoji",
+      "caption": "疑惑表情",
+      "tags": [
+        "疑惑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_10e6102284a9",
+      "uri": "stickers/疑惑/web13_093.gif",
+      "kind": "emoji",
+      "caption": "疑惑表情",
+      "tags": [
+        "疑惑"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_d7323e8b8306",
+      "uri": "stickers/疲惫/029.webp",
+      "kind": "emoji",
+      "caption": "疲惫表情",
+      "tags": [
+        "疲惫"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9042bd4faa04",
+      "uri": "stickers/疲惫/218.webp",
+      "kind": "emoji",
+      "caption": "疲惫表情",
+      "tags": [
+        "疲惫"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_86a23620d53e",
+      "uri": "stickers/疲惫/564.webp",
+      "kind": "emoji",
+      "caption": "疲惫表情",
+      "tags": [
+        "疲惫"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c14be9b6c4b2",
+      "uri": "stickers/疲惫/gj-meme-564.jpg",
+      "kind": "emoji",
+      "caption": "疲惫表情",
+      "tags": [
+        "疲惫"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ef5902a8bae2",
+      "uri": "stickers/疲惫/web06_039.jpg",
+      "kind": "emoji",
+      "caption": "疲惫表情",
+      "tags": [
+        "疲惫"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_860097b53dcb",
+      "uri": "stickers/疲惫/web09_062.jpg",
+      "kind": "emoji",
+      "caption": "疲惫表情",
+      "tags": [
+        "疲惫"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b09e80c15979",
+      "uri": "stickers/疲惫/web10_070.gif",
+      "kind": "emoji",
+      "caption": "疲惫表情",
+      "tags": [
+        "疲惫"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e60762835291",
+      "uri": "stickers/疲惫/web10_072.gif",
+      "kind": "emoji",
+      "caption": "疲惫表情",
+      "tags": [
+        "疲惫"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ecf9d50ad0e7",
+      "uri": "stickers/疲惫/web11_084.jpg",
+      "kind": "emoji",
+      "caption": "疲惫表情",
+      "tags": [
+        "疲惫"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_1a6b6ed9840a",
+      "uri": "stickers/疲惫/web12_092.gif",
+      "kind": "emoji",
+      "caption": "疲惫表情",
+      "tags": [
+        "疲惫"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_3a255ea940a5",
+      "uri": "stickers/疲惫/web16_115.gif",
+      "kind": "emoji",
+      "caption": "疲惫表情",
+      "tags": [
+        "疲惫"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_7a1f3ad79f47",
+      "uri": "stickers/表达爱意/081.webp",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b99a87c1793f",
+      "uri": "stickers/表达爱意/1mSjEwOLUQNDgax.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_17ec87defa93",
+      "uri": "stickers/表达爱意/20190121082034_WtBc4.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_cdc930d40d45",
+      "uri": "stickers/表达爱意/20200312224256_tbitb.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_4350b6dd1059",
+      "uri": "stickers/表达爱意/20200321075237_fehtf.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_2095e6b61567",
+      "uri": "stickers/表达爱意/20200710214212_tguab.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_1217ec522163",
+      "uri": "stickers/表达爱意/20200901180835_LU4UC.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_69eca8a6135a",
+      "uri": "stickers/表达爱意/20210411113129_STkLf.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9f50f4057a7d",
+      "uri": "stickers/表达爱意/20220607233354_69fb4.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_8320a4e78add",
+      "uri": "stickers/表达爱意/6339.png_860.png",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_37209bd82566",
+      "uri": "stickers/表达爱意/67deec98efa8b3cR.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_71abfaeabf5d",
+      "uri": "stickers/表达爱意/67fbed9d38c61MQg.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_d80c899fa1fe",
+      "uri": "stickers/表达爱意/94z888piC9Di.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_eb6a78d2f923",
+      "uri": "stickers/表达爱意/bYS8dPm5ILDlGEM.thumb.1000_0.gif",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_94a057bec901",
+      "uri": "stickers/表达爱意/R-C.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_34b74c4de195",
+      "uri": "stickers/表达爱意/v2-27bb2636daf80e4ee3eb08577e38f093_r.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_2f2e7aee4c87",
+      "uri": "stickers/表达爱意/v2-41dc389273ccfbb924cef63621fbf51e_r.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9c3d68853a71",
+      "uri": "stickers/表达爱意/v2-4791535060cb25f222ad604eb6fb9a8b_hd.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b1e852c43898",
+      "uri": "stickers/表达爱意/v2-5e65c882c02cd364a71fe6bf0ab3c383_1440w.png",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_71879faffdd2",
+      "uri": "stickers/表达爱意/v2-5ed487a34019ed66fc7641b2c78d51df_r.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_d5e2cefa982a",
+      "uri": "stickers/表达爱意/v2-8047800309de2a271d81df1a2357362e_hd.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_f0441600e579",
+      "uri": "stickers/表达爱意/v2-82d215e43f842aaab42a9d4bd431d66d_hd.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_54badf075552",
+      "uri": "stickers/表达爱意/v2-b076634f26f39b750513a8c5802cdf6c_hd.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a41c6272a9b6",
+      "uri": "stickers/表达爱意/v2-b352fddcdb3329bef4311ee6fc84499c_hd.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_7381e4f028c2",
+      "uri": "stickers/表达爱意/v2-bf254f7a2d0887b141dfd32a7ac01b95_720w.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_74074fc87fea",
+      "uri": "stickers/表达爱意/v2-da694418d01733967b736a36b4dfcefe_r.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_26e7a563ddbb",
+      "uri": "stickers/表达爱意/v2-e0fa1e0e5f642fcffd383649a7e0644d_r.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a07152d1526e",
+      "uri": "stickers/表达爱意/v2-e8f8dee83ddeec536daaabde17ed9114_720w.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_f2e864481717",
+      "uri": "stickers/表达爱意/web05_035.gif",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_0f85099c493d",
+      "uri": "stickers/表达爱意/web06_044.gif",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c8ca9c705515",
+      "uri": "stickers/表达爱意/web07_050.gif",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6432953e222b",
+      "uri": "stickers/表达爱意/web11_082.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_2fc72ec696ec",
+      "uri": "stickers/表达爱意/web15_107.gif",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_80c29cb5a79f",
+      "uri": "stickers/表达爱意/web16_111.gif",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_d6027428f033",
+      "uri": "stickers/表达爱意/web17_125.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_bf721858f327",
+      "uri": "stickers/表达爱意/web18_126.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_eda7bb2efe52",
+      "uri": "stickers/表达爱意/web18_127.jpeg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ad3aa4b5ebef",
+      "uri": "stickers/表达爱意/web18_128.jpeg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_273be5c748d4",
+      "uri": "stickers/表达爱意/web18_129.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e5f90f5400c8",
+      "uri": "stickers/表达爱意/web18_130.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a5ab7c62dbaf",
+      "uri": "stickers/表达爱意/web18_131.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_42edfbffe39a",
+      "uri": "stickers/表达爱意/web18_132.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_46ffb6562eaa",
+      "uri": "stickers/表达爱意/web18_133.jpg",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9c3c6f6bd564",
+      "uri": "stickers/表达爱意/web21_147.gif",
+      "kind": "emoji",
+      "caption": "表达爱意表情",
+      "tags": [
+        "表达爱意"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_b2575adfd314",
+      "uri": "stickers/难过/002.webp",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_d8b3ead6d052",
+      "uri": "stickers/难过/005TGG6vgy1h974y1gvruj30dw0dwt91.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a22a139546e7",
+      "uri": "stickers/难过/006APoFYly8h9z1ci8x3rj30b40b474n.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_276b6e42d543",
+      "uri": "stickers/难过/006C7PHRly1h2ucxw06fij30tb0sbn4x.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_f8f73416ce86",
+      "uri": "stickers/难过/006mSRzHgy1hbptleu39oj30u00tsta7.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_9351497c56c7",
+      "uri": "stickers/难过/006wuNILly1h1ug6adl8zj30u00tagnj.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_513177b4c08e",
+      "uri": "stickers/难过/006wuNILly1heylfxkc6zj30h30go3zc.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e65409f885a8",
+      "uri": "stickers/难过/0085wA6egy1hh4szfz99lj30dw0dwglu.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_12df5d799ffa",
+      "uri": "stickers/难过/023.webp",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e8fbbbb661b5",
+      "uri": "stickers/难过/037.webp",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_d9aa9ba3349f",
+      "uri": "stickers/难过/20180703201219_yRmQf.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_259886302088",
+      "uri": "stickers/难过/20B888piCc9X.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_61f874249f76",
+      "uri": "stickers/难过/498f8d0b31b9eeb4f5a200640f260277.gif",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_f755866b844f",
+      "uri": "stickers/难过/558.webp",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_ebb08e38b85e",
+      "uri": "stickers/难过/67f2b7812abc7bDJ.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_095446099bd6",
+      "uri": "stickers/难过/67fd42f0c985b9y6.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_51c96eef5a32",
+      "uri": "stickers/难过/68052e1703e71VFr.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_5aa912007fdc",
+      "uri": "stickers/难过/6841ce93ac6cdpSn.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6f4aa0d7e7f1",
+      "uri": "stickers/难过/687d281b024a733W.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_3b3937b3e0a5",
+      "uri": "stickers/难过/68c43d6cc5fecMA4.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_0846178bff32",
+      "uri": "stickers/难过/b64da6adly1hc1oq5sfwej20sg0signy.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_16dc61832a07",
+      "uri": "stickers/难过/ceeb653ely8hh6l81s9k1j20sg0sgabh.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_5c77cc4b9867",
+      "uri": "stickers/难过/OIP-C.webp",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_071939ed83cb",
+      "uri": "stickers/难过/v2-42b198474747cac625707940b0173f4c_b.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_bb4001c0a149",
+      "uri": "stickers/难过/v2-6f629aed79a1e5ea0beefbc68929521e_r.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_578be972f379",
+      "uri": "stickers/难过/v2-cf3fe32a32a68d48505172cd45d667f3_r.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c3b4fd036d3a",
+      "uri": "stickers/难过/w700d1q75cms.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_a8f48f10c89b",
+      "uri": "stickers/难过/web08_055.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_6b1139a81323",
+      "uri": "stickers/难过/web10_069.gif",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_253cfb58854c",
+      "uri": "stickers/难过/web11_083.jpg",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_e44bef926c81",
+      "uri": "stickers/难过/web16_112.gif",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    },
+    {
+      "id": "l_c08189cc7d55",
+      "uri": "stickers/难过/web16_116.gif",
+      "kind": "emoji",
+      "caption": "难过表情",
+      "tags": [
+        "难过"
+      ],
+      "uses": 0,
+      "recent_uses": 0,
+      "last_at": "",
+      "safe_auto": true,
+      "allowed": true
+    }
+  ]
+}

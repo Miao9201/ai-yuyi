@@ -1,0 +1,4 @@
+Pillow==11.3.0
+numpy==2.2.6
+qrcode==8.2
+jieba==0.42.1
