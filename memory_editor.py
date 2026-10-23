@@ -19,11 +19,17 @@ def scopes():
         profile=load_profile(name)
         rows.append({'account':'','persona':name,'personaName':profile['name'],'label':'我 · '+profile['name'],'ready':connected or bool(profile.get('real_chat_knowledge'))})
     rows.extend({'account':a['id'],'persona':a['persona'],'personaName':GUEST_PERSONAS[a['persona']],'label':a['label']+' · '+GUEST_PERSONAS[a['persona']],'ready':bool(load_credential(a['id']))} for a in load_accounts())
+    from qq_context import scopes as qq_scopes
+    try:rows.extend(qq_scopes())
+    except (OSError,ValueError):pass # A damaged QQ setting must not hide WeChat memories.
     return {'scopes':rows}
 
 
 def resolve_scope(account,persona):
     if not isinstance(account,str) or not isinstance(persona,str):raise ValueError('请选择用户和人设')
+    if account.startswith('qq:'):
+        from qq_context import scope_from_account
+        return scope_from_account(account,persona)
     match=next((s for s in scopes()['scopes'] if s['account']==account and s['persona']==persona),None)
     if not match:raise ValueError('该用户不能访问这个人设的记忆')
     if not match['ready']:raise ValueError('这位用户尚未扫码连接，暂时没有独立记忆库')
