@@ -50,3 +50,14 @@ test('restart resumes saved private work without requiring a new incoming event'
   const first=new QQEngine(args);first.receive(event(8));await first.tick();active=true;
   const second=new QQEngine(args);await second.tick();assert.equal(calls,1);
 }));
+test('restart cancels pending group work and keeps dedup without blocking new mentions',()=>fixture(async directory=>{
+  let active=true,calls=0;
+  const args={directory,bot:'300001',config:()=>cfg,allowed:()=>active,
+    generate:async()=>{active=false;return {text:'saved'};},send:async()=>{calls++;return {message_id:7};}};
+  const group=event(10,{message_type:'group',group_id:200001,message:[{type:'at',data:{qq:300001}},{type:'text',data:{text:'在吗'}}]});
+  const first=new QQEngine(args);first.receive(group);await first.tick();active=true;
+  const second=new QQEngine({...args,generate:async()=>({text:'new'})});await second.tick();
+  assert.equal(calls,0);assert.equal(second.receive(group),false);
+  assert.equal(second.queues.values().next().value.data.jobs[0].phase,'cancelled');
+  assert.equal(second.receive({...group,message_id:11}),true);await second.tick();assert.equal(calls,1);
+}));

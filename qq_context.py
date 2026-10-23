@@ -94,6 +94,6 @@ def context_for(request):
 
 
 if __name__=='__main__':
-    try:print(json.dumps(context_for(json.loads(sys.stdin.read(65537))),ensure_ascii=False))
+    try:print(json.dumps(context_for(json.loads(sys.stdin.read())),ensure_ascii=False))
     except Exception as error:
         print(json.dumps({'error':str(error) if isinstance(error,ValueError) else 'QQ角色资料暂时不可用'},ensure_ascii=False));sys.exit(1)

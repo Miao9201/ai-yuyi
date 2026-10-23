@@ -9,6 +9,24 @@ from companion_memory import Knowledge
 
 
 class QQContextTests(unittest.TestCase):
+    def test_cli_reads_complete_retained_history_without_truncating_json(self):
+        import io,json,runpy,contextlib
+        from types import SimpleNamespace
+        profile={'name':'体验角色','real_chat_knowledge':False,'media_catalog':None}
+        role=SimpleNamespace(profile=profile,facts=lambda:'体验角色')
+        body={'bot':'300001','kind':'private','peer':'100001','persona':'linmuwan','text':'你好',
+              'history':[{'key':str(i),'text':'长'*4000,'answer':'收到','phase':'sent','at':1} for i in range(100)]}
+        with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)),patch('persona.load_profile',return_value=profile),patch('persona.Persona',return_value=role):
+            qq.save_config({'privateUsers':['100001']})
+            output=io.StringIO()
+            with patch('sys.stdin',io.StringIO(json.dumps(body,ensure_ascii=False))),contextlib.redirect_stdout(output):
+                runpy.run_module('qq_context',run_name='__main__')
+            self.assertIn('context',json.loads(output.getvalue()))
+            file=next((Path(tmp)/'qq/memories').glob('*.sqlite3'))
+            knowledge=Knowledge(file)
+            try:self.assertEqual(knowledge.db.execute("SELECT COUNT(*) FROM memories WHERE origin='live'").fetchone()[0],100)
+            finally:knowledge.close()
+
     def test_scope_requires_exact_allowed_peer_and_persona(self):
         with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)):
             qq.save_config({'privateUsers':['100001'],'groups':['200001']})

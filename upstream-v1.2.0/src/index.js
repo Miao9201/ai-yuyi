@@ -808,6 +808,7 @@ async function handleWithDsh(state, msg, text) {
     const history = await loadHistory(userId);
     const messages = buildChatMessages(persona, history, text, {
       dynamicContext,
+      userContext: state.desktopUserContext || '',
       recentTurns: state.cfg.historyRecentTurns ?? 3,
       olderChars: state.cfg.historyOlderChars ?? 40,
       compress: compressHistory

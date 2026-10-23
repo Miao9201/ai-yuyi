@@ -13,7 +13,14 @@ export class QQEngine {
     const cfg=config();
     for(const [kind,peers] of [['private',cfg.privateUsers],['group',cfg.groups]])for(const peer of peers||[]){
       const scope=`qq:${bot}:${kind}:${peer}`;
-      if(fs.existsSync(this.file(scope)))this.queue({scope});
+      if(fs.existsSync(this.file(scope))){
+        const queue=this.queue({scope});
+        if(kind==='group'){
+          // Group replies belong to the current connection, even after a brief stop.
+          for(const job of queue.data.jobs)if(pending(job)){job.phase='cancelled';job.error='群聊连接已更新，不补发旧消息';}
+          queue.data.room=[];queue.save();
+        }
+      }
     }
   }
   file(scope){return path.join(this.directory,createHash('sha256').update(scope).digest('hex').slice(0,32)+'.json');}
@@ -35,7 +42,7 @@ export class QQEngine {
     queue.data.received=[...received,msg.key].slice(-1000);
     if(msg.kind==='group'){
       msg.repliedToBot=queue.data.jobs.some(j=>j.textConfirmed&&String(j.receipt?.message_id)===String(msg.replyTo));
-      queue.data.room=[...(queue.data.room||[]),`${msg.senderName}(${msg.sender}): ${msg.text||'[图片]'}`].slice(-20);
+      queue.data.room=[...(queue.data.room||[]),{sender:msg.sender,nickname:msg.senderName,text:msg.text||'[图片]'}].slice(-20);
     }
     // Record even messages that did not trigger, so replay cannot reroll probability.
     queue.save();
@@ -45,7 +52,7 @@ export class QQEngine {
     const text=(msg.kind==='group'?`${msg.senderName}(${msg.sender}): `:'')+(msg.text||'');
     const input={message_type:1,from_user_id:msg.scope,message_id:msg.key,create_time_ms:msg.at,qq:msg,
       item_list:[{type:1,text_item:{text}},...msg.images.map(image=>({type:2,image_item:{media:{full_url:'qq-image://inbound'}},qqImage:image}))]};
-    if(msg.kind==='group')input.qqRoom=(queue.data.room||[]).join('\n');
+    if(msg.kind==='group')input.qqRoom=queue.data.room||[];
     queue.receive([input],'',this.persona(msg,cfg));
     queue.data.jobs=queue.data.jobs.filter(j=>pending(j)||queue.data.jobs.indexOf(j)>=queue.data.jobs.length-100);
     queue.save();return true;

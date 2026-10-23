@@ -12,6 +12,7 @@ import time
 import urllib.request
 from urllib.parse import urlsplit
 from settings import DATA,atomic_write,protect
+from runtime_paths import node_executable
 
 def paths():
     try:meta=json.loads((DATA/'qq/runtime.json').read_text(encoding='utf8'))
@@ -98,6 +99,27 @@ def api(action,body=None):
             # Only an explicit authentication rejection is safe to repeat.
             return request(action,body or {},authenticate())
 
+def worker_alive(worker):
+    from ctypes import wintypes
+    pid=worker.get('pid')
+    if type(pid) is not int or not 0<pid<2**32:return False
+    kernel=ctypes.windll.kernel32;kernel.OpenProcess.restype=ctypes.c_void_p
+    handle=kernel.OpenProcess(0x1000|0x100000,False,pid)
+    if not handle:return False
+    handle=ctypes.c_void_p(handle)
+    try:
+        if kernel.WaitForSingleObject(handle,0)!=258:return False
+        size=wintypes.DWORD(32768);image=ctypes.create_unicode_buffer(size.value)
+        if not kernel.QueryFullProcessImageNameW(handle,0,image,ctypes.byref(size)):return False
+        if Path(image.value).resolve()!=Path(node_executable()).resolve():return False
+        times=[wintypes.FILETIME() for _ in range(4)]
+        if not kernel.GetProcessTimes(handle,*(ctypes.byref(value) for value in times)):return False
+        created=((times[0].dwHighDateTime<<32)|times[0].dwLowDateTime)/10000000-11644473600
+        return created<=float(worker.get('at',0))+1
+    except (OSError,TypeError,ValueError):return False
+    finally:kernel.CloseHandle(handle)
+
+
 def status():
     try:meta=paths()
     except ValueError:return {'installed':False,'running':False,'loggedIn':False,'detail':'尚未安装QQ运行环境'}
@@ -120,6 +142,8 @@ def status():
             worker.update(state='disabled',detail='QQ回复未启用')
         elif worker.get('bot')!=result.get('bot'):
             worker.update(state='connecting',detail='正在核对QQ连接')
+        elif not worker_alive(worker):
+            worker.update(state='reconnecting',detail='QQ回复进程未运行，等待恢复')
         result['worker']={k:worker[k] for k in ('state','detail','at','bot','nickname') if k in worker}
     except (OSError,ValueError):pass
     return result

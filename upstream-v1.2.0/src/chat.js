@@ -149,6 +149,7 @@ export async function chatComplete(opts) {
 export function buildChatMessages(persona, rawHistory, userText, opts = {}) {
   const {
     dynamicContext = '',
+    userContext = '',
     recentTurns = 3,
     olderChars = 40,
     compress = null
@@ -186,6 +187,6 @@ export function buildChatMessages(persona, rawHistory, userText, opts = {}) {
     messages.push({ role: m.role, content: m.content });
   }
 
-  messages.push({ role: 'user', content: userText });
+  messages.push({ role: 'user', content: userContext ? userContext+'\n【本轮待回复消息】\n'+userText : userText });
   return messages;
 }

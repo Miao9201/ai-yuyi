@@ -6,6 +6,25 @@ from unittest.mock import patch,Mock
 import qq_runtime as runtime
 
 class QQRuntimeTests(unittest.TestCase):
+    def test_worker_liveness_checks_node_identity_and_creation_time(self):
+        import subprocess,time
+        process=subprocess.Popen([runtime.node_executable(),'-e','setInterval(()=>{},1000)'],creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
+        try:
+            self.assertTrue(runtime.worker_alive({'pid':process.pid,'at':time.time()}))
+            self.assertFalse(runtime.worker_alive({'pid':process.pid,'at':1}))
+        finally:process.terminate();process.wait(timeout=5)
+        self.assertFalse(runtime.worker_alive({'pid':process.pid,'at':time.time()}))
+
+    def test_status_rejects_dead_or_reused_worker_pid(self):
+        import os,time
+        for pid in (2147483647,os.getpid()):
+            with self.subTest(pid=pid),tempfile.TemporaryDirectory() as tmp,patch.object(runtime,'DATA',Path(tmp)),patch.object(runtime,'paths',return_value={'port':6099}),patch.object(runtime,'available',return_value=True),patch.object(runtime,'api',side_effect=[{'isLogin':True},{'uin':'100001'}]):
+                folder=Path(tmp)/'qq';folder.mkdir()
+                (Path(tmp)/'config.json').write_text(json.dumps({'enabled':True,'run_id':'same'}),encoding='utf8')
+                (folder/'settings.json').write_text('{"enabled":true}',encoding='utf8')
+                (folder/'state.json').write_text(json.dumps({'state':'listening','detail':'QQ listening','pid':pid,'at':time.time(),'bot':'100001','runId':'same'}),encoding='utf8')
+                self.assertNotEqual(runtime.status()['worker']['state'],'listening')
+
     def test_configure_validates_independent_shell_and_never_exposes_token(self):
         with tempfile.TemporaryDirectory() as tmp,patch.object(runtime,'DATA',Path(tmp)/'data'):
             root=Path(tmp)/'shell';core=root/'versions/test/resources/app/napcat';core.mkdir(parents=True)
