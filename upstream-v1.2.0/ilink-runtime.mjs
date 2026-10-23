@@ -7,7 +7,8 @@ import {execFile} from 'node:child_process';
 import {setTimeout as delay} from 'node:timers/promises';
 import * as api from './src/ilink.js';
 import {uploadMedia,buildImageItem} from './src/media.js';
-import {selectMedia,resolveMedia,deliver} from './src/companion-media.mjs';
+import {resolveMedia,deliver} from './src/companion-media.mjs';
+import {prepareReply,companionConfig} from './src/companion-reply.mjs';
 import {accountContext} from './src/account-policy.mjs';
 
 const ROOT=path.dirname(fileURLToPath(import.meta.url)), LOCAL=path.dirname(ROOT);
@@ -187,19 +188,10 @@ async function main(){
     generate:async(msg,job)=>{
       const persona=job.persona||'private_persona';scope.assertPersona(persona);await sync(persona);
       for(const [key,mood] of Object.entries(MOODS))mood.tone=persona==='private_persona'?'按她最近两年的真实表达范例接话，可以熟人式反问吐槽，不强行温柔、撒娇或擅加亲昵称呼，不编造现实行踪。':originalTones[key];
-      state.cfg={...loadConfig(),proactive:false,allowStickers:false,imageGenEnabled:false,autoImageEnabled:false,sendTyping:false,showQueuedNotice:false,desktopNaturalReplies:true,maxBubbles:1,bubbleSplit:false,kaomojiChance:0,emojiChance:0,lifeEnabled:false,ragEnabled:false,sceneAnalyzeModel:false,defianceChance:0};
-      state.cfg.defaultPersona=persona;
+      state.cfg=companionConfig(loadConfig(),persona);
       const options=JSON.parse(await python('companion_memory.py',[],JSON.stringify({persona,text:api.extractText(msg)||'收到图片',owner:scope.memoryOwner(id),history:liveHistory(persona)})));
       historyExclusions.set(persona,options.suppressed_history_keys||[]);await sync(persona);
-      state.desktopStyleContext=options.context;
-      state.desktopStyleContext+='\n【当前能力】可以理解普通图片，可从当前角色的候选素材中发表情或用户明确索要的图片。不能看到图片以外的环境，目前没有生图或自拍能力。识图失败如实说明，不编造图片内容。';
-      if(options.candidates?.length)state.desktopStyleContext+='\n【本轮可发送素材】最多选一个，只能用以下ID；需要时在回复结尾单独加一行[sticker:素材ID]，这个标记会实际发送原媒体，不要把ID说给用户。普通照片只在明确索要时发送，表情不必每轮都发。\n'+JSON.stringify(options.candidates);
-      else state.desktopStyleContext+='\n本轮没有合适的发图候选，请只用文字，不承诺已发图。';
-      let answer='';const prepared=new Error('REPLY_PREPARED');
-      state.desktopTransport={sendText:async()=>{throw Error('模型未生成正常回复');},sendBubbles:async(_uid,bubbles)=>{answer=bubbles.join('\n\n').trim();throw prepared;}};
-      try{await handleWithDsh(state,{...msg,from_user_id:modelUser(persona)},api.extractText(msg));}catch(e){if(e!==prepared)throw e;}
-      if(!answer)answer=options.intent&&options.candidates?.length?'给你来一张':'在呢';
-      return {text:answer,media:selectMedia(state.companionRequestedMedia,options),vision:state.companionVision||'',evidence:options.evidence||[]};
+      return prepareReply({state,msg,text:api.extractText(msg),uid:modelUser(persona),options,handle:handleWithDsh});
     },
     prepare:async(job,checkpoint)=>{
       scope.assertPersona(job.persona||'private_persona');

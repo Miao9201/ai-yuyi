@@ -6,7 +6,7 @@ export function normalizeEvent(event,bot){
   const sender=String(event.user_id),kind=event.message_type;
   if(!account(sender)||sender===bot||!['private','group'].includes(kind))return null;
   const peer=kind==='group'?String(event.group_id):sender;
-  if(!account(peer)||event.message_id===undefined||!/^[-\d]{1,21}$/.test(String(event.message_id))||!Number.isFinite(event.time))return null;
+  if(!account(peer)||event.message_id===undefined||!/^-?\d{1,20}$/.test(String(event.message_id))||!Number.isFinite(event.time))return null;
   const segments=Array.isArray(event.message)?event.message:[{type:'text',data:{text:String(event.message??'')}}];
   if(segments.length>100)return null;
   const text=segments.filter(s=>s?.type==='text').map(s=>String(s.data?.text??'')).join('').trim().slice(0,4000);

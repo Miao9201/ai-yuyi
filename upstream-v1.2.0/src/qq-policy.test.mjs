@@ -9,6 +9,7 @@ test('only genuine events for this account and valid senders are normalized; CQ 
   assert.equal(normalizeEvent(event({self_id:300002}),'300001'),null);
   assert.equal(normalizeEvent(event({user_id:300001}),'300001'),null);
   assert.equal(normalizeEvent(event({group_id:'../bad'}),'300001'),null);
+  assert.equal(normalizeEvent(event({message_id:'---'}),'300001'),null);
   const msg=normalizeEvent(event({message:[{type:'text',data:{text:'[CQ:at,qq=300001]'}}]}),'300001');
   assert.equal(msg.mentioned,false);assert.equal(msg.text,'[CQ:at,qq=300001]');assert.equal(msg.senderName,'群友甲');
 });

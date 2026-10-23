@@ -29,7 +29,8 @@ export class OneBotClient {
       socket.addEventListener('error',()=>{clearTimeout(timer);reject(Error('QQ本机接口连接失败'));},{once:true});
       socket.addEventListener('close',()=>{
         clearTimeout(timer);reject(Error('QQ连接已断开'));
-        if(this.socket===socket)this.socket=null;
+        if(this.socket!==socket)return;
+        this.socket=null;
         for(const [id,call] of this.pending){clearTimeout(call.timer);const error=Error('QQ连接已断开，未确认的发送不自动重发');error.ambiguous=call.action.startsWith('send_');call.reject(error);this.pending.delete(id);}
         this.onDisconnect();
       });

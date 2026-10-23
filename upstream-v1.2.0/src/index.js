@@ -424,7 +424,7 @@ async function handleWithDsh(state, msg, text) {
 
     for (const item of imgItems.slice(0, maxImages)) {
       try {
-        const got = await downloadInboundImage(item, {
+        const got = await (state.inboundImageLoader || downloadInboundImage)(item, {
           destDir: path.join(process.env.WX_RUNTIME_DATA_DIR || path.join(ROOT, 'data'), 'media', 'inbox'),
           timeoutMs: Math.max(5000, Number(state.cfg.visionImageTimeoutMs ?? 20000))
         });

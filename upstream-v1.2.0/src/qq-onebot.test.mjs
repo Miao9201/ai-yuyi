@@ -32,3 +32,11 @@ test('64 bit identifiers remain exact and malformed/oversized input is rejected'
   assert.throws(()=>parseEvent('not JSON'));
   assert.throws(()=>parseEvent('x'.repeat(2*1024*1024+1)),/过大/);
 });
+test('a delayed close from an old socket cannot cancel a new connection',async()=>{
+  const client=new OneBotClient('ws://127.0.0.1:3001/','fixture-token',{WebSocketImpl:Socket,timeoutMs:100});
+  await client.connect();const old=Socket.instance;old.readyState=3;
+  await client.connect();const current=Socket.instance,pending=client.call('get_status');
+  old.dispatchEvent(new Event('close'));
+  current.respond({status:'ok',retcode:0,data:{online:true},echo:current.last.echo});
+  assert.equal((await pending).online,true);client.close();
+});
