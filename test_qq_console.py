@@ -13,6 +13,21 @@ import urllib.error
 from settings import ROOT,protect
 
 class QQConsoleTests(unittest.TestCase):
+    def test_qq_referenced_persona_cannot_be_deleted_or_renamed(self):
+        self.assertEqual(self.request('/api/qq/config',{'persona':'linmuwan','groupPersona':'linmuwan'})[0],200)
+        for endpoint,body in [('/api/personas/delete',{'name':'linmuwan'}),('/api/personas/rename',{'from':'linmuwan','to':'renamed'})]:
+            self.assertEqual(self.request(endpoint,body)[0],400)
+            self.assertTrue((self.root/'upstream-v1.2.0/personas/linmuwan.md').is_file())
+
+    def test_platform_switches_have_separate_write_boundaries(self):
+        self.assertEqual(self.request('/api/wechat/config',{'enabled':False})[0],200)
+        config=json.loads(self.request('/api/qq/config')[2])['config']
+        self.assertFalse(config['wechatEnabled']);self.assertFalse(config['enabled'])
+        self.assertEqual(self.request('/api/qq/config',{'enabled':True})[0],200)
+        self.assertFalse(json.loads(self.request('/api/wechat/config')[2])['config']['enabled'])
+        self.assertEqual(self.request('/api/qq/config',{'wechatEnabled':True})[0],400)
+        self.assertEqual(self.request('/api/wechat/config',{'enabled':True,'groups':['200001']})[0],400)
+
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
         self.root=Path(self.tmp.name);project=self.root/'upstream-v1.2.0';project.mkdir()
@@ -62,7 +77,8 @@ class QQConsoleTests(unittest.TestCase):
         self.assertIn(b'qqPrivateUsers',self.request('/')[2])
 
     def test_overview_reports_qq_only_mode_and_qq_log(self):
-        code,_,body=self.request('/api/qq/config',{'enabled':True,'wechatEnabled':False})
+        self.request('/api/wechat/config',{'enabled':False})
+        code,_,body=self.request('/api/qq/config',{'enabled':True})
         self.assertEqual(code,200,body)
         code,_,body=self.request('/api/state');self.assertEqual(code,200,body)
         data=json.loads(body)
@@ -70,6 +86,10 @@ class QQConsoleTests(unittest.TestCase):
         self.assertFalse(data['qq']['installed'])
         folder=self.root/'data/qq';folder.mkdir(exist_ok=True)
         (folder/'run.log').write_text('QQ synthetic log entry',encoding='utf8')
+        (self.root/'data/run.log').write_text('WX synthetic log entry',encoding='utf8')
         self.assertIn(b'QQ synthetic log entry',self.request('/api/logs')[2])
+        self.assertNotIn(b'WX synthetic log entry',self.request('/api/logs?platform=qq')[2])
+        self.assertNotIn(b'QQ synthetic log entry',self.request('/api/logs?platform=wechat')[2])
+        self.assertEqual(self.request('/api/logs?platform=unknown')[0],400)
 
 if __name__=='__main__':unittest.main()

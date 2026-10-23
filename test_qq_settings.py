@@ -7,6 +7,23 @@ import qq_settings as qq
 
 
 class QQSettingsTests(unittest.TestCase):
+    def test_missing_custom_group_role_does_not_block_configuration_recovery(self):
+        with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)/'data'),patch('persona.load_profile',return_value={'real_chat_knowledge':False}):
+            role=Path(tmp)/'upstream-v1.2.0/personas/public_fixture.md';role.parent.mkdir(parents=True);role.write_text('fixture')
+            qq.save_config({'groupPersona':'public_fixture'});role.unlink()
+            self.assertEqual(qq.load_config()['groupPersona'],'public_fixture')
+            self.assertEqual(qq.save_config({'groupPersona':'dafeiyu'})['groupPersona'],'dafeiyu')
+            self.assertFalse(qq.save_config({'wechatEnabled':False})['wechatEnabled'])
+
+    def test_default_role_and_independent_reply_parameters_are_validated(self):
+        with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)):
+            cfg=qq.load_config();self.assertEqual(cfg['persona'],'dafeiyu');self.assertEqual(cfg['probability'],0.1)
+            self.assertEqual(cfg['groupPersona'],'dafeiyu')
+            saved=qq.save_config({'activeHours':[9,23],'replyOptions':{'visionEnabled':False,'sceneEnabled':True,'emotionEnabled':True}})
+            self.assertFalse(saved['replyOptions']['visionEnabled'])
+            for bad in ({'activeHours':[25,2]},{'emotionAware':'yes'},{'replyOptions':{'apiKey':'bad'}},{'replyOptions':{'visionEnabled':'no'}}):
+                with self.assertRaises(ValueError):qq.save_config(bad)
+
     def test_new_install_has_no_allowed_targets_and_qq_is_off(self):
         with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)):
             cfg=qq.load_config()

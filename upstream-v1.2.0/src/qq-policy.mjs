@@ -13,7 +13,7 @@ export function normalizeEvent(event,bot){
   const mentions=segments.filter(s=>s?.type==='at').map(s=>String(s.data?.qq));
   return {key:String(event.message_id),bot,kind,peer,sender,senderName:clean(event.sender?.card||event.sender?.nickname||sender),
     scope:`qq:${bot}:${kind}:${peer}`,text,at:event.time*1000,mentioned:mentions.includes(bot),atAll:mentions.includes('all'),
-    replyTo:segments.find(s=>s?.type==='reply')?.data?.id,images:segments.filter(s=>s?.type==='image').slice(0,3).map(s=>({file:String(s.data?.file??''),url:String(s.data?.url??''),summary:clean(s.data?.summary)}))};
+    otherMention:mentions.some(id=>id!=='all'&&id!==bot),replyTo:segments.find(s=>s?.type==='reply')?.data?.id,images:segments.filter(s=>s?.type==='image').slice(0,3).map(s=>({file:String(s.data?.file??''),url:String(s.data?.url??''),summary:clean(s.data?.summary)}))};
 }
 
 export class ReplyPolicy {
@@ -32,12 +32,17 @@ export class ReplyPolicy {
     if(recent.filter(t=>now-t<60000).length>=(cfg.maxPerMinute??6))return no('density');
     if(recent.length&&now-recent.at(-1)<(cfg.cooldownSeconds??5)*1000)return no('cooldown');
     if(msg.mentioned||msg.repliedToBot||cfg.keywords?.some(k=>msg.text.includes(k)))return {reply:true,reason:'addressed'};
+    if(msg.otherMention||msg.replyTo&&!msg.repliedToBot)return no('other_person');
+    const [activeStart,activeEnd]=cfg.activeHours??[0,24];
+    if(activeStart!==activeEnd&&!(activeStart<activeEnd?hour>=activeStart&&hour<activeEnd:hour>=activeStart||hour<activeEnd))return no('inactive_hours');
     let probability=cfg.probability??0.1;
     const [start,end]=cfg.quietHours??[0,7];
     if(start!==end&&(start<end?hour>=start&&hour<end:hour>=start||hour<end))probability*=0.15;
     const quality=msg.text.length<3||/^(哈+|[6好哦嗯啊]+)[!！。]*$/.test(msg.text)?0.1:/[?？]/.test(msg.text)?1.5:1;
     const attention=recent.length&&now-recent.at(-1)<120000?1.5:1;
     const fatigue=1/(1+recent.length*0.2);
-    return {reply:random()<Math.min(1,Math.max(0,probability*quality*attention*fatigue)),reason:'probability'};
+    const emotion=cfg.emotionAware!==false?(/难过|伤心|想哭|烦死|开心|太棒|好耶|生气|气死/.test(msg.text)?1.6:1):1;
+    const effective=Math.min(1,Math.max(0,probability*quality*attention*fatigue*emotion));
+    return {reply:random()<effective,reason:'probability',probability:effective,factors:{quality,attention,fatigue,emotion}};
   }
 }

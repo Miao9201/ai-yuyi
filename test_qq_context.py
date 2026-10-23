@@ -17,7 +17,7 @@ class QQContextTests(unittest.TestCase):
         body={'bot':'300001','kind':'private','peer':'100001','persona':'linmuwan','text':'你好',
               'history':[{'key':str(i),'text':'长'*4000,'answer':'收到','phase':'sent','at':1} for i in range(100)]}
         with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)),patch('persona.load_profile',return_value=profile),patch('persona.Persona',return_value=role):
-            qq.save_config({'privateUsers':['100001']})
+            qq.save_config({'persona':'linmuwan','groupPersona':'linmuwan','privateUsers':['100001']})
             output=io.StringIO()
             with patch('sys.stdin',io.StringIO(json.dumps(body,ensure_ascii=False))),contextlib.redirect_stdout(output):
                 runpy.run_module('qq_context',run_name='__main__')
@@ -29,7 +29,7 @@ class QQContextTests(unittest.TestCase):
 
     def test_scope_requires_exact_allowed_peer_and_persona(self):
         with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)):
-            qq.save_config({'privateUsers':['100001'],'groups':['200001']})
+            qq.save_config({'persona':'linmuwan','groupPersona':'linmuwan','privateUsers':['100001'],'groups':['200001']})
             with patch.object(context,'load_profile',return_value={'name':'体验角色','real_chat_knowledge':False}):
                 good=context.resolve_scope('300001','private','100001','linmuwan')
                 other=context.resolve_scope('300001','group','200001','linmuwan')
@@ -37,12 +37,12 @@ class QQContextTests(unittest.TestCase):
                 self.assertIn('qq:',good['uid'])
                 for args in [('300001','private','100002','linmuwan'),('300001','group','200002','linmuwan'),('300001','group','200001','private_example'),('300001','private','100001','../example')]:
                     with self.assertRaises(ValueError):context.resolve_scope(*args)
-            qq.save_config({'groups':[]})
+            qq.save_config({'persona':'linmuwan','groupPersona':'linmuwan','groups':[]})
             with self.assertRaises(ValueError):context.resolve_scope('300001','group','200001','linmuwan')
 
     def test_group_cannot_load_private_profile_even_if_title_is_public(self):
         with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)):
-            qq.save_config({'groups':['200001']})
+            qq.save_config({'persona':'linmuwan','groupPersona':'linmuwan','groups':['200001']})
             with patch.object(context,'load_profile',return_value={'name':'体验角色','real_chat_knowledge':True}):
                 with self.assertRaises(ValueError):context.resolve_scope('300001','group','200001','linmuwan')
 
@@ -67,7 +67,7 @@ class QQContextTests(unittest.TestCase):
     def test_memory_editor_uses_qq_scope_without_reading_wechat_credentials(self):
         import memory_editor
         with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)):
-            qq.save_config({'privateUsers':['100001']})
+            qq.save_config({'persona':'linmuwan','groupPersona':'linmuwan','privateUsers':['100001']})
             (Path(tmp)/'qq/state.json').write_text('{"bot":"300001"}',encoding='utf8')
             with patch.object(context,'load_profile',return_value={'name':'体验角色','real_chat_knowledge':False}),patch.object(memory_editor,'load_credential',side_effect=AssertionError('QQ must not use WeChat auth')):
                 body={'account':'qq:300001:private:100001','persona':'linmuwan','text':'我喜欢画画'}
@@ -82,7 +82,7 @@ class QQContextTests(unittest.TestCase):
         profile={'name':'体验角色','real_chat_knowledge':False,'media_catalog':None}
         role=SimpleNamespace(profile=profile,facts=lambda:'PRIVATE_RELATIONSHIP_SENTINEL')
         with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)),patch.object(context,'load_profile',return_value=profile),patch.object(context,'Persona',return_value=role):
-            qq.save_config({'groups':['200001']})
+            qq.save_config({'persona':'linmuwan','groupPersona':'linmuwan','groups':['200001']})
             result=context.context_for({'bot':'300001','kind':'group','peer':'200001','persona':'linmuwan','text':'你好','history':[]})
             self.assertIn('普通群友',result['context'])
             self.assertNotIn('PRIVATE_RELATIONSHIP_SENTINEL',result['context'])

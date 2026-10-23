@@ -35,7 +35,7 @@ def source_files(source):
         parts = set(p.lower() for p in relative.parts)
         if parts.intersection({'private', '__pycache__', '.git', 'runtime', 'node_modules','dist','work','build'}) or lower.endswith(('.log', '.dpapi', '.pyc', '.har', '.sqlite', '.sqlite3', '.db', '.exe', '.dll', '.pyd', '.zip')) or relative.name.lower().startswith('.env'):
             raise ValueError('Private/runtime path in public source manifest: ' + item)
-        if 'data' in parts and lower.removeprefix('templates/') not in {'data/config.json', 'data/persona-profiles/linmuwan.json', 'data/media-catalog-linmuwan.json', 'upstream-v1.2.0/data/config.json'}:
+        if 'data' in parts and lower.removeprefix('templates/') not in {'data/config.json', 'data/persona-profiles/linmuwan.json', 'data/persona-profiles/dafeiyu.json', 'data/media-catalog-linmuwan.json', 'upstream-v1.2.0/data/config.json'}:
             raise ValueError('Only reviewed configuration defaults may appear under data/: ' + item)
         path = source.joinpath(*relative.parts)
         if not path.is_file() or path.is_symlink() or any(parent.is_symlink() for parent in path.parents if parent != source.parent):

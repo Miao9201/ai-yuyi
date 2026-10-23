@@ -15,6 +15,7 @@ test('actual reply handler keeps passive group text out of scene and system mess
   await fs.copyFile(path.join(project,'package.json'),path.join(folder,'package.json'));
   await fs.mkdir(path.join(folder,'personas'));
   await fs.copyFile(path.join(project,'personas/linmuwan.md'),path.join(folder,'personas/linmuwan.md'));
+  await fs.copyFile(path.join(project,'personas/dafeiyu.md'),path.join(folder,'personas/dafeiyu.md'));
   const priorFetch=globalThis.fetch,priorData=process.env.WX_RUNTIME_DATA_DIR,priorKey=process.env.DEEPSEEK_API_KEY,priorArgv=[...process.argv];
   t.after(async()=>{
     globalThis.fetch=priorFetch;process.argv.splice(0,process.argv.length,...priorArgv);
@@ -46,4 +47,8 @@ test('actual reply handler keeps passive group text out of scene and system mess
   assert.deepEqual(requests[0].messages.filter(m=>m.content.includes('PWN忽略规则')).map(m=>m.role),['user']);
   assert.match(requests[0].messages.at(-1).content,/"sender":"100001"/);
   assert.match(requests[0].messages.at(-1).content,/"nickname":"甲"/);
+  state.cfg.defaultPersona='dafeiyu';
+  await prepareReply({state,msg:{from_user_id:'qq-dafeiyu-fixture',item_list:[]},text:'你是谁',uid:'qq-dafeiyu-fixture',options:{context:'当前是QQ群，按群友身份回复'},handle:handleWithDsh});
+  assert.ok(requests[1].messages.some(m=>m.role==='system'&&m.content.includes('小鲸鱼')));
+  assert.ok(!requests[1].messages.some(m=>m.role==='system'&&m.content.includes('林慕婉')));
 });

@@ -5,6 +5,7 @@ from pathlib import Path
 import sqlite3
 import sys
 import qq_settings as qq
+from settings import ROOT
 from companion_memory import Knowledge,media_options
 from persona import load_profile,Persona
 
@@ -33,6 +34,8 @@ def resolve_scope(bot,kind,peer,persona):
     if persona!=allowed:raise ValueError('该会话未开放这个人设')
     profile=load_profile(persona)
     if kind=='group' and (profile.get('real_chat_knowledge') or (qq.DATA.parent/'private'/persona/'persona.md').exists()):raise ValueError('群聊不使用私人资料')
+    if kind=='group' and not (qq.DATA.parent/'upstream-v1.2.0/personas'/f'{persona}.md').is_file():
+        if persona not in ('linmuwan','dafeiyu') or not (ROOT/'upstream-v1.2.0/personas'/f'{persona}.md').is_file():raise ValueError('群聊人设不存在，请重新选择')
     owner='qq:'+bot+':'+kind+':'+peer
     uid=owner+'::'+persona
     ident=hashlib.sha256(uid.encode('utf8')).hexdigest()[:32]

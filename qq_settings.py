@@ -8,9 +8,11 @@ from urllib.parse import urlsplit
 from settings import DATA,atomic_write,protect
 
 DEFAULTS={'enabled':False,'wechatEnabled':True,'privateUsers':[],'groups':[],
-          'persona':'linmuwan','groupPersona':'linmuwan','privatePersonas':{},
+          'persona':'dafeiyu','groupPersona':'dafeiyu','privatePersonas':{},
           'wsUrl':'ws://127.0.0.1:3001/','probability':0.1,'cooldownSeconds':5,
-          'maxPerMinute':6,'keywords':['林慕婉'],'quietHours':[0,7]}
+          'maxPerMinute':6,'keywords':['DeepSeek','deepseek','大肥鱼','肥鱼','小鲸鱼'],'quietHours':[0,7],
+          'activeHours':[0,24],'emotionAware':True,
+          'replyOptions':{'visionEnabled':True,'sceneEnabled':True,'emotionEnabled':True}}
 
 
 def account(value):
@@ -25,13 +27,13 @@ def persona(value):
 
 def validate(cfg):
     if set(cfg)!=set(DEFAULTS):raise ValueError('QQ配置包含未知字段')
-    for name in ('enabled','wechatEnabled'):
+    for name in ('enabled','wechatEnabled','emotionAware'):
         if type(cfg[name]) is not bool:raise ValueError('启用状态应为布尔值')
     for name in ('privateUsers','groups'):
         if not isinstance(cfg[name],list) or len(cfg[name])>200:raise ValueError('允许对象最多200个')
         cfg[name]=list(dict.fromkeys(account(v) for v in cfg[name]))
     persona(cfg['persona'])
-    if cfg['groupPersona']!='linmuwan':raise ValueError('群聊仅开放默认公开人设')
+    persona(cfg['groupPersona'])
     mapping=cfg['privatePersonas']
     if not isinstance(mapping,dict) or set(mapping)-set(cfg['privateUsers']):raise ValueError('只能给允许的私聊对象指定人设')
     for value in mapping.values():persona(value)
@@ -46,8 +48,11 @@ def validate(cfg):
         if isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or not minimum<=value<=maximum:raise ValueError('接话概率、冷却或频率参数无效')
         if name=='maxPerMinute' and type(value) is not int:raise ValueError('每分钟回复上限应为整数')
     if not isinstance(cfg['keywords'],list) or len(cfg['keywords'])>20 or any(not isinstance(v,str) or not 1<=len(v.strip())<=30 or any(ord(c)<32 for c in v) for v in cfg['keywords']):raise ValueError('触发词最多20个，每个1到30字')
-    hours=cfg['quietHours']
-    if not isinstance(hours,list) or len(hours)!=2 or any(type(v) is not int or not 0<=v<=24 for v in hours):raise ValueError('安静时段应为两个0到24的整数')
+    for key in ('quietHours','activeHours'):
+        hours=cfg[key]
+        if not isinstance(hours,list) or len(hours)!=2 or any(type(v) is not int or not 0<=v<=24 for v in hours):raise ValueError('时段应为两个0到24的整数')
+    options=cfg['replyOptions']
+    if not isinstance(options,dict) or set(options)!=set(DEFAULTS['replyOptions']) or any(type(v) is not bool for v in options.values()):raise ValueError('QQ回复参数无效')
     return cfg
 
 
@@ -64,6 +69,12 @@ def public_config():
 
 def save_config(body):
     if not isinstance(body,dict) or set(body)-set(DEFAULTS):raise ValueError('QQ配置字段无效')
+    if 'groupPersona' in body:
+        group=persona(body['groupPersona'])
+        if group not in ('linmuwan','dafeiyu'):
+            from persona import load_profile
+            if not (DATA.parent/'upstream-v1.2.0/personas'/f'{group}.md').is_file():raise ValueError('群聊人设不存在')
+            if (DATA.parent/'private'/group).exists() or load_profile(group).get('real_chat_knowledge'):raise ValueError('群聊不使用私人资料')
     cfg={**load_config(),**body}
     if 'privateUsers' in body and 'privatePersonas' not in body and isinstance(cfg['privateUsers'],list):
         cfg['privatePersonas']={peer:role for peer,role in cfg['privatePersonas'].items() if peer in cfg['privateUsers']}
@@ -83,7 +94,15 @@ if __name__=='__main__':
     try:
         action=sys.argv[1] if len(sys.argv)==2 else ''
         if action=='get':result=public_config()
-        elif action=='save':result=save_config(json.loads(sys.stdin.read(65537)))
+        elif action=='save':
+            body=json.loads(sys.stdin.read(65537))
+            if not isinstance(body,dict) or 'wechatEnabled' in body:raise ValueError('请在微信板块调整微信开关')
+            result=save_config(body)
+        elif action=='wechat-get':result={'enabled':load_config()['wechatEnabled'],'groupSupported':False}
+        elif action=='wechat-save':
+            body=json.loads(sys.stdin.read(65537))
+            if not isinstance(body,dict) or set(body)!={'enabled'} or type(body['enabled']) is not bool:raise ValueError('微信平台设置无效')
+            result={'enabled':save_config({'wechatEnabled':body['enabled']})['wechatEnabled'],'groupSupported':False}
         elif action=='connection':result=connection_settings() # Private child-process stdio only.
         else:raise ValueError('QQ设置操作无效')
         print(json.dumps(result,ensure_ascii=False))

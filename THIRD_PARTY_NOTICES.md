@@ -13,3 +13,5 @@
 桌面窗口使用 Microsoft.Web.WebView2 SDK 1.0.4258.31，相关 LICENSE.txt 与 NOTICE.txt 随安装包保存在 runtime/webview2/。SDK 从微软 NuGet 包获取并校验固定 SHA256；Evergreen 运行组件安装程序来自微软官方链接并验证微软 Authenticode 签名，其安装与更新遵循微软许可。
 
 QQ接入通过独立安装的 [NapCatQQ](https://github.com/NapNeko/NapCatQQ) 和 OneBot 11 通信。本次验证版本 v4.18.41 使用 Limited Redistribution License，并非MIT，适用非商业使用与再分发限制，详见[原许可证](https://github.com/NapNeko/NapCatQQ/blob/v4.18.41/LICENSE)。本仓库与语忆AI安装包不复制、修改或附带该组件或QQ客户端；用户按官方说明另行安装。参考项目 make-your-qq-ai-group-member 仅用于架构学习，未集成AstrBot或复制其群聊插件代码。
+
+QQ预置“大肥鱼”角色卡采用 [mtshang/make-your-qq-ai-group-member 的 persona_dafeiyu.md](https://github.com/mtshang/make-your-qq-ai-group-member/blob/main/templates/persona_dafeiyu.md)，原项目MIT版权与完整许可保存在 licenses/qq-persona-MIT.txt。该文本作为可编辑角色资料使用，不包含真实用户聊天资料；不代表本软件与DeepSeek官方存在关联。

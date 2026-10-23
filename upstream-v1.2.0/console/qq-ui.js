@@ -2,41 +2,53 @@
   'use strict';
   const el=id=>document.getElementById(id);
   let loaded=false,busy=false;
+  for(const id of ['qqSaveUsers','qqSaveParameters','wechatSave'])el(id).disabled=true;
   const list=value=>value.split(/[\s,，;；]+/).filter(Boolean);
   function fields(config){
-    el('qqEnabled').checked=config.enabled;el('qqWechatEnabled').checked=config.wechatEnabled;
+    el('qqEnabled').checked=config.enabled;
     el('qqPrivateUsers').value=config.privateUsers.join('\n');el('qqGroups').value=config.groups.join('\n');
-    el('qqPersona').value=config.persona;
+    el('qqPersona').value=config.persona;el('qqGroupPersona').value=config.groupPersona;
     el('qqProbability').value=Math.round(config.probability*100);el('qqCooldown').value=config.cooldownSeconds;
     el('qqMaxPerMinute').value=config.maxPerMinute;el('qqKeywords').value=config.keywords.join('，');
     el('qqQuietStart').value=config.quietHours[0];el('qqQuietEnd').value=config.quietHours[1];
+    el('qqActiveStart').value=config.activeHours[0];el('qqActiveEnd').value=config.activeHours[1];el('qqEmotionAware').checked=config.emotionAware;
+    for(const [field,key] of [['qqVisionEnabled','visionEnabled'],['qqSceneEnabled','sceneEnabled'],['qqEmotionEnabled','emotionEnabled']])el(field).checked=config.replyOptions[key];
   }
   async function load(){
-    const [result,roles]=await Promise.all([api('/api/qq/config'),api('/api/personas')]);
+    loaded=false;
+    for(const id of ['qqSaveUsers','qqSaveParameters','wechatSave'])el(id).disabled=true;
+    const [result,roles,wechat]=await Promise.all([api('/api/qq/config'),api('/api/personas'),api('/api/wechat/config')]);
+    el('wechatEnabled').checked=wechat.config.enabled;
     const select=el('qqPersona');select.replaceChildren();
-    for(const role of roles.items){const option=document.createElement('option');option.value=role.name;option.textContent=role.title||role.name;select.append(option);}
+    const validRoles=roles.items.filter(r=>/^[a-z0-9][a-z0-9_-]{0,31}$/i.test(r.name));
+    for(const role of validRoles){const option=document.createElement('option');option.value=role.name;option.textContent=role.title||role.name;select.append(option);}
+    const group=el('qqGroupPersona');group.replaceChildren();
+    for(const role of validRoles.filter(r=>!r.isPrivate)){const option=document.createElement('option');option.value=role.name;option.textContent=role.title||role.name;group.append(option);}
     fields(result.config);loaded=true;
+    for(const id of ['qqSaveUsers','qqSaveParameters','wechatSave'])el(id).disabled=false;
   }
   async function status(){
     try{
-      const data=await api('/api/qq/state'),worker=data.worker;
+      const [global,settings]=await Promise.all([api('/api/state'),api('/api/qq/config')]),data=global.qq||{},worker=data.worker;
       const identity=data.loggedIn?(data.nickname||data.bot)+' ('+data.bot+')':'未登录';
-      el('qqOverview').textContent='QQ · '+identity+' · '+(worker?.detail||data.detail);
-      el('qqStatus').textContent=(worker?.detail||data.detail)+(data.loggedIn?' · '+identity:'');
+      const detail=!settings.config.enabled?'未启用':!global.enabled?'已停止回复':worker?.detail||data.detail;
+      const title=name=>[...el('qqPersona').options].find(o=>o.value===name)?.textContent||name;
+      el('qqOverview').textContent='QQ · '+identity+' · '+detail+' · 私聊人设：'+title(settings.config.persona)+' · 群聊人设：'+title(settings.config.groupPersona);
+      el('qqStatus').textContent=detail+(data.loggedIn?' · '+identity:'');
       if(data.loggedIn)el('qqQrPanel').hidden=true;
-    }catch{el('qqOverview').textContent='QQ · 状态暂不可用';}
+    }catch{el('qqOverview').textContent='QQ · 状态暂不可用';el('qqStatus').textContent='状态暂不可用，请刷新';}
   }
   async function action(button,task){
     if(busy)return;busy=true;button.disabled=true;
     try{await task();}catch(error){toast(error.message,true);}finally{busy=false;button.disabled=false;}
   }
   el('qqSaveUsers').onclick=()=>action(el('qqSaveUsers'),async()=>{
-    await post('/api/qq/config',{enabled:el('qqEnabled').checked,wechatEnabled:el('qqWechatEnabled').checked,
-      privateUsers:list(el('qqPrivateUsers').value),groups:list(el('qqGroups').value),persona:el('qqPersona').value});
+    await post('/api/qq/config',{enabled:el('qqEnabled').checked,
+      privateUsers:list(el('qqPrivateUsers').value),groups:list(el('qqGroups').value),persona:el('qqPersona').value,groupPersona:el('qqGroupPersona').value});
     toast('已保存平台和回复对象');await status();
   });
   el('qqSaveParameters').onclick=()=>action(el('qqSaveParameters'),async()=>{
-    await post('/api/qq/config',{probability:Number(el('qqProbability').value)/100,cooldownSeconds:Number(el('qqCooldown').value),maxPerMinute:Number(el('qqMaxPerMinute').value),keywords:list(el('qqKeywords').value),quietHours:[Number(el('qqQuietStart').value),Number(el('qqQuietEnd').value)]});
+    await post('/api/qq/config',{probability:Number(el('qqProbability').value)/100,cooldownSeconds:Number(el('qqCooldown').value),maxPerMinute:Number(el('qqMaxPerMinute').value),keywords:list(el('qqKeywords').value),quietHours:[Number(el('qqQuietStart').value),Number(el('qqQuietEnd').value)],activeHours:[Number(el('qqActiveStart').value),Number(el('qqActiveEnd').value)],emotionAware:el('qqEmotionAware').checked,replyOptions:{visionEnabled:el('qqVisionEnabled').checked,sceneEnabled:el('qqSceneEnabled').checked,emotionEnabled:el('qqEmotionEnabled').checked}});
     toast('已保存QQ接话参数');
   });
   el('qqConfigure').onclick=()=>action(el('qqConfigure'),async()=>{
@@ -48,11 +60,13 @@
     await status();
   });
   el('qqRefresh').onclick=()=>action(el('qqRefresh'),async()=>{await load();await status();});
+  el('wechatSave').onclick=()=>action(el('wechatSave'),async()=>{await post('/api/wechat/config',{enabled:el('wechatEnabled').checked});toast('已保存微信开关');});
   async function visible(){
     if(['#accounts','#config','#overview',''].includes(location.hash)){
-      try{if(!loaded)await load();await status();}catch(error){toast(error.message,true);}
+      try{if(!loaded||['#accounts','#config'].includes(location.hash))await load();await status();}catch(error){toast(error.message,true);}
     }
   }
   window.addEventListener('hashchange',visible);visible();
+  window.addEventListener('personaschange',()=>{loaded=false;});
   setInterval(()=>{if(['#accounts','#overview',''].includes(location.hash))status();},7000);
 })();

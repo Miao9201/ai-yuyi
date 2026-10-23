@@ -4,6 +4,14 @@ import {normalizeEvent,ReplyPolicy} from './qq-policy.mjs';
 
 const event=(extra={})=>({post_type:'message',message_type:'group',self_id:300001,user_id:100001,group_id:200001,message_id:123,time:1000,sender:{nickname:'群友甲'},message:[{type:'text',data:{text:'你觉得画画怎么样？'}}],...extra});
 const config={privateUsers:['100001'],groups:['200001'],probability:0.1,cooldownSeconds:5,maxPerMinute:6,keywords:['小语'],quietHours:[0,7]};
+test('active hours and emotion influence passive participation; other-person replies stay quiet',()=>{
+  const policy=new ReplyPolicy(),msg=normalizeEvent(event({message:[{type:'text',data:{text:'今天有个事情想聊聊'}}]}),'300001');
+  assert.equal(policy.decide(msg,{...config,activeHours:[9,18]},{now:1000000,hour:22,random:()=>0}).reply,false);
+  const normal=policy.decide(msg,{...config,emotionAware:true},{now:1000000,hour:12,random:()=>0.12});
+  const emotional=policy.decide({...msg,text:'今天好难过，想哭'},{...config,emotionAware:true},{now:1000000,hour:12,random:()=>0.12});
+  assert.equal(normal.reply,false);assert.equal(emotional.reply,true);assert.ok(emotional.factors.emotion>1);
+  assert.equal(policy.decide({...msg,replyTo:'other-person'},{...config,probability:1},{now:1000000,hour:12,random:()=>0}).reply,false);
+});
 test('only genuine events for this account and valid senders are normalized; CQ text remains text',()=>{
   assert.equal(normalizeEvent(event({post_type:'notice'}),'300001'),null);
   assert.equal(normalizeEvent(event({self_id:300002}),'300001'),null);

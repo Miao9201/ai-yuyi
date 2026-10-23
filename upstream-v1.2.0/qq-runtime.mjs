@@ -7,7 +7,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {OneBotClient} from './src/qq-onebot.mjs';
 import {QQEngine} from './src/qq-engine.mjs';
 import {createImageLoader} from './src/qq-media.mjs';
-import {prepareReply,companionConfig} from './src/companion-reply.mjs';
+import {prepareReply,qqCompanionConfig} from './src/companion-reply.mjs';
 import {resolveMedia} from './src/companion-media.mjs';
 import {confirmedHistory} from './ilink-runtime.mjs';
 import {extractText} from './src/ilink.js';
@@ -63,12 +63,12 @@ async function main(){
           const options=await context(msg,job,queue),user=uid(msg,job.persona);
           options.userContext=groupReference(msg);
           await syncConfirmedHistory(user,confirmedHistory(queue.data.jobs,job.persona,options.suppressed_history_keys||[]));
-          state.cfg=companionConfig(loadConfig(),job.persona);
+          state.cfg=qqCompanionConfig(loadConfig(),job.persona,settings().replyOptions);
           return prepareReply({state,msg,text:extractText(msg),uid:user,options,handle:handleWithDsh});
         },
         prepare:async(job,checkpoint)=>{
           job.uploads??=[];if(!job.media?.length)return;
-          const role=job.persona,privateFile=path.join(LOCAL,'private',role,'media-catalog.json'),fallback=path.join(LOCAL,'data',`media-catalog-${role}.json`);
+          const role=job.persona,privateFile=path.join(LOCAL,'private',role,'media-catalog.json'),fallback=path.join(LOCAL,'data',`media-catalog-${role==='dafeiyu'?'linmuwan':role}.json`);
           const catalog=JSON.parse(fs.readFileSync(fs.existsSync(privateFile)?privateFile:fallback,'utf8'));
           if(catalog.builtin)catalog.source_root=ROOT;
           for(const selection of job.media){

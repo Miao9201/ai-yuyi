@@ -1,5 +1,11 @@
 import {selectMedia} from './companion-media.mjs';
 
+export function qqCompanionConfig(base,persona,options){
+  const api={};
+  for(const key of ['chatBaseUrl','chatModel','chatTemperature','taskTimeoutMs','visionProvider','visionModel','visionModelDeepseek','visionBaseUrl','visionFallback','visionApiKey'])if(base[key]!==undefined)api[key]=base[key];
+  return companionConfig({...api,autoSearch:false,sceneEnabled:true,emotionEnabled:true,visionEnabled:true,historyRecentTurns:3,historyOlderChars:40,...options},persona);
+}
+
 export function companionConfig(base,persona){
   return {...base,defaultPersona:persona,proactive:false,allowStickers:false,imageGenEnabled:false,autoImageEnabled:false,
     sendTyping:false,showQueuedNotice:false,desktopNaturalReplies:true,maxBubbles:1,bubbleSplit:false,

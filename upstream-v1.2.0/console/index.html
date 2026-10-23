@@ -83,7 +83,7 @@
   <span class="meta" id="headMeta">连接中…</span>
   <span style="flex:1"></span>
   <button class="btn sm" id="btnLocate">定位微信</button>
-  <button class="btn sm danger" id="btnReplyToggle" title="停止所有用户的回复">停止回复</button>
+  <button class="btn sm danger" id="btnReplyToggle" title="停止微信和QQ的所有回复">停止回复</button>
   <button class="btn sm" id="btnRefresh">刷新状态</button>
 </header>
 <div class="card" style="margin:14px 20px 0">
@@ -119,10 +119,12 @@
 <label>请求超时（秒）<input id="apiTimeout" type="number" min="5" max="300" step="1"></label></div><datalist id="apiModelOptions"></datalist>
 <p id="apiReplyTarget" class="note"></p><p id="apiConfigStatus" role="status">正在读取配置…</p>
 <div class="row"><button id="btnApiModels" class="btn">读取可用模型</button><button id="btnApiTest" class="btn">检测接口</button><button id="btnApiSave" class="btn primary">保存并应用</button><button id="btnApiReload" class="btn">重新读取</button><button id="btnApiDeepSeek" class="btn">填入 DeepSeek 默认值</button></div>
-<p class="note">密钥本机加密保存；保存配置会重启正在运行的服务。</p></div></section>
+<p class="note">密钥本机加密保存；保存配置会重启正在运行的服务。</p><details style="margin-top:16px"><summary>共享模型高级参数</summary><table><thead><tr><th>项目</th><th>值</th></tr></thead><tbody id="cfgSharedBody"></tbody></table><button class="btn" id="btnSaveSharedConfig">保存共享模型参数</button></details></div></section>
   <section id="tab-accounts" class="hide">
     <div class="card">
-      <h2>微信用户</h2>
+      <h2>微信</h2>
+      <div class="row"><label><input type="checkbox" id="wechatEnabled">启用微信回复</label><button class="btn" id="wechatSave">保存微信开关</button></div>
+      <p class="note">iLink AI会话：支持私聊、识图和媒体回复；当前通道不支持微信群聊。</p>
       <p class="note">每个用户独立扫码，聊天与记忆分开保存。</p>
       <p class="note">所有用户共用本机 API，调用费用由你承担。</p>
       <div class="row">
@@ -142,20 +144,21 @@
     <div class="card" style="margin-top:16px">
       <div class="row"><h2>QQ</h2><span style="flex:1"></span><button class="btn sm" id="qqRefresh">刷新状态</button></div>
       <p id="qqStatus" role="status">正在读取QQ状态…</p>
-      <div class="row"><label><input type="checkbox" id="qqWechatEnabled">启用微信</label><label><input type="checkbox" id="qqEnabled">启用QQ</label><button class="btn" id="qqLogin">扫码登录 / 刷新二维码</button></div>
+      <div class="row"><label><input type="checkbox" id="qqEnabled">启用QQ</label><button class="btn" id="qqLogin">扫码登录 / 刷新二维码</button></div>
       <div id="qqQrPanel" hidden style="text-align:center;margin:14px 0"><img id="qqQrImage" alt="QQ小号登录二维码" style="width:300px;max-width:95%;border:12px solid white;border-radius:10px"><p class="note">用手机QQ小号扫码并确认。过期后点击刷新二维码。</p></div>
       <div class="api-fields" style="margin-top:16px">
         <label>允许私聊的QQ号<textarea id="qqPrivateUsers" aria-label="允许私聊的QQ号" style="min-height:110px" placeholder="每行一个QQ号"></textarea></label>
         <label>允许回复的群号<textarea id="qqGroups" aria-label="允许回复的群号" style="min-height:110px" placeholder="每行一个群号，留空关闭全部群聊"></textarea></label>
-        <label>QQ私聊人设<select id="qqPersona"></select></label>
+        <label>QQ私聊人设<select id="qqPersona"></select></label><label>QQ群聊人设<select id="qqGroupPersona"></select></label>
       </div>
-      <p class="note">只回复列表内对象；群聊使用林慕婉，各会话记忆独立。共用已有API配置。</p>
+      <p class="note">只回复名单内对象；会话记忆独立。QQ人设文件标识使用字母、数字、下划线或短横线，显示名称可用中文。</p>
       <button class="btn primary" id="qqSaveUsers">保存QQ设置</button>
       <details style="margin-top:16px"><summary>QQ运行环境</summary><p class="note">运行官方 NapCat OneKey 安装器后，选择包含 QQ.exe 的独立目录。<a href="https://napneko.github.io/guide/boot/Shell" target="_blank" rel="noopener">安装说明</a></p><div class="row"><input id="qqShellPath" type="text" placeholder="NapCat OneKey独立目录" style="flex:1"><button class="btn" id="qqConfigure">保存目录</button></div></details>
     </div>
   </section>
   <!-- 总览 -->
   <section id="tab-overview">
+    <div class="card" id="wechatOverview" style="margin-bottom:14px" role="status">微信 · 正在读取状态…</div>
     <div class="card" id="qqOverview" style="margin-bottom:14px" role="status">正在读取QQ状态…</div>
     <div class="grid cards" id="cards"></div>
     <div class="card" style="margin-top:14px">
@@ -183,7 +186,7 @@
         <textarea id="personaBody" placeholder="填写身份、关系和说话方式。"></textarea>
         <div class="row" style="margin-top:10px">
           <button class="btn primary" id="btnSavePersona">保存</button>
-          <button class="btn" id="btnSaveDefault">保存并设为默认</button>
+          <button class="btn" id="btnSaveDefault">保存并设为微信默认</button>
           <button class="btn" id="btnRenamePersona">重命名</button>
           <button class="btn danger" id="btnDeletePersona">删除</button>
         </div>
@@ -207,17 +210,8 @@
   </section>
 
   <!-- 参数 -->
-  <section id="tab-config" class="hide">
-    <details class="card" style="margin-bottom:16px"><summary>QQ群接话</summary>
-      <div class="api-fields" style="margin-top:14px">
-        <label>普通消息接话概率（%）<input id="qqProbability" type="number" min="0" max="100" step="1"></label>
-        <label>回复间隔（秒）<input id="qqCooldown" type="number" min="0" max="300"></label>
-        <label>每分钟最多回复<input id="qqMaxPerMinute" type="number" min="1" max="60"></label>
-        <label>触发词<input id="qqKeywords" type="text" placeholder="用逗号分隔"></label>
-        <label>安静时段开始（0—24）<input id="qqQuietStart" type="number" min="0" max="24"></label>
-        <label>安静时段结束（0—24）<input id="qqQuietEnd" type="number" min="0" max="24"></label>
-      </div><p class="note">@和触发词优先回复，仍遵守间隔与频率；@全体不触发。安静时段降低普通接话概率。</p><button class="btn primary" id="qqSaveParameters">保存QQ接话参数</button>
-    </details>
+  <section id="tab-config" class="hide"><div class="card"><h2>微信参数</h2><p class="note">只影响微信。QQ在下方单独调整；模型接口统一在API配置设置。</p>
+
     <div class="row" style="margin-bottom:10px">
       <input type="text" id="cfgFilter" placeholder="搜索键名…" style="flex:1;max-width:320px">
       <button class="btn sm" id="btnReloadConfig">刷新</button>
@@ -228,8 +222,20 @@
       <tbody id="cfgBody"></tbody>
     </table>
     <div class="row" style="margin-top:12px">
-      <button class="btn primary" id="btnSaveConfig">保存参数</button>
+      <button class="btn primary" id="btnSaveConfig">保存微信参数</button>
       <span class="note" id="cfgHint"></span>
+    </div>
+    </div>
+    <div class="card" style="margin-top:16px"><h2>QQ参数</h2><h3>群聊接话</h3>
+      <div class="api-fields" style="margin-top:14px">
+        <label>普通消息接话概率（%）<input id="qqProbability" type="number" min="0" max="100" step="1"></label>
+        <label>回复间隔（秒）<input id="qqCooldown" type="number" min="0" max="300"></label>
+        <label>每分钟最多回复<input id="qqMaxPerMinute" type="number" min="1" max="60"></label>
+        <label>触发词<input id="qqKeywords" type="text" placeholder="用逗号分隔"></label>
+        <label>活跃时段开始（0—24）<input id="qqActiveStart" type="number" min="0" max="24"></label><label>活跃时段结束（0—24）<input id="qqActiveEnd" type="number" min="0" max="24"></label>
+        <label>安静时段开始（0—24）<input id="qqQuietStart" type="number" min="0" max="24"></label>
+        <label>安静时段结束（0—24）<input id="qqQuietEnd" type="number" min="0" max="24"></label>
+      </div><div class="row" style="margin-top:14px"><label><input id="qqEmotionAware" type="checkbox">情绪感知接话</label><label><input id="qqVisionEnabled" type="checkbox">图片识别</label><label><input id="qqSceneEnabled" type="checkbox">话题延续</label><label><input id="qqEmotionEnabled" type="checkbox">回复情绪</label></div><p class="note">@和触发词优先回复，仍遵守间隔与频率；@全体不触发。默认基础概率10%，结合质量、注意力、情绪与疲劳调整；普通接话仅在活跃时段触发，安静时段降低概率。</p><button class="btn primary" id="qqSaveParameters">保存QQ参数</button>
     </div>
   </section>
 
@@ -400,7 +406,7 @@
   <!-- 日志 -->
   <section id="tab-logs" class="hide">
     <div class="row" style="margin-bottom:10px">
-      <button class="btn sm" id="btnReloadLogs">刷新</button>
+      <button class="btn sm" id="btnReloadLogs">刷新</button><label class="note">平台 <select id="logPlatform"><option value="all">全部</option><option value="wechat">微信</option><option value="qq">QQ</option></select></label>
       <label class="note">行数 <input type="number" id="logLines" value="400" min="20" max="2000" style="width:90px"></label>
       <label class="note"><input type="checkbox" id="logAuto"> 每 2 秒自动刷新</label>
     </div>
@@ -511,6 +517,7 @@ async function loadState() {
     const ilink=s.desktop?.transport==='ilink';
     const wechat=s.platforms?.wechat!==false,qq=!!s.platforms?.qq;
     const qqDetail=s.qq?.worker?.detail||s.qq?.detail||'QQ尚未连接';
+    $('#wechatOverview').textContent='微信 · '+(!wechat?'未启用':!s.enabled?'已停止回复':s.desktop?.detail||'尚未连接');
     $('#btnLocate').hidden=ilink;
     $('#transportNote').textContent=!wechat&&qq?'电脑需保持开机联网，QQ无需前台。':ilink?'电脑需保持开机联网，微信无需前台。':'请保持目标微信聊天在前台。';
     $('#qrPanel').hidden=!(wechat&&ilink&&s.bot.running&&s.desktop?.qr);
@@ -521,19 +528,19 @@ async function loadState() {
     $('#dot').className = 'dot' + (s.bot.running ? ' on' : '');
     $('#headMeta').textContent = s.bot.running&&s.enabled ? '运行中' : s.bot.running ? '正在停止' : '已停止';
     state.replyEnabled=!!s.enabled;
-    const toggle=$('#btnReplyToggle');toggle.textContent=s.enabled?'停止回复':'开始回复';toggle.className='btn sm '+(s.enabled?'danger':'success');toggle.title=s.enabled?'停止所有用户的回复':'启动所有已启用用户的回复';
+    const toggle=$('#btnReplyToggle');toggle.textContent=s.enabled?'停止回复':'开始回复';toggle.className='btn sm '+(s.enabled?'danger':'success');toggle.title=s.enabled?'停止所有用户的回复':'开始所有已启用平台的回复';
     const phaseNames={queued:'等待生成',generating:'生成中',prepared:'等待发送',pasting:'正在粘贴',pasted:'核对输入',entering:'发送确认中',sending:'发送中',sent:'已发送',uncertain:'发送待核对',failed:'本轮失败'};
     $('#cards').innerHTML = [
       ['机器人', s.bot.running ? '运行中' : '已停止'],
-      ['人设', `${s.personas.count} 个${s.personas.current ? ' · ' + s.personas.current : ''}`],
-      ['回复对象', !wechat&&qq?(s.qq?.nickname||s.qq?.bot||'QQ未登录'):(s.desktop?.contact||'未绑定微信')],
+      ['人设库', `${s.personas.count} 个`],
+      [!wechat&&qq?'QQ机器人':'微信回复对象', !wechat&&qq?(s.qq?.nickname||s.qq?.bot||'QQ未登录'):(s.desktop?.contact||'未绑定微信')],
       ['当前模型', s.config.model || '—'],
       ['引擎版本', s.desktop?.version || '1.2.0'],
       ['收发方式', !wechat&&qq?'QQ 后台连接':qq?'微信＋QQ 后台连接':ilink?'iLink 后台连接':'前台文字识别'],
       ['当前／最近任务', wechat&&s.desktop?.event ? `#${s.desktop.event} · ${phaseNames[s.desktop.phase]||s.desktop.state}` : '无待发任务'],
-      ['当前人设', s.profile ? `${s.profile.name} · ${s.profile.gender}` : '—'],
-      ['与你的关系', s.profile ? `${s.profile.relationship} · 称呼${s.profile.address}` : '—'],
-      ...(s.companion?.mode==='role'?[
+      ...(wechat?[['微信人设', s.profile ? `${s.profile.name} · ${s.profile.gender}` : '—'],
+      ['微信关系', s.profile ? `${s.profile.relationship} · 称呼${s.profile.address}` : '—']]:[]),
+      ...(!wechat?[]:s.companion?.mode==='role'?[
         ['说话方式','当前人设文件'],['记忆范围','本角色的新对话'],['表情素材',`${s.companion.emoji}个内置素材`],
       ]:s.companion?[
         ['学习重点',`${s.companion.focus} · ${s.companion.examples}组接话范例`],
@@ -541,7 +548,7 @@ async function loadState() {
         ['她发过的素材',`${s.companion.emoji}个表情 · ${s.companion.images}张图片`],
       ]:[]),
     ].map(([k, v]) => `<div class="card"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
-    const lg = await api('/api/logs?lines=24');
+    const lg = await api('/api/logs?lines=24&platform='+(!wechat&&qq?'qq':wechat&&!qq?'wechat':'all'));
     $('#miniLog').textContent = lg.text || '(空)';
     return s;
   } catch (e) { toast('读取状态失败：' + e.message, true); }
@@ -562,6 +569,7 @@ async function loadPersonas(select) {
   try {
     const r = await api('/api/personas');
     state.personas = r.items;
+    window.dispatchEvent(new Event('personaschange'));
     $('#personaList').innerHTML = r.items.map((p) => `
       <div class="item ${p.name === state.activePersona ? 'active' : ''}" data-name="${esc(p.name)}">
         <div><div class="n">${esc(p.title || p.name)} ${p.isDefault ? '<span style="color:var(--accent)">●默认</span>' : ''}</div>
@@ -597,7 +605,7 @@ async function savePersona(asDefault) {
   try {
     await post('/api/personas/save', { name, content: $('#personaBody').value });
     if (asDefault) await post('/api/personas/default', { name });
-    toast(asDefault ? '已保存并设为默认' : '已保存');
+    toast(asDefault ? '已保存并设为微信默认' : '已保存');
     await loadPersonas(name);
   } catch (e) { toast('保存失败：' + e.message, true); }
 }
@@ -621,6 +629,8 @@ $('#btnDeletePersona').onclick = async () => {
 
 // ── 参数 ──
 let cfgItems = [];
+const sharedConfigKeys=new Set(['chatBaseUrl','chatModel','chatTemperature','taskTimeoutMs','visionProvider','visionModel','visionModelDeepseek','visionBaseUrl','visionFallback']);
+const isSharedConfig=it=>sharedConfigKeys.has(it.key)||it.kind==='secret';
 async function loadConfig() {
   try {
     const r = await api('/api/config');
@@ -634,7 +644,8 @@ function renderConfig() {
     || it.key.toLowerCase().includes(q)
     || (it.zh || '').toLowerCase().includes(q)
     || (it.desc || '').toLowerCase().includes(q));
-  $('#cfgBody').innerHTML = rows.map((it) => {
+  for(const [selector,shared] of [['#cfgBody',false],['#cfgSharedBody',true]]){
+  $(selector).innerHTML = rows.filter(it=>isSharedConfig(it)===shared).map((it) => {
     const id = 'cfg_' + it.key;
     const v = it.value;
     let input;
@@ -659,12 +670,13 @@ function renderConfig() {
       : '<div class="note" style="font-size:11px">（暂无中文说明）</div>';
     return `<tr><td>${title}<code style="font-size:11px;opacity:.55">${esc(it.key)}</code></td><td>${input}</td></tr>`;
   }).join('') || '<tr><td colspan="2" class="note">没有匹配的项目</td></tr>';
+  }
 }
 $('#cfgFilter').oninput = renderConfig;
 $('#btnReloadConfig').onclick = loadConfig;
-$('#btnSaveConfig').onclick = async () => {
+async function saveConfigScope(shared){
   const patch = {};
-  for (const it of cfgItems) {
+  for (const it of cfgItems.filter(it=>isSharedConfig(it)===shared)) {
     const el = document.getElementById('cfg_' + it.key);
     if (!el) continue;
     if (it.kind === 'bool') patch[it.key] = el.checked;
@@ -676,6 +688,9 @@ $('#btnSaveConfig').onclick = async () => {
   try { const r = await post('/api/config', { patch }); toast(`已保存 ${r.changed.length} 项`); loadConfig(); }
   catch (e) { toast('保存失败：' + e.message, true); }
 };
+
+$('#btnSaveConfig').onclick=()=>saveConfigScope(false);
+$('#btnSaveSharedConfig').onclick=()=>saveConfigScope(true);
 
 // ── 生活线（可 DIY：人物 + 故事模板）──
 let lifeData = null;
@@ -942,7 +957,7 @@ let logTimer = null;
 async function loadLogs() {
   try {
     const n = Math.max(20, Math.min(2000, Number($('#logLines').value) || 400));
-    const r = await api('/api/logs?lines=' + n);
+    const r = await api('/api/logs?lines=' + n+'&platform='+encodeURIComponent($('#logPlatform').value||'all'));
     const pre = $('#logBody');
     const atBottom = pre.scrollTop + pre.clientHeight >= pre.scrollHeight - 40;
     pre.textContent = r.text || '(空)';
@@ -950,6 +965,7 @@ async function loadLogs() {
   } catch (e) { toast('读取日志失败：' + e.message, true); }
 }
 $('#btnReloadLogs').onclick = loadLogs;
+$('#logPlatform').onchange=loadLogs;
 $('#logAuto').onchange = (e) => {
   if (logTimer) { clearInterval(logTimer); logTimer = null; }
   if (e.target.checked) logTimer = setInterval(loadLogs, 2000);

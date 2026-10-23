@@ -297,11 +297,26 @@ const ENUM_LABELS = {
 // ── 路由 ─────────────────────────────────────────────────────────────────
 const routes = [];
 const route = (method, pattern, handler) => routes.push({ method, pattern, handler });
+let platformWrite=Promise.resolve();
+function savePlatform(action,body){
+  const next=platformWrite.catch(()=>{}).then(()=>localOperation('qq_settings.py',action,body));
+  platformWrite=next;return next;
+}
+async function usedByQQ(name){
+  if(!fs.existsSync(path.join(DESKTOP_ROOT,'data/qq/settings.json')))return false;
+  const cfg=await localOperation('qq_settings.py','get');
+  return [cfg.persona,cfg.groupPersona,...Object.values(cfg.privatePersonas)].includes(name);
+}
+route('GET',/^\/api\/wechat\/config$/,async(req,res)=>json(res,200,{ok:true,config:await localOperation('qq_settings.py','wechat-get')}));
+route('POST',/^\/api\/wechat\/config$/,async(req,res)=>{
+  const body=JSON.parse((await readBody(req,4096)).toString('utf8')||'{}');
+  return json(res,200,{ok:true,config:await savePlatform('wechat-save',body)});
+});
 
 route('GET',/^\/api\/qq\/config$/,async(req,res)=>json(res,200,{ok:true,config:await localOperation('qq_settings.py','get')}));
 route('POST',/^\/api\/qq\/config$/,async(req,res)=>{
   const body=JSON.parse((await readBody(req,32768)).toString('utf8')||'{}');
-  return json(res,200,{ok:true,config:await localOperation('qq_settings.py','save',body)});
+  return json(res,200,{ok:true,config:await savePlatform('save',body)});
 });
 route('GET',/^\/api\/qq\/state$/,async(req,res)=>json(res,200,{ok:true,...await qqOperation('status')}));
 route('POST',/^\/api\/qq\/(configure|login)$/,async(req,res,m)=>{
@@ -426,6 +441,7 @@ route('POST', /^\/api\/personas\/rename$/, async (req, res) => {
   const dst = path.join(PERSONA_DIR, to + '.md');
   if (!fs.existsSync(src)) return bad(res, 404, '人设不存在');
   if (fs.existsSync(dst)) return bad(res, 409, '目标名字已存在');
+  if(await usedByQQ(from))return bad(res,400,'QQ正在使用这个人设，请先在QQ板块更换');
   fs.renameSync(src, dst);
   const cfg = loadConfig();
   if (String(cfg.defaultPersona || '').replace(/\.md$/i, '') === from) { cfg.defaultPersona = to; saveConfig(cfg); }
@@ -439,6 +455,7 @@ route('POST', /^\/api\/personas\/delete$/, async (req, res) => {
   const full = personaFile(name);
   if (!fs.existsSync(full)) return bad(res, 404, '人设不存在');
   if (listPersonas().length <= 1) return bad(res, 400, '至少保留一个人设');
+  if(await usedByQQ(name))return bad(res,400,'QQ正在使用这个人设，请先在QQ板块更换');
   fs.unlinkSync(full);
   const cfg = loadConfig();
   if (String(cfg.defaultPersona || '').replace(/\.md$/i, '') === name) { cfg.defaultPersona = ''; saveConfig(cfg); }
@@ -806,9 +823,12 @@ route('GET', /^\/api\/logs$/, (req, res, m, url) => {
   const requested = Number(url.searchParams.get('lines') || 300);
   if (!Number.isFinite(requested)) return bad(res,400,'日志行数无效');
   const lines = Math.min(2000, Math.max(20, requested));
-  let text = loadConfig().desktopAdapterEnabled ? tail(LOG_PATH,Math.ceil(lines/2))+'\n—— 微信收发 ——\n'+tail(path.join(DESKTOP_ROOT,'data','run.log'),Math.ceil(lines/2)) : tail(LOG_PATH,lines);
-  const qqLog=tail(path.join(DESKTOP_ROOT,'data','qq','run.log'),Math.ceil(lines/2));
-  if(qqLog)text+='\n—— QQ收发 ——\n'+qqLog;
+  const platform=url.searchParams.get('platform')||'all';
+  if(!['all','wechat','qq'].includes(platform))return bad(res,400,'日志平台无效');
+  const count=platform==='all'?Math.ceil(lines/2):lines;
+  const wxLog=loadConfig().desktopAdapterEnabled?tail(LOG_PATH,count)+'\n'+tail(path.join(DESKTOP_ROOT,'data','run.log'),count):tail(LOG_PATH,count);
+  const qqLog=tail(path.join(DESKTOP_ROOT,'data','qq','run.log'),count);
+  const text=platform==='qq'?qqLog:platform==='wechat'?wxLog:'—— 微信收发 ——\n'+wxLog+'\n—— QQ收发 ——\n'+qqLog;
   return json(res, 200, { ok: true, text });
 });
 
