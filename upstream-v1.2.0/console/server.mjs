@@ -38,6 +38,7 @@ function localOperation(script,action,body={}){
   });
 }
 const accountOperation=(action,body={})=>localOperation('account_store.py',action,body);
+const qqOperation=(action,body={})=>localOperation('qq_runtime.py',action,body);
 function localSettings(){try{return JSON.parse(fs.readFileSync(path.join(DESKTOP_ROOT,'data/config.json'),'utf8'));}catch{return {};}}
 function desktopStatus() {
   try { return JSON.parse(fs.readFileSync(path.join(DESKTOP_ROOT,'data','status.json'),'utf8')); }
@@ -297,6 +298,23 @@ const ENUM_LABELS = {
 const routes = [];
 const route = (method, pattern, handler) => routes.push({ method, pattern, handler });
 
+route('GET',/^\/api\/qq\/config$/,async(req,res)=>json(res,200,{ok:true,config:await localOperation('qq_settings.py','get')}));
+route('POST',/^\/api\/qq\/config$/,async(req,res)=>{
+  const body=JSON.parse((await readBody(req,32768)).toString('utf8')||'{}');
+  return json(res,200,{ok:true,config:await localOperation('qq_settings.py','save',body)});
+});
+route('GET',/^\/api\/qq\/state$/,async(req,res)=>json(res,200,{ok:true,...await qqOperation('status')}));
+route('POST',/^\/api\/qq\/(configure|login)$/,async(req,res,m)=>{
+  const body=JSON.parse((await readBody(req,16384)).toString('utf8')||'{}');
+  if(!body||typeof body!=='object'||Array.isArray(body)||Object.keys(body).some(k=>m[1]==='configure'?k!=='shell':true))return bad(res,400,'QQ操作参数无效');
+  return json(res,200,{ok:true,...await qqOperation(m[1]==='login'?'qr':'configure',body)});
+});
+route('GET',/^\/api\/qq\/qr$/,async(req,res)=>{
+  const file=path.join(DESKTOP_ROOT,'data','qq','login-qr.png');
+  if(!fs.existsSync(file))return bad(res,404,'请先生成QQ登录二维码');
+  const image=fs.readFileSync(file);res.writeHead(200,{'content-type':'image/png','content-length':image.length,'cache-control':'no-store'});res.end(image);
+});
+
 route('GET', /^\/api\/accounts$/,async(req,res)=>json(res,200,{ok:true,...await accountOperation('list')}));
 route('POST', /^\/api\/persona-import\/(analyze|import)$/,async(req,res,m)=>{
   const body=JSON.parse((await readBody(req,16384)).toString('utf8')||'{}');
@@ -333,8 +351,17 @@ route('GET', /^\/api\/state$/, async (req, res) => {
     try{identity=await accountOperation('identity');}
     catch{identity={bound:false,name:'绑定信息暂不可用',source:'unavailable'};}
   }
+  let platforms={wechat:true,qq:false},qq=null;
+  if(fs.existsSync(path.join(DESKTOP_ROOT,'data','qq','settings.json'))){
+    try{
+      const settings=await localOperation('qq_settings.py','get');
+      platforms={wechat:settings.wechatEnabled,qq:settings.enabled};
+      if(platforms.qq)qq=await qqOperation('status');
+    }catch{platforms={wechat:false,qq:false};}
+  }
   return json(res, 200, {
     ok: true,
+    platforms,qq,
     appId: cfg.desktopAdapterEnabled ? 'ai-yuyi' : 'wx-bridge',
     instanceId: INSTANCE_ID,
     desktop: cfg.desktopAdapterEnabled ? {...desktopStatus(),version:'1.2.0',transport:localTransport(),contact:identity?identity.name:(localSettings().contact||'未设置'),contactSource:identity?.source} : null,
@@ -779,7 +806,9 @@ route('GET', /^\/api\/logs$/, (req, res, m, url) => {
   const requested = Number(url.searchParams.get('lines') || 300);
   if (!Number.isFinite(requested)) return bad(res,400,'日志行数无效');
   const lines = Math.min(2000, Math.max(20, requested));
-  const text = loadConfig().desktopAdapterEnabled ? tail(LOG_PATH,Math.ceil(lines/2))+'\n—— 微信收发 ——\n'+tail(path.join(DESKTOP_ROOT,'data','run.log'),Math.ceil(lines/2)) : tail(LOG_PATH,lines);
+  let text = loadConfig().desktopAdapterEnabled ? tail(LOG_PATH,Math.ceil(lines/2))+'\n—— 微信收发 ——\n'+tail(path.join(DESKTOP_ROOT,'data','run.log'),Math.ceil(lines/2)) : tail(LOG_PATH,lines);
+  const qqLog=tail(path.join(DESKTOP_ROOT,'data','qq','run.log'),Math.ceil(lines/2));
+  if(qqLog)text+='\n—— QQ收发 ——\n'+qqLog;
   return json(res, 200, { ok: true, text });
 });
 
@@ -794,7 +823,7 @@ route('GET', /^\/api\/ilink\/qr$/, (req,res)=>{
   const body=fs.readFileSync(file);res.writeHead(200,{'content-type':'image/png','content-length':body.length,'cache-control':'no-store'});res.end(body);
 });
 
-route('GET', /^\/(api-ui|memory-ui|import-ui)\.js$/, (req,res,m)=>{const body=fs.readFileSync(path.join(HERE,m[1]+'.js'));res.writeHead(200,{'content-type':'text/javascript; charset=utf-8','content-length':body.length,'cache-control':'no-store'});res.end(body);});
+route('GET', /^\/(api-ui|memory-ui|import-ui|qq-ui)\.js$/, (req,res,m)=>{const body=fs.readFileSync(path.join(HERE,m[1]+'.js'));res.writeHead(200,{'content-type':'text/javascript; charset=utf-8','content-length':body.length,'cache-control':'no-store'});res.end(body);});
 // 静态文件（console/index.html）
 route('GET', /^\/$|^\/index\.html$/, (req, res) => {
   const file = path.join(HERE, 'index.html');

@@ -59,4 +59,14 @@ class QQContextTests(unittest.TestCase):
                 self.assertEqual(listed['total'],1)
 
 
+    def test_group_context_replaces_private_relationship_instructions(self):
+        from types import SimpleNamespace
+        profile={'name':'体验角色','real_chat_knowledge':False,'media_catalog':None}
+        role=SimpleNamespace(profile=profile,facts=lambda:'PRIVATE_RELATIONSHIP_SENTINEL')
+        with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)),patch.object(context,'load_profile',return_value=profile),patch.object(context,'Persona',return_value=role):
+            qq.save_config({'groups':['200001']})
+            result=context.context_for({'bot':'300001','kind':'group','peer':'200001','persona':'linmuwan','text':'你好','history':[]})
+            self.assertIn('普通群友',result['context'])
+            self.assertNotIn('PRIVATE_RELATIONSHIP_SENTINEL',result['context'])
+
 if __name__=='__main__':unittest.main()

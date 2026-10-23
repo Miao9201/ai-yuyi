@@ -69,7 +69,11 @@ def context_for(request):
     try:
         knowledge.remember_live(scope['owner'],request.get('history',[]),'群友' if scope['kind']=='group' else '用户')
         memories=knowledge.search(question)
-        parts=[role.facts(),knowledge.fixed_context(),'【当前QQ会话已确认的对话记忆，不代表现实人物的真实经历】',*(m['text'] for m in memories)]
+        facts=role.facts() if scope['kind']=='private' else (
+            f'【当前QQ群角色】姓名：{profile["name"]}。群成员都是普通群友，按各自昵称称呼。'
+            '本轮优先于人设中的私聊关系和历史错误称呼：只沿用角色的性格与口语风格，'
+            '不要使用宝宝、老公、老婆等恋爱称呼，也不把任何群友当作私聊恋人。')
+        parts=[facts,knowledge.fixed_context(),'【当前QQ会话已确认的对话记忆，不代表现实人物的真实经历】',*(m['text'] for m in memories)]
         if scope['kind']=='group':parts.append('当前是多人QQ群。请分清每位说话人，以群友身份自然接话，不把所有人当成私聊对象或恋人，不披露其他会话资料。')
         if profile.get('real_chat_knowledge'):
             folder=qq.DATA.parent/'private'/scope['persona']

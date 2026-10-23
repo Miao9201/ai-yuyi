@@ -11,3 +11,5 @@
 语忆AI新增的人设导入、管理界面与本地适配修改使用根目录MIT许可；该许可不替代上游源码与素材自己的许可。输入分享版说明明确允许公开分享脱敏源文件及内置示例；上游未提供的许可证不由本项目补造。已另附腾讯协议参考项目当前官方LICENSE，保留其版权与许可，见 `licenses/Tencent-openclaw-weixin-LICENSE.txt`。
 
 桌面窗口使用 Microsoft.Web.WebView2 SDK 1.0.4258.31，相关 LICENSE.txt 与 NOTICE.txt 随安装包保存在 runtime/webview2/。SDK 从微软 NuGet 包获取并校验固定 SHA256；Evergreen 运行组件安装程序来自微软官方链接并验证微软 Authenticode 签名，其安装与更新遵循微软许可。
+
+QQ接入通过独立安装的 [NapCatQQ](https://github.com/NapNeko/NapCatQQ) 和 OneBot 11 通信。本次验证版本 v4.18.41 使用 Limited Redistribution License，并非MIT，适用非商业使用与再分发限制，详见[原许可证](https://github.com/NapNeko/NapCatQQ/blob/v4.18.41/LICENSE)。本仓库与语忆AI安装包不复制、修改或附带该组件或QQ客户端；用户按官方说明另行安装。参考项目 make-your-qq-ai-group-member 仅用于架构学习，未集成AstrBot或复制其群聊插件代码。

@@ -64,7 +64,10 @@ def public_config():
 
 def save_config(body):
     if not isinstance(body,dict) or set(body)-set(DEFAULTS):raise ValueError('QQ配置字段无效')
-    cfg=validate({**load_config(),**body})
+    cfg={**load_config(),**body}
+    if 'privateUsers' in body and 'privatePersonas' not in body and isinstance(cfg['privateUsers'],list):
+        cfg['privatePersonas']={peer:role for peer,role in cfg['privatePersonas'].items() if peer in cfg['privateUsers']}
+    cfg=validate(cfg)
     atomic_write(DATA/'qq/settings.json',json.dumps(cfg,ensure_ascii=False,indent=2).encode('utf8'))
     return public_config()
 

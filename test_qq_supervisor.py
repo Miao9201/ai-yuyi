@@ -19,4 +19,17 @@ class QQSupervisorTests(unittest.TestCase):
         with patch('qq_bot.time.monotonic',return_value=21):worker.reconcile(True)
         self.assertIs(worker.proc,proc);worker.reconcile(False);proc.terminate.assert_called_once()
 
+    def test_bad_platform_config_keeps_last_known_platform_switches(self):
+        import json,tempfile
+        from pathlib import Path
+        import qq_settings
+        from ilink_bot import platform_config
+        with tempfile.TemporaryDirectory() as tmp,patch.object(qq_settings,'DATA',Path(tmp)):
+            qq_settings.save_config({'enabled':True,'wechatEnabled':False})
+            good=platform_config({'wechatEnabled':False,'enabled':False})
+            (Path(tmp)/'qq/settings.json').write_text('bad json',encoding='utf8')
+            result=platform_config(good)
+            self.assertTrue(result['enabled'])
+            self.assertFalse(result['wechatEnabled'])
+
 if __name__=='__main__':unittest.main()

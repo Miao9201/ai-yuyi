@@ -84,6 +84,12 @@ class WorkerPool:
         self.children.clear()
 
 
+def platform_config(previous):
+    import qq_settings
+    try:return qq_settings.load_config()
+    except Exception:return previous
+
+
 def main():
     kernel=ctypes.windll.kernel32
     kernel.CreateMutexW.restype=ctypes.c_void_p
@@ -116,11 +122,11 @@ def main():
         import qq_settings
         from qq_bot import QQWorker,spawn_worker,error_state
         qq_worker=QQWorker(lambda:spawn_worker(env),error_state)
+        platforms={'wechatEnabled':not (DATA/'qq/settings.json').exists(),'enabled':False}
         while True:
             now=load_config()
             if (DATA/'stop').exists() or not now.get('enabled') or now.get('run_id')!=run_id:break
-            try:platforms=qq_settings.load_config()
-            except Exception:platforms={'wechatEnabled':True,'enabled':False}
+            platforms=platform_config(platforms)
             pool.reconcile(load_accounts() if platforms['wechatEnabled'] else [],primary_enabled=platforms['wechatEnabled'])
             qq_worker.reconcile(platforms['enabled']);time.sleep(.5)
     finally:

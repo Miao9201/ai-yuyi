@@ -29,4 +29,11 @@ class QQSettingsTests(unittest.TestCase):
             self.assertNotIn(first['token'],json.dumps(qq.public_config()))
 
 
+    def test_removing_private_target_also_removes_its_persona_assignment(self):
+        with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)):
+            qq.save_config({'privateUsers':['100001','100002'],'privatePersonas':{'100001':'private_example'}})
+            result=qq.save_config({'privateUsers':['100002']})
+            self.assertEqual(result['privateUsers'],['100002'])
+            self.assertEqual(result['privatePersonas'],{})
+
 if __name__=='__main__':unittest.main()

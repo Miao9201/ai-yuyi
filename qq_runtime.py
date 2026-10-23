@@ -1,5 +1,7 @@
 """Manage the independent official NapCat OneKey runtime on this computer."""
 import hashlib
+import ctypes
+from contextlib import contextmanager
 import json
 from pathlib import Path
 import secrets
@@ -47,6 +49,19 @@ def start():
     atomic_write(folder/'napcat-process.json',json.dumps({'pid':process.pid,'path':str(meta['shell']/'NapCatWinBootMain.exe'),'at':time.time()}).encode('utf8'))
     return {'started':True}
 
+@contextmanager
+def webui_lock():
+    kernel=ctypes.windll.kernel32;kernel.CreateMutexW.restype=ctypes.c_void_p
+    name='Local\\YuYiQQWebUI_'+hashlib.sha256(str(DATA.resolve()).encode()).hexdigest()[:16]
+    handle=kernel.CreateMutexW(None,False,name)
+    if not handle:raise OSError('无法锁定QQ接口会话')
+    try:
+        if kernel.WaitForSingleObject(ctypes.c_void_p(handle),10000) not in (0,128):raise ValueError('QQ接口正忙，请稍后重试')
+        try:yield
+        finally:kernel.ReleaseMutex(ctypes.c_void_p(handle))
+    finally:kernel.CloseHandle(ctypes.c_void_p(handle))
+
+
 def api(action,body=None):
     meta=paths();token=protect((DATA/'qq/webui.dpapi').read_bytes(),True).decode('utf8')
     opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -55,12 +70,33 @@ def api(action,body=None):
         if credential:headers['Authorization']='Bearer '+credential
         req=urllib.request.Request('http://127.0.0.1:'+str(meta['port'])+'/api/'+route,data=json.dumps(data).encode('utf8'),headers=headers)
         with opener.open(req,timeout=15) as response:result=json.load(response)
-        if result.get('code')!=0:raise ValueError('NapCat暂未完成登录或本机接口不可用')
+        if result.get('code')!=0:
+            if result.get('message')=='Unauthorized':raise PermissionError('QQ接口会话已失效')
+            raise ValueError('NapCat暂未完成登录或本机接口不可用')
         return result.get('data')
-    auth=request('auth/login',{'hash':hashlib.sha256((token+'.napcat').encode('utf8')).hexdigest()})
-    credential=auth.get('Credential') if isinstance(auth,dict) else None
-    if not credential:raise ValueError('NapCat本机验证失败')
-    return request(action,body or {},credential)
+    file=DATA/'qq/webui-session.dpapi'
+    fingerprint=hashlib.sha256((str(meta['port'])+' '+token).encode()).hexdigest()
+    with webui_lock():
+        try:session=json.loads(protect(file.read_bytes(),True).decode('utf8'))
+        except (OSError,ValueError):session={}
+        if session.get('fingerprint')!=fingerprint:session={}
+        if session.get('retryAt',0)>time.time():raise ValueError('QQ接口登录频率受限，请稍后刷新')
+        def authenticate():
+            try:
+                auth=request('auth/login',{'hash':hashlib.sha256((token+'.napcat').encode('utf8')).hexdigest()})
+                credential=auth.get('Credential') if isinstance(auth,dict) else None
+                if not credential:raise ValueError('NapCat本机验证失败')
+            except (ValueError,PermissionError):
+                atomic_write(file,protect(json.dumps({'fingerprint':fingerprint,'retryAt':time.time()+65}).encode()))
+                raise ValueError('QQ接口登录暂时不可用，请稍后刷新') from None
+            atomic_write(file,protect(json.dumps({'fingerprint':fingerprint,'credential':credential,'at':time.time()}).encode()))
+            return credential
+        credential=session.get('credential') if time.time()-session.get('at',0)<3000 else None
+        if not credential:credential=authenticate()
+        try:return request(action,body or {},credential)
+        except PermissionError:
+            # Only an explicit authentication rejection is safe to repeat.
+            return request(action,body or {},authenticate())
 
 def status():
     try:meta=paths()
@@ -77,6 +113,13 @@ def status():
     except Exception:result['detail']='QQ本机接口暂时不可用'
     try:
         worker=json.loads((DATA/'qq/state.json').read_text(encoding='utf8'))
+        cfg=json.loads((DATA/'config.json').read_text(encoding='utf8'))
+        if not cfg.get('enabled') or cfg.get('run_id')!=worker.get('runId') or (DATA/'stop').exists():
+            worker.update(state='stopped',detail='已停止QQ回复')
+        elif not json.loads((DATA/'qq/settings.json').read_text(encoding='utf8')).get('enabled'):
+            worker.update(state='disabled',detail='QQ回复未启用')
+        elif worker.get('bot')!=result.get('bot'):
+            worker.update(state='connecting',detail='正在核对QQ连接')
         result['worker']={k:worker[k] for k in ('state','detail','at','bot','nickname') if k in worker}
     except (OSError,ValueError):pass
     return result
@@ -101,11 +144,11 @@ def prepare():
     connection=connection_settings();url=urlsplit(connection['url'])
     config=api('OB11Config/GetConfig');network=config.setdefault('network',{})
     desired={'name':'yuyi-ai','enable':True,'host':'127.0.0.1','port':url.port,'messagePostFormat':'array','reportSelfMessage':False,'token':connection['token'],'enableForcePushEvent':True,'debug':False,'heartInterval':30000}
-    current=network.get('websocketServers',[])
-    if current!=[desired]:
-        # This is a dedicated runtime, so no other endpoint may publish private QQ events.
-        config['network']={key:[] for key in ('httpServers','httpSseServers','httpClients','websocketServers','websocketClients','plugins')}
-        config['network']['websocketServers']=[desired]
+    desired_network={key:[] for key in ('httpServers','httpSseServers','httpClients','websocketServers','websocketClients','plugins')}
+    desired_network['websocketServers']=[desired]
+    if network!=desired_network:
+        # This dedicated runtime must not publish private QQ events to other endpoints.
+        config['network']=desired_network
         api('OB11Config/SetConfig',{'config':json.dumps(config,ensure_ascii=False)})
     return {'ready':True}
 
