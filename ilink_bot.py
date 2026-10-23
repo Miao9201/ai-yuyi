@@ -51,8 +51,8 @@ class WorkerPool:
         try:self.on_error(ident,revision)
         except Exception:pass  # A full/unwritable disk must not stop healthy accounts.
 
-    def reconcile(self,rows):
-        desired={'':{'revision':''}}
+    def reconcile(self,rows,primary_enabled=True):
+        desired={'':{'revision':''}} if primary_enabled else {}
         desired.update({r['id']:r for r in rows if r['enabled']})
         for ident,child in list(self.children.items()):
             row=desired.get(ident);proc=child['proc']
@@ -91,7 +91,7 @@ def main():
     if not handle:raise OSError('无法创建工作进程锁')
     if kernel.GetLastError()==183:
         kernel.CloseHandle(ctypes.c_void_p(handle));return
-    cfg=load_config();run_id=cfg['run_id'];pool=None
+    cfg=load_config();run_id=cfg['run_id'];pool=None;qq_worker=None
     project=ROOT/'upstream-v1.2.0';pidfile=project/'data'/'bridge.pid'
     try:
         env=os.environ.copy();env.update(DEEPSEEK_API_KEY=load_key(),WX_DESKTOP_PYTHON=str(Path(sys.executable).with_name('python.exe')),WX_COMPANION_RUN_ID=run_id)
@@ -113,11 +113,18 @@ def main():
             payload={'state':'error','detail':'此账号工作进程暂时不可用，10 秒后重试；其他账号继续运行','at':time.time(),'accountRevision':revision,'runId':run_id}
             tmp=folder/'status.supervisor.tmp';tmp.write_text(json.dumps(payload,ensure_ascii=False),encoding='utf8');tmp.replace(folder/'status.json')
         pool=WorkerPool(spawn,status,on_error)
+        import qq_settings
+        from qq_bot import QQWorker,spawn_worker,error_state
+        qq_worker=QQWorker(lambda:spawn_worker(env),error_state)
         while True:
             now=load_config()
             if (DATA/'stop').exists() or not now.get('enabled') or now.get('run_id')!=run_id:break
-            pool.reconcile(load_accounts());time.sleep(.5)
+            try:platforms=qq_settings.load_config()
+            except Exception:platforms={'wechatEnabled':True,'enabled':False}
+            pool.reconcile(load_accounts() if platforms['wechatEnabled'] else [],primary_enabled=platforms['wechatEnabled'])
+            qq_worker.reconcile(platforms['enabled']);time.sleep(.5)
     finally:
+        if qq_worker:qq_worker.close()
         if pool:
             pool.close()
             tmp=DATA/'status.ilink-stop.tmp'
