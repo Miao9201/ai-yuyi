@@ -42,14 +42,20 @@ export class QQEngine {
     queue.data.received=[...received,msg.key].slice(-1000);
     if(msg.kind==='group'){
       msg.repliedToBot=queue.data.jobs.some(j=>j.textConfirmed&&String(j.receipt?.message_id)===String(msg.replyTo));
-      queue.data.room=[...(queue.data.room||[]),{sender:msg.sender,nickname:msg.senderName,text:msg.text||'[图片]'}].slice(-20);
+      const room=queue.data.room||[],postedImages=msg.images;
+      const refersToImage=(!msg.text&&msg.mentioned)||/(?:这|那)(?:张|幅|个)?.{0,3}(?:图|照片)|(?:刚才|上面|上一张).{0,5}(?:图|照片)|(?:图|照片|图片)(?:里|上|中)/.test(msg.text);
+      if(!msg.images.length&&!msg.replyTo&&refersToImage){
+        const previous=[...room].reverse().find(row=>row.sender===msg.sender&&row.images?.length&&row.at<=msg.at&&msg.at-row.at<=120000);
+        if(previous){msg.images=previous.images;msg.imageReference='recent';}
+      }
+      queue.data.room=[...room,{key:msg.key,at:msg.at,sender:msg.sender,nickname:msg.senderName,text:msg.text||(postedImages.length?'[图片]':'[仅@机器人]'),images:postedImages}].slice(-20);
     }
     // Record even messages that did not trigger, so replay cannot reroll probability.
     queue.save();
     if(!this.policy.decide(msg,cfg,{now:this.now(),random:this.random}).reply)return false;
     const active=queue.data.jobs.filter(pending);
     if(active.length>=(msg.kind==='group'?1:3))return false;
-    const text=(msg.kind==='group'?`${msg.senderName}(${msg.sender}): `:'')+(msg.text||'');
+    const text=(msg.kind==='group'?`${msg.senderName}(${msg.sender}): `:'')+(msg.text||(msg.images.length?'（请看这张图片）':msg.replyTo?'（请看引用消息）':'（仅@机器人，未附文字或图片）'));
     const input={message_type:1,from_user_id:msg.scope,message_id:msg.key,create_time_ms:msg.at,qq:msg,
       item_list:[{type:1,text_item:{text}},...msg.images.map(image=>({type:2,image_item:{media:{full_url:'qq-image://inbound'}},qqImage:image}))]};
     if(msg.kind==='group')input.qqRoom=queue.data.room||[];

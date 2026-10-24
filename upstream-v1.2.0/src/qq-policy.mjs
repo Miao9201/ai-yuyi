@@ -13,7 +13,7 @@ export function normalizeEvent(event,bot){
   const mentions=segments.filter(s=>s?.type==='at').map(s=>String(s.data?.qq));
   return {key:String(event.message_id),bot,kind,peer,sender,senderName:clean(event.sender?.card||event.sender?.nickname||sender),
     scope:`qq:${bot}:${kind}:${peer}`,text,at:event.time*1000,mentioned:mentions.includes(bot),atAll:mentions.includes('all'),
-    otherMention:mentions.some(id=>id!=='all'&&id!==bot),replyTo:segments.find(s=>s?.type==='reply')?.data?.id,images:segments.filter(s=>s?.type==='image').slice(0,3).map(s=>({file:String(s.data?.file??''),url:String(s.data?.url??''),summary:clean(s.data?.summary)}))};
+    otherMention:mentions.some(id=>id!=='all'&&id!==bot),replyTo:segments.find(s=>s?.type==='reply')?.data?.id,images:segments.filter(s=>['image','mface'].includes(s?.type)).slice(0,3).map(s=>({file:String(s.data?.file??''),url:String(s.data?.url??''),summary:clean(s.data?.summary)}))};
 }
 
 export class ReplyPolicy {

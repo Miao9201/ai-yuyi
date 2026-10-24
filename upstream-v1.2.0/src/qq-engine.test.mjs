@@ -12,6 +12,31 @@ async function fixture(run){
   try{await run(directory);}finally{fs.rmSync(directory,{recursive:true,force:true});}
 }
 
+test('an image followed by an explicit mention is associated only within the same recent sender and room',()=>fixture(async directory=>{
+  let now=Date.now();const seen=[];
+  const engine=new QQEngine({directory,bot:'300001',config:()=>cfg,allowed:()=>true,now:()=>now,
+    generate:async msg=>{seen.push(msg);return {text:'看到了'};},send:async()=>({message_id:1})});
+  const group=(id,text='',extra={})=>event(id,{message_type:'group',group_id:200001,time:now/1000,message:[{type:'text',data:{text}},...extra.message||[]],...Object.fromEntries(Object.entries(extra).filter(([k])=>k!=='message'))});
+  engine.receive(group(80,'',{message:[{type:'image',data:{url:'https://gchat.qpic.cn/fixture.png',file:'image-id'}}]}));
+  engine.receive(group(81,'这张图是什么',{user_id:100002,message:[{type:'at',data:{qq:'300001'}}]}));await engine.tick();
+  assert.equal(seen.at(-1).item_list.filter(i=>i.type===2).length,0,'must not attach another sender image');
+  engine.receive(group(82,'',{message:[{type:'at',data:{qq:'300001'}}]}));await engine.tick();
+  assert.equal(seen.at(-1).item_list.filter(i=>i.type===2).length,1);
+  assert.equal(seen.at(-1).qq.imageReference,'recent');
+  now+=121000;engine.receive(group(83,'这张图是什么',{message:[{type:'at',data:{qq:'300001'}}]}));await engine.tick();
+  assert.equal(seen.at(-1).item_list.filter(i=>i.type===2).length,0,'expired source images must not be refreshed by later mentions');
+}));
+
+test('recent image references do not cross groups or survive a group connection restart',()=>fixture(async directory=>{
+  const config={...cfg,groups:['200001','200002']},seen=[];
+  const args={directory,bot:'300001',config:()=>config,allowed:()=>true,generate:async msg=>{seen.push(msg);return {text:'在呢'};},send:async()=>({message_id:1})};
+  let engine=new QQEngine(args);
+  engine.receive(event(90,{message_type:'group',group_id:200001,message:[{type:'image',data:{url:'https://gchat.qpic.cn/source.png'}}]}));
+  const mention=(id,group_id)=>event(id,{message_type:'group',group_id,message:[{type:'at',data:{qq:'300001'}}]});
+  engine.receive(mention(91,200002));await engine.tick();assert.equal(seen.at(-1).item_list.filter(i=>i.type===2).length,0);
+  engine=new QQEngine(args);engine.receive(mention(92,200001));await engine.tick();assert.equal(seen.at(-1).item_list.filter(i=>i.type===2).length,0);
+}));
+
 test('saved hour slots control actual group generation and quiet hours still allow mentions',()=>fixture(async directory=>{
   let config={...cfg,probability:1,activeHourSlots:[]},generated=0,sent=0;
   const engine=new QQEngine({directory,bot:'300001',config:()=>config,allowed:()=>true,random:()=>0,

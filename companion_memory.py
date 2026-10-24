@@ -234,13 +234,17 @@ def media_options(question,history,catalog_file=CATALOG):
     if not Path(catalog_file).exists():return {'candidates':[],'intent':None}
     catalog=json.loads(Path(catalog_file).read_text(encoding='utf-8'));items=catalog.get('items',[])
     blocked=bool(re.search(r'(别|不要|不用|不许|不想).{0,5}(发|表情|图片|照片)',question))
-    explicit=not blocked and bool(re.search(r'(发|来|给|看看|看下|整|丢|甩|再).{0,15}(图|表情|照片)|(图|表情|照片).{0,10}(发|给)',question))
+    explicit=not blocked and bool(re.search(r'(发|来|给|看看|看下|整|丢|甩|再).{0,15}(图|表情|照片|自拍)|(图|表情|照片|自拍).{0,10}(发|给)',question))
     intent=('emoji' if '表情' in question else 'image') if explicit else None
     serious=bool(re.search(r'自杀|不想活|活不下去|去世|葬礼|手术|住院|借钱|还钱|叫什么|男生女生|什么关系|怎么称呼|接入测试',question))
     if blocked or (not explicit and serious):return {'candidates':[],'intent':None}
+    generic=not re.sub(r'能不能|可以|能|请|你|给我|帮我|分享|发|来|给|我|再|看看|看下|看|整|丢|甩|一些|一点|几张|一张|张|个|点|些|几|一|图片|照片|图|吗|啊|呀|吧|呗|[\s，。！？?!]', '',question) and not re.search(r'你的|自己的|自拍',question)
     recent_media=[m.get('id') for j in history[-8:] if j.get('mediaConfirmed') for m in (j.get('media') or [])]
     if not explicit and any(j.get('mediaConfirmed') for j in history[-3:]):return {'candidates':[],'intent':None}
-    pool=[i for i in items if i['kind']==(intent or 'emoji') and i.get('allowed') is not False and not re.search(r'杀了|杀死|你妈|色情|露骨|血腥',i.get('caption','')) and (explicit or i.get('safe_auto'))]
+    eligible=[i for i in items if i.get('allowed') is not False and not re.search(r'杀了|杀死|你妈|色情|露骨|血腥',i.get('caption','')) and (explicit or i.get('safe_auto'))]
+    pool=[i for i in eligible if i['kind']==(intent or 'emoji')]
+    if intent=='image' and generic and not pool:
+        pool=[i for i in eligible if i['kind']=='emoji'];intent='emoji'
     q=tokens(question)
     def rank(i):
         label=i.get('caption','')+' '+','.join(i.get('tags',[]));context=' '.join(i.get('contexts',[]))
@@ -249,7 +253,7 @@ def media_options(question,history,catalog_file=CATALOG):
         if i['id'] in recent_media:weight-=8
         return weight
     pool.sort(key=rank,reverse=True)
-    if intent=='image' and pool:
+    if intent=='image' and pool and not generic:
         # Photos are sent only on explicit requests and with an actual matching label/context.
         meaningful=[t for t in q if t not in ('发张','发个','给张','张图','一张','看看','之前','以前')]
         pool=[i for i in pool if any(t in i.get('caption','')+' '.join(i.get('tags',[]))+' '.join(i.get('contexts',[])) for t in meaningful)] if meaningful else pool

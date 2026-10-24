@@ -5,6 +5,11 @@ import {normalizeEvent,ReplyPolicy} from './qq-policy.mjs';
 const event=(extra={})=>({post_type:'message',message_type:'group',self_id:300001,user_id:100001,group_id:200001,message_id:123,time:1000,sender:{nickname:'群友甲'},message:[{type:'text',data:{text:'你觉得画画怎么样？'}}],...extra});
 const config={privateUsers:['100001'],groups:['200001'],probability:0.1,cooldownSeconds:5,maxPerMinute:6,keywords:['小语'],quietHours:[0,7]};
 
+test('QQ custom image stickers retain a real image source for the vision loader',()=>{
+  const msg=normalizeEvent(event({message:[{type:'mface',data:{url:'https://gxh.vip.qq.com/fixture.gif',summary:'开心'}}]}),'300001');
+  assert.equal(msg.images.length,1);assert.equal(msg.images[0].url,'https://gxh.vip.qq.com/fixture.gif');
+});
+
 test('hour slots decide passive participation across split periods and midnight',()=>{
   const policy=new ReplyPolicy(),msg=normalizeEvent(event(),'300001');
   const cfg={...config,activeHourSlots:[0,1,9,10,22,23],activeHours:[9,18],quietHours:[0,7]};

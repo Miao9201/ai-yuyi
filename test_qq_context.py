@@ -9,6 +9,22 @@ from companion_memory import Knowledge
 
 
 class QQContextTests(unittest.TestCase):
+    def test_generic_image_request_can_use_allowed_stickers_but_specific_photos_do_not(self):
+        import json
+        with tempfile.TemporaryDirectory() as tmp:
+            file=Path(tmp)/'catalog.json'
+            file.write_text(json.dumps({'items':[
+                {'id':'happy','kind':'emoji','caption':'开心表情','tags':['开心'],'uses':1,'safe_auto':True},
+                {'id':'blocked','kind':'emoji','caption':'不允许','uses':100,'allowed':False}]}),encoding='utf8')
+            for question in ('发点图片给我看','发张图','给我来张图片'):
+                result=context.media_options(question,[],file)
+                self.assertEqual(result['intent'],'emoji');self.assertEqual([i['id'] for i in result['candidates']],['happy'])
+            for question in ('发张你的自拍','发张以前画画的照片','不要发图片'):
+                self.assertEqual(context.media_options(question,[],file)['candidates'],[],question)
+            catalog=json.loads(file.read_text());catalog['items'].append({'id':'drawing','kind':'image','caption':'画画的作品','tags':['画画'],'uses':1})
+            file.write_text(json.dumps(catalog),encoding='utf8')
+            self.assertEqual(context.media_options('发点图片给我看',[],file)['candidates'][0]['id'],'drawing')
+
     def test_cli_reads_complete_retained_history_without_truncating_json(self):
         import io,json,runpy,contextlib
         from types import SimpleNamespace

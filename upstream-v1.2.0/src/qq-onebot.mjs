@@ -1,6 +1,6 @@
 import {randomUUID} from 'node:crypto';
 
-const ACTIONS=new Set(['get_login_info','get_status','get_image','send_private_msg','send_group_msg']);
+const ACTIONS=new Set(['get_login_info','get_status','get_image','get_msg','send_private_msg','send_group_msg']);
 export function parseEvent(text){
   if(typeof text!=='string'||Buffer.byteLength(text)>2*1024*1024)throw Error('QQ消息过大');
   return JSON.parse(text,(key,value,context)=>{

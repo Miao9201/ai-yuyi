@@ -9,6 +9,16 @@ class Socket extends EventTarget {
   respond(value){this.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}));}
   close(){this.readyState=3;this.dispatchEvent(new Event('close'));}
 }
+
+test('the scoped media pipeline can read a quoted message through the existing authenticated client',async()=>{
+  const client=new OneBotClient('ws://127.0.0.1:3001/','fixture-token',{WebSocketImpl:Socket,timeoutMs:100});await client.connect();
+  try{
+    const pending=client.call('get_msg',{message_id:'88'});
+    assert.equal(Socket.instance.last.action,'get_msg');
+    Socket.instance.respond({status:'ok',retcode:0,data:{message_id:88,message_type:'group',group_id:200001,message:[]},echo:Socket.instance.last.echo});
+    assert.equal((await pending).message_id,88);
+  }finally{client.close();}
+});
 test('connects only to loopback, correlates echoes and forwards events',async()=>{
   assert.throws(()=>new OneBotClient('ws://example.com:3001/','secret'),/本机/);
   const events=[],client=new OneBotClient('ws://127.0.0.1:3001/','fixture-token',{WebSocketImpl:Socket,onEvent:e=>events.push(e),timeoutMs:100});

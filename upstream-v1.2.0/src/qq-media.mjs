@@ -3,6 +3,17 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 
 const MAX=20*1024*1024;
+export async function attachQuotedImage(msg,onebot){
+  const qq=msg.qq;
+  if(qq?.kind!=='group'||!qq.replyTo||msg.item_list?.some(item=>item.type===2))return msg;
+  try{
+    const source=await onebot.call('get_msg',{message_id:String(qq.replyTo)});
+    if(source.message_type!=='group'||String(source.group_id)!==qq.peer||String(source.message_id)!==String(qq.replyTo)||(source.self_id!==undefined&&String(source.self_id)!==qq.bot))return {...msg,qq:{...qq,imageReferenceUnavailable:true}};
+    const images=(Array.isArray(source.message)?source.message:[]).filter(item=>['image','mface'].includes(item?.type)).slice(0,3).map(item=>({type:2,image_item:{media:{full_url:'qq-image://inbound'}},qqImage:{file:String(item.data?.file||''),url:String(item.data?.url||''),summary:String(item.data?.summary||'').slice(0,60)}}));
+    return images.length?{...msg,qq:{...qq,imageReference:'quoted'},item_list:[...(msg.item_list||[]),...images]}:msg;
+  }catch{return {...msg,qq:{...qq,imageReferenceUnavailable:true}};}
+}
+
 function mimeOf(bytes){
   if(bytes.subarray(0,8).equals(Buffer.from('89504e470d0a1a0a','hex')))return ['image/png','.png'];
   if(bytes[0]===255&&bytes[1]===216&&bytes[2]===255)return ['image/jpeg','.jpg'];

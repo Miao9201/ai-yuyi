@@ -6,7 +6,7 @@ import {execFile} from 'node:child_process';
 import {setTimeout as delay} from 'node:timers/promises';
 import {OneBotClient} from './src/qq-onebot.mjs';
 import {QQEngine} from './src/qq-engine.mjs';
-import {createImageLoader} from './src/qq-media.mjs';
+import {createImageLoader,attachQuotedImage} from './src/qq-media.mjs';
 import {prepareReply,qqCompanionConfig} from './src/companion-reply.mjs';
 import {resolveMedia} from './src/companion-media.mjs';
 import {confirmedHistory} from './ilink-runtime.mjs';
@@ -57,9 +57,10 @@ async function main(){
       identity={bot,nickname:String(info.nickname||bot).slice(0,80)};
       const state={cfg:{},companionMode:true,inboundImageLoader:createImageLoader({onebot:client,allowedRoots:JSON.parse(process.env.YUYI_QQ_MEDIA_ROOTS||'[]')})};
       const uid=(msg,persona)=>msg.from_user_id+'::'+persona;
-      const context=(msg,job,queue)=>python('qq_context.py',[],{bot,kind:msg.qq.kind,peer:msg.qq.peer,persona:job.persona,text:extractText(msg)||'收到图片',history:liveHistory(queue,job.persona)});
+      const context=(msg,job,queue)=>python('qq_context.py',[],{bot,kind:msg.qq.kind,peer:msg.qq.peer,persona:job.persona,text:msg.qq.text||(msg.qq.images.length?'收到图片':'仅@机器人'),history:liveHistory(queue,job.persona)});
       engine=new QQEngine({directory:path.join(QQ,'queues'),bot,config:settings,allowed:()=>allowed()&&!disconnected,notice,
         generate:async(msg,job,queue)=>{
+          msg=await attachQuotedImage(msg,client);
           const options=await context(msg,job,queue),user=uid(msg,job.persona);
           options.userContext=groupReference(msg);
           await syncConfirmedHistory(user,confirmedHistory(queue.data.jobs,job.persona,options.suppressed_history_keys||[]));
