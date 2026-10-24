@@ -14,7 +14,7 @@ using Microsoft.Web.WebView2.WinForms;
 [assembly: AssemblyTitle("语忆AI")]
 [assembly: AssemblyProduct("语忆AI")]
 [assembly: AssemblyDescription("语忆AI独立桌面窗口")]
-[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.2.0.0")]
 
 internal static class DesktopLauncher
 {

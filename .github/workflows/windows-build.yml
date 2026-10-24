@@ -22,7 +22,7 @@ jobs:
       - name: 虚构导入资料测试
         run: python -X utf8 -m unittest test_import_persona test_qq_settings test_qq_context test_qq_runtime test_qq_supervisor test_qq_console
       - name: 本地服务回归测试
-        run: node --test upstream-v1.2.0/console/local-helpers.test.mjs upstream-v1.2.0/src/qq-*.test.mjs upstream-v1.2.0/src/companion-reply.test.mjs
+        run: node --test upstream-v1.2.0/console/*.test.mjs upstream-v1.2.0/src/qq-*.test.mjs upstream-v1.2.0/src/companion-reply.test.mjs
       - name: 构建 语忆AI
         shell: powershell
         run: ./packaging/build-portable.ps1 -SourceRoot . -OutputRoot dist
@@ -56,7 +56,10 @@ jobs:
           assert not qq_runtime.status()['installed']
           assert not (root/'private').exists()
           assert not (root/'data/ilink-auth.dpapi').exists()
-          assert {p.name for p in (root/'upstream-v1.2.0/personas').glob('*.md')}=={'linmuwan.md'}
+          assert {p.name for p in (root/'upstream-v1.2.0/personas').glob('*.md')}=={'linmuwan.md','dafeiyu.md'}
+          gallery=json.loads((root/'data/media-catalog-linmuwan.json').read_text(encoding='utf-8'))
+          assert gallery['builtin'] and len(gallery['items'])==319
+          assert all((root/'upstream-v1.2.0'/item['uri']).is_file() for item in gallery['items'])
           assert (root/'语忆AI.exe').is_file()
           subprocess.run([runtime_paths.node_executable(),'--version'],check=True)
           print('Complete installer: source hashes, bundled imports and clean default state verified.')

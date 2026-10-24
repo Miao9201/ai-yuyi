@@ -1,6 +1,6 @@
 {
   "name": "yuyi-ai",
-  "version": "0.1.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "description": "语忆AI本地微信与QQ连接运行时",
