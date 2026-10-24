@@ -18,7 +18,7 @@ def sha(path):
     with path.open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
 
 def fetch(url,path):
-    request=urllib.request.Request(url,headers={'User-Agent':'YuYiAI-build/1.1.0'})
+    request=urllib.request.Request(url,headers={'User-Agent':'YuYiAI-build/1.2.0'})
     temporary=path.with_suffix(path.suffix+'.download')
     try:
         with urllib.request.urlopen(request,timeout=90) as source,temporary.open('wb') as out:shutil.copyfileobj(source,out)
@@ -40,6 +40,8 @@ def prepare(destination,cache):
     bootstrapper=cache/'MicrosoftEdgeWebview2Setup.exe'
     if not bootstrapper.exists():fetch(BOOTSTRAPPER_URL,bootstrapper)
     env={**os.environ,'YUYI_WEBVIEW_BOOTSTRAPPER':str(bootstrapper)}
+    # Windows PowerShell must not load the parent PowerShell 7 security module.
+    env['PSModulePath']=str(Path(os.environ['WINDIR'])/'System32/WindowsPowerShell/v1.0/Modules')
     command="$s=Get-AuthenticodeSignature -LiteralPath $env:YUYI_WEBVIEW_BOOTSTRAPPER; if($s.Status -ne 'Valid' -or $s.SignerCertificate.Subject -notmatch 'O=Microsoft Corporation'){throw 'Invalid Microsoft runtime installer signature'}"
     subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-Command',command],env=env,check=True,capture_output=True,timeout=45)
     shutil.copy2(bootstrapper,destination/bootstrapper.name)

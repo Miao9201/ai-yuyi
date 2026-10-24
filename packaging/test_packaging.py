@@ -109,6 +109,20 @@ class PackagingTests(unittest.TestCase):
 
 @unittest.skipUnless(os.name == 'nt', 'Native Windows installer test')
 class NativeInstallerTests(unittest.TestCase):
+    def test_webview_preparation_verifies_signed_runtime_with_inherited_shell_modules(self):
+        prepare=module('prepare_webview_test',APP/'packaging/prepare_webview.py')
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);cache=root/'cache';cache.mkdir()
+            sdk=cache/f'microsoft.web.webview2.{prepare.VERSION}.nupkg'
+            with zipfile.ZipFile(sdk,'w') as archive:
+                for name in ('lib/net462/Microsoft.Web.WebView2.Core.dll','lib/net462/Microsoft.Web.WebView2.WinForms.dll','runtimes/win-x64/native/WebView2Loader.dll'):
+                    archive.writestr(name,b'fixture-sdk')
+            shutil.copy2(WEBVIEW/'MicrosoftEdgeWebview2Setup.exe',cache/'MicrosoftEdgeWebview2Setup.exe')
+            with patch.object(prepare,'SDK_SHA256',prepare.sha(sdk)):
+                result=prepare.prepare(root/'out',cache)
+            self.assertTrue(result['runtimeBootstrapperMicrosoftSignatureVerified'])
+            self.assertTrue((root/'out/WEBVIEW-MANIFEST.json').is_file())
+
     def test_powershell_51_wrapper_omits_empty_optional_cache_argument(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory)
