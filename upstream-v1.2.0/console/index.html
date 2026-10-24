@@ -43,6 +43,11 @@
   .btn.danger{border-color:#5b2b2b;color:#ffb4b4}
   #btnReplyToggle.danger{background:#bb3544;border-color:#d44b5a;color:white}
   .btn.sm{padding:4px 9px;font-size:12px;border-radius:6px}
+  .btn,nav button,.chip,.memory-item{transition:background-color .16s ease,border-color .16s ease,color .16s ease,box-shadow .16s ease,opacity .16s ease,transform .12s ease}
+  .btn:hover:not(:disabled){transform:translateY(-1px)}
+  .btn:active:not(:disabled),nav button:active,.chip:active,.memory-item:active{transform:translateY(1px) scale(.98)}
+  .btn:focus-visible,nav button:focus-visible,.chip:focus-visible,.memory-item:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
+  .btn:disabled{transform:none}
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .split{display:grid;grid-template-columns:280px 1fr;gap:14px}
   .list{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
@@ -70,9 +75,16 @@
   pre{background:#101216;border:1px solid var(--line);border-radius:10px;padding:14px;overflow:auto;max-height:62vh;font:12.5px/1.55 Consolas,monospace;white-space:pre-wrap}
   .note{color:var(--dim);font-size:12px}
   .hide{display:none!important}
-  .toast{position:fixed;right:20px;bottom:20px;background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--ok);border-radius:10px;padding:12px 16px;max-width:420px;box-shadow:0 8px 30px #0008;z-index:99}
-  .toast.err{border-left-color:var(--err)}
+  .toast-stack{position:fixed;right:20px;bottom:20px;z-index:99;display:flex;flex-direction:column;align-items:flex-end;width:min(420px,calc(100vw - 40px));pointer-events:none}
+  .toast{display:grid;grid-template-rows:0fr;max-width:100%;margin-top:0;opacity:0;transform:translateY(12px);transition:grid-template-rows .22s ease,margin-top .22s ease,opacity .18s ease,transform .22s ease}
+  .toast.visible{grid-template-rows:1fr;margin-top:10px;opacity:1;transform:translateY(0)}
+  .toast-content{min-height:0;overflow:hidden}
+  .toast-message{background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--ok);border-radius:10px;padding:12px 16px;overflow-wrap:anywhere}
+  .toast.err .toast-message{border-left-color:var(--err)}
   .kbd{background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12px}
+  main>section:not(.hide){animation:panel-in .16s ease-out}
+  @keyframes panel-in{from{opacity:.65;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+  @media(prefers-reduced-motion:reduce){.toast,.btn,nav button,.chip,.memory-item,main>section{animation:none!important;transition:none!important;transform:none!important}}
 [hidden]{display:none!important}.btn.success{background:#278754;border-color:#36af70;color:white}.api-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.api-fields label{display:flex;flex-direction:column;gap:7px}.api-fields input{width:100%}a.btn{color:var(--txt);text-decoration:none;display:inline-block}
 .memory-split{display:grid;grid-template-columns:minmax(240px,0.85fr) minmax(300px,1.4fr);gap:14px}.memory-split textarea{width:100%;min-height:180px}.memory-item{display:block;width:100%;text-align:left;margin-bottom:8px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;color:var(--txt);cursor:pointer}.memory-item.active{border-color:var(--accent)}@media(max-width:760px){.memory-split{grid-template-columns:1fr}header{flex-wrap:wrap}.api-fields{grid-template-columns:1fr}}
 .platform-panels{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.platform-card h2,.persona-defaults h2{margin:0 0 12px;font-size:19px}.platform-card .row h2{margin:0;flex:1}.platform-facts{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px 16px;margin:20px 0}.platform-facts dt{color:var(--dim)}.platform-facts dd{margin:0;overflow-wrap:anywhere}.status-pill{font-size:12px;color:var(--accent2)}.platform-details{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}.platform-details div{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:8px}#cards{margin-top:16px}.persona-defaults{margin-bottom:18px}.persona-defaults select{flex:1;min-width:140px}.persona-defaults .note{min-height:18px}.role-tag{font-size:11px;color:var(--accent2);font-weight:400;margin-left:6px}@media(max-width:850px){.platform-panels{grid-template-columns:1fr}}
@@ -433,6 +445,7 @@
     <pre id="logBody">加载中…</pre>
   </section>
 </main>
+<div id="toastStack" class="toast-stack" aria-label="通知"></div>
 
 <script>
 const $ = (s) => document.querySelector(s);
@@ -440,11 +453,25 @@ const $$ = (s) => [...document.querySelectorAll(s)];
 let state = { personas: [], currentTab: 'overview', activePersona: null, activeCat: null, stickerData: null };
 
 function toast(msg, isErr) {
+  const stack = $('#toastStack');
+  while (stack.children.length >= 3) stack.firstElementChild.remove();
   const el = document.createElement('div');
   el.className = 'toast' + (isErr ? ' err' : '');
-  el.textContent = msg;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), isErr ? 6000 : 2600);
+  el.setAttribute('role', isErr ? 'alert' : 'status');
+  el.setAttribute('aria-atomic', 'true');
+  const content = document.createElement('div'), message = document.createElement('div');
+  content.className = 'toast-content';
+  message.className = 'toast-message';
+  message.textContent = msg;
+  content.appendChild(message);el.appendChild(content);stack.appendChild(el);
+  // Establish the collapsed height before expanding, so earlier messages move upward smoothly.
+  void el.offsetHeight;
+  el.classList.add('visible');
+  setTimeout(() => {
+    if (!el.isConnected) return;
+    el.classList.remove('visible');
+    setTimeout(() => el.remove(), 220);
+  }, isErr ? 6000 : 2600);
 }
 async function api(path, opts) {
   const r = await fetch(path, opts);

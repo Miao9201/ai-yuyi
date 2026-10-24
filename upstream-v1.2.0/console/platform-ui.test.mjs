@@ -10,6 +10,53 @@ const qq=fs.readFileSync(new URL('./qq-ui.js',import.meta.url),'utf8');
 const copy=value=>JSON.parse(JSON.stringify(value));
 const settle=async()=>{for(let i=0;i<4;i++)await new Promise(resolve=>setImmediate(resolve));};
 
+function notifications(){
+  let now=0,sequence=0;
+  const timers=[];
+  class Node{
+    constructor(){this.children=[];this.parent=null;this.className='';this.textContent='';this.attrs={};this.classes=new Set();this.classList={add:name=>this.classes.add(name),remove:name=>this.classes.delete(name),contains:name=>this.classes.has(name)};}
+    appendChild(child){child.parent=this;this.children.push(child);return child;}
+    get firstElementChild(){return this.children[0];}
+    get isConnected(){return this===body||!!this.parent?.isConnected;}
+    get offsetHeight(){return 0;}
+    setAttribute(key,value){this.attrs[key]=value;}
+    remove(){if(this.parent){this.parent.children.splice(this.parent.children.indexOf(this),1);this.parent=null;}}
+  }
+  const body=new Node(),stack=new Node();body.appendChild(stack);
+  const context=vm.createContext({document:{body,createElement:()=>new Node()},$:()=>stack,setTimeout:(fn,delay)=>{timers.push({fn,at:now+delay,id:++sequence});}});
+  vm.runInContext(main.slice(main.indexOf('function toast('),main.indexOf('async function api(')),context);
+  function advance(ms){const end=now+ms;for(;;){timers.sort((a,b)=>a.at-b.at||a.id-b.id);if(!timers.length||timers[0].at>end)break;const next=timers.shift();now=next.at;next.fn();}now=end;}
+  const text=node=>node.textContent+node.children.map(text).join('');
+  return {toast:context.toast,stack,advance,text};
+}
+
+test('notifications keep the newest three in chronological order without sharing a slot',()=>{
+  const n=notifications();for(const text of ['一','二','三','四'])n.toast(text);
+  assert.deepEqual(n.stack.children.map(n.text),['二','三','四']);
+  assert.ok(n.stack.children.every(node=>node.classList.contains('visible')));
+});
+
+test('expired notifications leave before removal without deleting a newer replacement',()=>{
+  const n=notifications();n.toast('旧');n.advance(1000);n.toast('新');
+  n.advance(1600);assert.equal(n.stack.children[0].classList.contains('visible'),false);
+  n.advance(220);assert.deepEqual(n.stack.children.map(n.text),['新']);
+  n.advance(1000);assert.equal(n.stack.children.length,0);
+});
+
+test('error notifications keep their longer lifetime and use accessible literal text',()=>{
+  const n=notifications();n.toast('<img src=x onerror=alert(1)>',true);
+  assert.equal(n.text(n.stack.children[0]),'<img src=x onerror=alert(1)>');
+  assert.equal(n.stack.children[0].attrs.role,'alert');
+  n.advance(5999);assert.equal(n.stack.children.length,1);
+  n.advance(221);assert.equal(n.stack.children.length,0);
+});
+
+test('timers from evicted notifications do not affect the latest three',()=>{
+  const n=notifications();n.toast('旧');n.advance(1000);
+  for(const text of ['甲','乙','丙'])n.toast(text);
+  n.advance(1820);assert.deepEqual(n.stack.children.map(n.text),['甲','乙','丙']);
+});
+
 async function browser({full=false,fail=[]}={}){
   const nodes=new Map(),events=new Map(),requests=[],failures=new Set(fail),timers=[],gates=new Map();
   const response=(path,value)=>{const gate=gates.get(path);if(gate){gates.delete(path);return gate.then(()=>value);}return value;};
@@ -18,14 +65,16 @@ async function browser({full=false,fail=[]}={}){
     get value(){return this.tagName==='SELECT'?(this.children.find(x=>x.value===this._value)?.value||''):this._value;}
     get options(){return this.children;}
     set value(value){this._value=String(value);}
-    append(...children){for(const child of children){this.children.push(child);if(this.tagName==='SELECT'&&this.children.length===1)this._value=child.value;}}
+    append(...children){for(const child of children){child.parentNode=this;this.children.push(child);if(this.tagName==='SELECT'&&this.children.length===1)this._value=child.value;}}
     appendChild(child){this.append(child);return child;}
     replaceChildren(...children){this.children=[];this._value='';this.append(...children);}
     addEventListener(){}
     setAttribute(key,value){this[key]=value;}
     getAttribute(key){return this[key];}
     focus(){}
-    remove(){}
+    get firstElementChild(){return this.children[0];}
+    get isConnected(){return this===document.body||!!this.parentNode?.isConnected;}
+    remove(){if(this.parentNode){this.parentNode.children.splice(this.parentNode.children.indexOf(this),1);this.parentNode=null;}}
     click(){if(!this.disabled)return this.onclick?.();}
     set innerHTML(markup){
       this._html=markup;
