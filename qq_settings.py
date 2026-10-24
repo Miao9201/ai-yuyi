@@ -11,7 +11,7 @@ DEFAULTS={'enabled':False,'wechatEnabled':True,'privateUsers':[],'groups':[],
           'persona':'dafeiyu','groupPersona':'dafeiyu','groupFollowsDefault':True,'privatePersonas':{},
           'wsUrl':'ws://127.0.0.1:3001/','probability':0.1,'cooldownSeconds':5,
           'maxPerMinute':6,'keywords':['DeepSeek','deepseek','大肥鱼','肥鱼','小鲸鱼'],'quietHours':[0,7],
-          'activeHours':[0,24],'emotionAware':True,
+          'activeHours':[0,24],'activeHourSlots':None,'emotionAware':True,
           'replyOptions':{'visionEnabled':True,'sceneEnabled':True,'emotionEnabled':True}}
 
 
@@ -51,6 +51,10 @@ def validate(cfg):
     for key in ('quietHours','activeHours'):
         hours=cfg[key]
         if not isinstance(hours,list) or len(hours)!=2 or any(type(v) is not int or not 0<=v<=24 for v in hours):raise ValueError('时段应为两个0到24的整数')
+    slots=cfg['activeHourSlots']
+    if slots is not None:
+        if not isinstance(slots,list) or len(slots)>24 or any(type(v) is not int or not 0<=v<24 for v in slots) or len(set(slots))!=len(slots):raise ValueError('活跃时间格应为不重复的0到23整数')
+        cfg['activeHourSlots']=sorted(slots)
     options=cfg['replyOptions']
     if not isinstance(options,dict) or set(options)!=set(DEFAULTS['replyOptions']) or any(type(v) is not bool for v in options.values()):raise ValueError('QQ回复参数无效')
     return cfg

@@ -33,11 +33,16 @@ export class ReplyPolicy {
     if(recent.length&&now-recent.at(-1)<(cfg.cooldownSeconds??5)*1000)return no('cooldown');
     if(msg.mentioned||msg.repliedToBot||cfg.keywords?.some(k=>msg.text.includes(k)))return {reply:true,reason:'addressed'};
     if(msg.otherMention||msg.replyTo&&!msg.repliedToBot)return no('other_person');
-    const [activeStart,activeEnd]=cfg.activeHours??[0,24];
-    if(activeStart!==activeEnd&&!(activeStart<activeEnd?hour>=activeStart&&hour<activeEnd:hour>=activeStart||hour<activeEnd))return no('inactive_hours');
+    const slots=cfg.activeHourSlots;
+    if(Array.isArray(slots)){
+      if(!slots.includes(hour))return no('inactive_hours');
+    }else{
+      const [activeStart,activeEnd]=cfg.activeHours??[0,24];
+      if(activeStart!==activeEnd&&!(activeStart<activeEnd?hour>=activeStart&&hour<activeEnd:hour>=activeStart||hour<activeEnd))return no('inactive_hours');
+    }
     let probability=cfg.probability??0.1;
     const [start,end]=cfg.quietHours??[0,7];
-    if(start!==end&&(start<end?hour>=start&&hour<end:hour>=start||hour<end))probability*=0.15;
+    if(!Array.isArray(slots)&&start!==end&&(start<end?hour>=start&&hour<end:hour>=start||hour<end))probability*=0.15;
     const quality=msg.text.length<3||/^(哈+|[6好哦嗯啊]+)[!！。]*$/.test(msg.text)?0.1:/[?？]/.test(msg.text)?1.5:1;
     const attention=recent.length&&now-recent.at(-1)<120000?1.5:1;
     const fatigue=1/(1+recent.length*0.2);

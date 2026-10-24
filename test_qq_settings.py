@@ -7,6 +7,18 @@ import qq_settings as qq
 
 
 class QQSettingsTests(unittest.TestCase):
+    def test_hour_slots_are_optional_validated_and_persist_without_changing_other_settings(self):
+        with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)):
+            self.assertIsNone(qq.load_config()['activeHourSlots'])
+            saved=qq.save_config({'activeHourSlots':[23,0,7],'privateUsers':['100001']})
+            self.assertEqual(saved['activeHourSlots'],[0,7,23])
+            self.assertEqual(qq.save_config({'probability':0.2})['activeHourSlots'],[0,7,23])
+            self.assertEqual(qq.save_config({'activeHourSlots':[]})['activeHourSlots'],[])
+            for invalid in ([24],[-1],[True],[1.5],['7'],[1,1],list(range(25)),False):
+                before=(Path(tmp)/'qq/settings.json').read_bytes()
+                with self.assertRaises(ValueError,msg=str(invalid)):qq.save_config({'activeHourSlots':invalid})
+                self.assertEqual((Path(tmp)/'qq/settings.json').read_bytes(),before)
+
     def test_legacy_private_profile_cannot_follow_into_group(self):
         import persona
         legacy=persona.PRIVATE.name

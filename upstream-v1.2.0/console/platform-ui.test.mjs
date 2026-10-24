@@ -57,7 +57,7 @@ test('timers from evicted notifications do not affect the latest three',()=>{
   n.advance(1820);assert.deepEqual(n.stack.children.map(n.text),['甲','乙','丙']);
 });
 
-async function browser({full=false,fail=[]}={}){
+async function browser({full=false,fail=[],qqConfig={}}={}){
   const nodes=new Map(),events=new Map(),requests=[],failures=new Set(fail),timers=[],gates=new Map();
   const response=(path,value)=>{const gate=gates.get(path);if(gate){gates.delete(path);return gate.then(()=>value);}return value;};
   class Element{
@@ -72,6 +72,9 @@ async function browser({full=false,fail=[]}={}){
     setAttribute(key,value){this[key]=value;}
     getAttribute(key){return this[key];}
     focus(){}
+    getBoundingClientRect(){return {left:0,width:240};}
+    setPointerCapture(){}
+    releasePointerCapture(){}
     get firstElementChild(){return this.children[0];}
     get isConnected(){return this===document.body||!!this.parentNode?.isConnected;}
     remove(){if(this.parentNode){this.parentNode.children.splice(this.parentNode.children.indexOf(this),1);this.parentNode=null;}}
@@ -101,6 +104,7 @@ async function browser({full=false,fail=[]}={}){
     worker:{loggedIn:true,bot:'100002',nickname:'测试机器人',detail:'QQ已登录',worker:{detail:'QQ已连接，后台监听中'}},
     items:[{key:'sceneEnabled',kind:'bool',value:true},{key:'historyRecentTurns',kind:'number',value:3},{key:'defaultPersona',kind:'string',value:'linmuwan'},{key:'chatModel',kind:'string',value:'fixture'},{key:'chatBaseUrl',kind:'string',value:'https://fixture.invalid/v1'},{key:'chatTemperature',kind:'number',value:.75},{key:'taskTimeoutMs',kind:'number',value:45000},{key:'visionModelDeepseek',kind:'string',value:'fixture-vision'}],
   };
+  Object.assign(data.qq,qqConfig);
   async function api(path,opts){
     const method=opts?.method||'GET',body=opts?.body?JSON.parse(opts.body):undefined;requests.push({method,path,body});
     if(failures.has(path))throw Error('synthetic unavailable');
@@ -140,8 +144,30 @@ test('QQ and WeChat save only their own platform fields',async()=>{
   await b.nodes.get('qqSaveParameters').click();
   const params=b.requests.filter(r=>r.method==='POST'&&r.path==='/api/qq/config').at(-1).body;
   assert.deepEqual(params.replyOptions,{visionEnabled:true,sceneEnabled:true,emotionEnabled:true});
-  assert.deepEqual(params.activeHours,[0,24]);assert.equal('enabled' in params,false);assert.equal('persona' in params,false);
+  assert.deepEqual(params.activeHourSlots,Array.from({length:17},(_,i)=>i+7));assert.equal('enabled' in params,false);assert.equal('persona' in params,false);
   assert.deepEqual(b.nodes.get('qqGroupPersona').children.map(x=>x.value),['dafeiyu']);
+});
+
+test('the hour bar has 24 cells, imports old quiet hours and saves only QQ slots',async()=>{
+  const b=await browser(),bar=b.nodes.get('qqHourBar');assert.equal(bar.children.length,24);
+  assert.equal(bar.children[0].getAttribute('aria-pressed'),'false');
+  assert.equal(bar.children[7].getAttribute('aria-pressed'),'true');
+  await b.nodes.get('qqSaveParameters').click();
+  const body=b.requests.filter(r=>r.path==='/api/qq/config'&&r.method==='POST').at(-1).body;
+  assert.deepEqual(body.activeHourSlots,Array.from({length:17},(_,i)=>i+7));
+  assert.equal('quietHours' in body,false);assert.equal('activeHours' in body,false);
+});
+
+test('the hour bar supports drag painting, keyboard changes and all-day modes',async()=>{
+  const b=await browser({qqConfig:{activeHourSlots:[]}}),bar=b.nodes.get('qqHourBar');
+  bar.onpointerdown({button:0,pointerId:1,clientX:95,preventDefault(){}});
+  bar.onpointermove({pointerId:1,clientX:125});bar.onpointerup({pointerId:1});
+  assert.deepEqual(bar.children.filter(n=>n.getAttribute('aria-pressed')==='true').map(n=>Number(n.dataset.hour)),[9,10,11,12]);
+  bar.children[10].onclick({detail:1});assert.equal(bar.children[10].getAttribute('aria-pressed'),'true','pointer click must not toggle again');
+  bar.children[10].onclick({detail:0});assert.equal(bar.children[10].getAttribute('aria-pressed'),'false');
+  await b.nodes.get('qqHoursAll').click();assert.ok(bar.children.every(n=>n.getAttribute('aria-pressed')==='true'));
+  await b.nodes.get('qqHoursNone').click();assert.ok(bar.children.every(n=>n.getAttribute('aria-pressed')==='false'));
+  await b.nodes.get('qqSaveParameters').click();assert.deepEqual(b.requests.filter(r=>r.method==='POST').at(-1).body.activeHourSlots,[]);
 });
 
 test('entering users reloads custom personas and excludes invalid QQ identifiers',async()=>{

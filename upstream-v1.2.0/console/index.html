@@ -48,6 +48,12 @@
   .btn:active:not(:disabled),nav button:active,.chip:active,.memory-item:active{transform:translateY(1px) scale(.98)}
   .btn:focus-visible,nav button:focus-visible,.chip:focus-visible,.memory-item:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
   .btn:disabled{transform:none}
+  .hour-bar{display:grid;grid-template-columns:repeat(24,minmax(0,1fr));gap:3px;touch-action:none;user-select:none;margin-top:12px}
+  .hour-cell{min-width:0;padding:12px 0;background:var(--panel2);border:1px solid var(--line);border-radius:5px;color:var(--dim);font-size:11px;cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
+  .hour-cell[aria-pressed=true]{background:#633d50;border-color:var(--accent);color:#ffe5ed}
+  .hour-cell:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+  .hour-cell:disabled{opacity:.45;cursor:default}
+  .hour-ticks{display:flex;justify-content:space-between;color:var(--dim);font-size:11px;margin:5px 0 10px}
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .split{display:grid;grid-template-columns:280px 1fr;gap:14px}
   .list{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
@@ -84,7 +90,7 @@
   .kbd{background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12px}
   main>section:not(.hide){animation:panel-in .16s ease-out}
   @keyframes panel-in{from{opacity:.65;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-  @media(prefers-reduced-motion:reduce){.toast,.btn,nav button,.chip,.memory-item,main>section{animation:none!important;transition:none!important;transform:none!important}}
+  @media(prefers-reduced-motion:reduce){.toast,.btn,nav button,.chip,.memory-item,.hour-cell,main>section{animation:none!important;transition:none!important;transform:none!important}}
 [hidden]{display:none!important}.btn.success{background:#278754;border-color:#36af70;color:white}.api-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.api-fields label{display:flex;flex-direction:column;gap:7px}.api-fields input{width:100%}a.btn{color:var(--txt);text-decoration:none;display:inline-block}
 .memory-split{display:grid;grid-template-columns:minmax(240px,0.85fr) minmax(300px,1.4fr);gap:14px}.memory-split textarea{width:100%;min-height:180px}.memory-item{display:block;width:100%;text-align:left;margin-bottom:8px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;color:var(--txt);cursor:pointer}.memory-item.active{border-color:var(--accent)}@media(max-width:760px){.memory-split{grid-template-columns:1fr}header{flex-wrap:wrap}.api-fields{grid-template-columns:1fr}}
 .platform-panels{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.platform-card h2,.persona-defaults h2{margin:0 0 12px;font-size:19px}.platform-card .row h2{margin:0;flex:1}.platform-facts{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px 16px;margin:20px 0}.platform-facts dt{color:var(--dim)}.platform-facts dd{margin:0;overflow-wrap:anywhere}.status-pill{font-size:12px;color:var(--accent2)}.platform-details{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}.platform-details div{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:8px}#cards{margin-top:16px}.persona-defaults{margin-bottom:18px}.persona-defaults select{flex:1;min-width:140px}.persona-defaults .note{min-height:18px}.role-tag{font-size:11px;color:var(--accent2);font-weight:400;margin-left:6px}@media(max-width:850px){.platform-panels{grid-template-columns:1fr}}
@@ -264,10 +270,16 @@
         <label>回复间隔（秒）<input id="qqCooldown" type="number" min="0" max="300"></label>
         <label>每分钟最多回复<input id="qqMaxPerMinute" type="number" min="1" max="60"></label>
         <label>触发词<input id="qqKeywords" type="text" placeholder="用逗号分隔"></label>
-        <label>活跃时段开始（0—24）<input id="qqActiveStart" type="number" min="0" max="24"></label><label>活跃时段结束（0—24）<input id="qqActiveEnd" type="number" min="0" max="24"></label>
-        <label>安静时段开始（0—24）<input id="qqQuietStart" type="number" min="0" max="24"></label>
-        <label>安静时段结束（0—24）<input id="qqQuietEnd" type="number" min="0" max="24"></label>
-      </div><div class="row" style="margin-top:14px"><label><input id="qqEmotionAware" type="checkbox">情绪感知接话</label><label><input id="qqVisionEnabled" type="checkbox">图片识别</label><label><input id="qqSceneEnabled" type="checkbox">话题延续</label><label><input id="qqEmotionEnabled" type="checkbox">回复情绪</label></div><p class="note">@和触发词优先回复，仍遵守间隔与频率；@全体不触发。默认基础概率10%，结合质量、注意力、情绪与疲劳调整；普通接话仅在活跃时段触发，安静时段降低概率。</p><button class="btn primary" id="qqSaveParameters">保存QQ参数</button>
+      </div>
+      <div style="margin-top:18px">
+        <div class="row"><strong id="qqHourTitle">群聊活跃时段</strong><span style="flex:1"></span><button class="btn sm" id="qqHoursAll">全天活跃</button><button class="btn sm" id="qqHoursNone">全天安静</button></div>
+        <div id="qqHourBar" class="hour-bar" role="group" aria-labelledby="qqHourTitle" aria-describedby="qqHourHelp"></div>
+        <div class="hour-ticks" aria-hidden="true"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+        <div id="qqHoursSummary" role="status" aria-live="polite"></div>
+        <p id="qqHourHelp" class="note">每格1小时，点击或拖动涂选。粉色活跃，灰色安静；私聊、@和触发词不受时段限制。按电脑本地时间生效。</p>
+        <p id="qqHoursLegacy" class="note" hidden>已按旧设置显示；保存后，安静时段不再主动接话。</p>
+      </div>
+      <div class="row" style="margin-top:14px"><label><input id="qqEmotionAware" type="checkbox">情绪感知接话</label><label><input id="qqVisionEnabled" type="checkbox">图片识别</label><label><input id="qqSceneEnabled" type="checkbox">话题延续</label><label><input id="qqEmotionEnabled" type="checkbox">回复情绪</label></div><p class="note">活跃时段按概率接话，并结合群聊氛围调整。@和触发词仍遵守间隔与频率；@全体不触发。</p><button class="btn primary" id="qqSaveParameters">保存QQ参数</button>
     </div>
   </section>
 
@@ -579,7 +591,7 @@ async function loadState() {
     const wxContact=s.desktop?.contact||'';
     $('#wxOverviewAccount').textContent=s.desktop?.contactSource==='nickname'?wxContact:(!wxContact||wxContact==='未绑定微信'?'未绑定':'主账号已绑定');
     $('#wxOverviewPersona').textContent=s.profile?.name||s.personas?.current||'未指定';
-    $('#wxOverviewDetails').textContent='账号标识：'+(wxContact||'未绑定')+'\n'+(s.profile?[s.profile.gender,s.profile.relationship,'称呼：'+s.profile.address].join(' · '):'')+'\n引擎版本：'+(s.desktop?.version||'1.2.0');
+    $('#wxOverviewDetails').textContent='账号标识：'+(wxContact||'未绑定')+'\n'+(s.profile?[s.profile.gender,s.profile.relationship,'称呼：'+s.profile.address].join(' · '):'');
     $('#btnLocate').hidden=ilink;
     $('#transportNote').textContent='已启用平台：'+([wechat?'微信':'',qq?'QQ':''].filter(Boolean).join('、')||'无')+'。电脑需保持开机联网。';
     $('#qrPanel').hidden=!(wechat&&ilink&&s.bot.running&&s.desktop?.qr);

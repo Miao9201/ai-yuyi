@@ -73,9 +73,10 @@ class QQConsoleTests(unittest.TestCase):
     def test_qq_config_api_is_persistent_validated_local_only_and_hides_token(self):
         code,_,raw=self.request('/api/qq/config');self.assertEqual(code,200,raw)
         self.assertFalse(json.loads(raw)['config']['enabled'])
-        payload={'privateUsers':['100001'],'groups':['200001'],'probability':0.25}
+        payload={'privateUsers':['100001'],'groups':['200001'],'probability':0.25,'activeHourSlots':[8,9,22,23]}
         code,_,raw=self.request('/api/qq/config',payload);self.assertEqual(code,200,raw)
         self.assertEqual(json.loads(self.request('/api/qq/config')[2])['config']['groups'],['200001'])
+        self.assertEqual(json.loads(self.request('/api/qq/config')[2])['config']['activeHourSlots'],[8,9,22,23])
         file=self.root/'data/qq/connection.dpapi';file.write_bytes(protect(b'PRIVATE_QQ_FIXTURE_TOKEN'))
         self.assertNotIn(b'PRIVATE_QQ_FIXTURE_TOKEN',self.request('/api/qq/config')[2])
         for bad in ({'token':'bad'},{'groups':['../bad']},{'enabled':'true'},{'groupPersona':'private_fixture'}):

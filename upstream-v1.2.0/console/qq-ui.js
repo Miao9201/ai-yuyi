@@ -2,9 +2,48 @@
   'use strict';
   const el=id=>document.getElementById(id);
   let loaded=false,busy=false,rolesByName=new Map(),loadVersion=0;
-  const saveIds=['qqSaveUsers','qqSaveParameters','wechatSave','qqPersonaSave'];
+  const saveIds=['qqSaveUsers','qqSaveParameters','wechatSave','qqPersonaSave','qqHoursAll','qqHoursNone'];
   for(const id of saveIds)el(id).disabled=true;
   const list=value=>value.split(/[\s,，;；]+/).filter(Boolean);
+  let hours=new Set(),drag=null;
+  const bar=el('qqHourBar'),clock=value=>String(value).padStart(2,'0')+':00';
+  const cells=Array.from({length:24},(_,hour)=>{
+    const cell=document.createElement('button');cell.type='button';cell.className='hour-cell';cell.disabled=true;cell.dataset.hour=String(hour);cell.textContent=String(hour);
+    cell.onclick=event=>{if(loaded&&event.detail===0){hours.has(hour)?hours.delete(hour):hours.add(hour);renderHours();}};
+    bar.appendChild(cell);return cell;
+  });
+  function renderHours(){
+    for(let hour=0;hour<24;hour++){
+      cells[hour].disabled=!loaded;cells[hour].setAttribute('aria-pressed',String(hours.has(hour)));
+      cells[hour].setAttribute('aria-label',clock(hour)+'–'+clock(hour+1)+' '+(hours.has(hour)?'活跃':'安静'));
+    }
+    const ranges=[];let start=null;
+    for(let hour=0;hour<=24;hour++){
+      if(hour<24&&hours.has(hour)){if(start===null)start=hour;}
+      else if(start!==null){ranges.push(clock(start)+'–'+clock(hour));start=null;}
+    }
+    el('qqHoursSummary').textContent=hours.size===24?'全天活跃':hours.size===0?'全天安静':'活跃：'+ranges.join('、')+'；其余安静';
+  }
+  function loadHours(config){
+    const within=(hour,[start,end],equal)=>start===end?equal:start<end?hour>=start&&hour<end:hour>=start||hour<end;
+    hours=new Set(Array.isArray(config.activeHourSlots)?config.activeHourSlots:Array.from({length:24},(_,hour)=>hour).filter(hour=>within(hour,config.activeHours||[0,24],true)&&!within(hour,config.quietHours||[0,7],false)));
+    el('qqHoursLegacy').hidden=Array.isArray(config.activeHourSlots);renderHours();
+  }
+  const pointedHour=event=>{const rect=bar.getBoundingClientRect();return Math.max(0,Math.min(23,Math.floor((event.clientX-rect.left)*24/rect.width)));};
+  bar.onpointerdown=event=>{
+    if(!loaded||event.button!==0)return;event.preventDefault();
+    const hour=pointedHour(event);drag={id:event.pointerId,on:!hours.has(hour),last:hour};bar.setPointerCapture(event.pointerId);
+    drag.on?hours.add(hour):hours.delete(hour);renderHours();
+  };
+  bar.onpointermove=event=>{
+    if(!drag||event.pointerId!==drag.id)return;
+    const hour=pointedHour(event);for(let i=Math.min(hour,drag.last);i<=Math.max(hour,drag.last);i++)drag.on?hours.add(i):hours.delete(i);
+    drag.last=hour;renderHours();
+  };
+  bar.onpointerup=event=>{if(drag&&event.pointerId===drag.id){drag=null;bar.releasePointerCapture(event.pointerId);}};
+  bar.onpointercancel=bar.onlostpointercapture=()=>{drag=null;};
+  el('qqHoursAll').onclick=()=>{if(loaded){hours=new Set(Array.from({length:24},(_,i)=>i));renderHours();}};
+  el('qqHoursNone').onclick=()=>{if(loaded){hours.clear();renderHours();}};
   function fields(config){
     el('qqEnabled').checked=config.enabled;
     el('qqPrivateUsers').value=config.privateUsers.join('\n');el('qqGroups').value=config.groups.join('\n');
@@ -15,13 +54,12 @@
     if(typeof state!=='undefined'){state.qqPersonaConfig=config;if(typeof renderPersonaList==='function')renderPersonaList();}
     el('qqProbability').value=Math.round(config.probability*100);el('qqCooldown').value=config.cooldownSeconds;
     el('qqMaxPerMinute').value=config.maxPerMinute;el('qqKeywords').value=config.keywords.join('，');
-    el('qqQuietStart').value=config.quietHours[0];el('qqQuietEnd').value=config.quietHours[1];
-    el('qqActiveStart').value=config.activeHours[0];el('qqActiveEnd').value=config.activeHours[1];el('qqEmotionAware').checked=config.emotionAware;
+    loadHours(config);el('qqEmotionAware').checked=config.emotionAware;
     for(const [field,key] of [['qqVisionEnabled','visionEnabled'],['qqSceneEnabled','sceneEnabled'],['qqEmotionEnabled','emotionEnabled']])el(field).checked=config.replyOptions[key];
   }
   async function load(){
     const version=++loadVersion;
-    loaded=false;
+    loaded=false;drag=null;for(const cell of cells)cell.disabled=true;
     for(const id of saveIds)el(id).disabled=true;
     const [result,roles,wechat]=await Promise.all([api('/api/qq/config'),api('/api/personas'),api('/api/wechat/config')]);
     if(version!==loadVersion)return;
@@ -32,7 +70,7 @@
     for(const role of validRoles){const option=document.createElement('option');option.value=role.name;option.textContent=role.title||role.name;select.append(option);}
     const group=el('qqGroupPersona');group.replaceChildren();
     for(const role of validRoles.filter(r=>!r.isPrivate)){const option=document.createElement('option');option.value=role.name;option.textContent=role.title||role.name;group.append(option);}
-    fields(result.config);loaded=true;
+    fields(result.config);loaded=true;renderHours();
     for(const id of saveIds)el(id).disabled=false;
   }
   async function status(){
@@ -63,7 +101,8 @@
     toast('已保存平台和回复对象');await status();
   });
   el('qqSaveParameters').onclick=()=>action(el('qqSaveParameters'),async()=>{
-    await post('/api/qq/config',{probability:Number(el('qqProbability').value)/100,cooldownSeconds:Number(el('qqCooldown').value),maxPerMinute:Number(el('qqMaxPerMinute').value),keywords:list(el('qqKeywords').value),quietHours:[Number(el('qqQuietStart').value),Number(el('qqQuietEnd').value)],activeHours:[Number(el('qqActiveStart').value),Number(el('qqActiveEnd').value)],emotionAware:el('qqEmotionAware').checked,replyOptions:{visionEnabled:el('qqVisionEnabled').checked,sceneEnabled:el('qqSceneEnabled').checked,emotionEnabled:el('qqEmotionEnabled').checked}});
+    await post('/api/qq/config',{probability:Number(el('qqProbability').value)/100,cooldownSeconds:Number(el('qqCooldown').value),maxPerMinute:Number(el('qqMaxPerMinute').value),keywords:list(el('qqKeywords').value),activeHourSlots:[...hours].sort((a,b)=>a-b),emotionAware:el('qqEmotionAware').checked,replyOptions:{visionEnabled:el('qqVisionEnabled').checked,sceneEnabled:el('qqSceneEnabled').checked,emotionEnabled:el('qqEmotionEnabled').checked}});
+    el('qqHoursLegacy').hidden=true;
     toast('已保存QQ接话参数');
   });
   el('qqConfigure').onclick=()=>action(el('qqConfigure'),async()=>{

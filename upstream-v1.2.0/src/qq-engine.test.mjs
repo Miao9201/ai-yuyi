@@ -11,6 +11,19 @@ async function fixture(run){
   const directory=fs.mkdtempSync(path.join(os.tmpdir(),'qq-engine-'));
   try{await run(directory);}finally{fs.rmSync(directory,{recursive:true,force:true});}
 }
+
+test('saved hour slots control actual group generation and quiet hours still allow mentions',()=>fixture(async directory=>{
+  let config={...cfg,probability:1,activeHourSlots:[]},generated=0,sent=0;
+  const engine=new QQEngine({directory,bot:'300001',config:()=>config,allowed:()=>true,random:()=>0,
+    generate:async()=>{generated++;return {text:'收到'};},send:async()=>({message_id:++sent})});
+  const group=id=>event(id,{message_type:'group',group_id:200001});
+  assert.equal(engine.receive(group(51)),false);await engine.tick();assert.equal(generated,0);
+  config={...config,activeHourSlots:Array.from({length:24},(_,i)=>i)};
+  assert.equal(engine.receive(group(52)),true);await engine.tick();assert.equal(sent,1);
+  config={...config,activeHourSlots:[]};
+  const addressed={...group(53),message:[{type:'at',data:{qq:'300001'}},{type:'text',data:{text:'在吗'}}]};
+  assert.equal(engine.receive(addressed),true);await engine.tick();assert.equal(sent,2);
+}));
 test('private reply survives restart and deduplicates; unapproved chats never create queues',()=>fixture(async directory=>{
   const sent=[];let config=structuredClone(cfg);
   const args={directory,bot:'300001',config:()=>config,allowed:()=>true,generate:async()=>({text:'在画画',media:[]}),send:async(items)=>{sent.push(items);return {message_id:9};}};

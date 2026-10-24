@@ -4,6 +4,22 @@ import {normalizeEvent,ReplyPolicy} from './qq-policy.mjs';
 
 const event=(extra={})=>({post_type:'message',message_type:'group',self_id:300001,user_id:100001,group_id:200001,message_id:123,time:1000,sender:{nickname:'群友甲'},message:[{type:'text',data:{text:'你觉得画画怎么样？'}}],...extra});
 const config={privateUsers:['100001'],groups:['200001'],probability:0.1,cooldownSeconds:5,maxPerMinute:6,keywords:['小语'],quietHours:[0,7]};
+
+test('hour slots decide passive participation across split periods and midnight',()=>{
+  const policy=new ReplyPolicy(),msg=normalizeEvent(event(),'300001');
+  const cfg={...config,activeHourSlots:[0,1,9,10,22,23],activeHours:[9,18],quietHours:[0,7]};
+  for(let hour=0;hour<24;hour++)assert.equal(policy.decide(msg,cfg,{now:1000000,hour,random:()=>0}).reply,cfg.activeHourSlots.includes(hour),String(hour));
+  assert.equal(policy.decide(msg,cfg,{now:1000000,hour:1,random:()=>0.05}).reply,true,'selected hours use normal probability even when an old quiet range overlaps');
+  assert.equal(policy.decide(msg,{...cfg,activeHourSlots:[]},{now:1000000,hour:9,random:()=>0}).reply,false);
+  assert.equal(policy.decide(msg,{...cfg,activeHourSlots:Array.from({length:24},(_,i)=>i)},{now:1000000,hour:7,random:()=>0}).reply,true);
+});
+
+test('quiet hour slots still allow private messages, mentions and trigger words within existing limits',()=>{
+  const policy=new ReplyPolicy(),msg=normalizeEvent(event(),'300001'),cfg={...config,activeHourSlots:[]};
+  for(const addressed of [{...msg,mentioned:true},{...msg,text:'小语在吗'},{...msg,kind:'private',peer:'100001'}])assert.equal(policy.decide(addressed,cfg,{now:1000000,hour:2,random:()=>0.99}).reply,true);
+  policy.markSent(msg.scope,1000000);
+  assert.equal(policy.decide({...msg,mentioned:true},cfg,{now:1001000,hour:2}).reply,false);
+});
 test('active hours and emotion influence passive participation; other-person replies stay quiet',()=>{
   const policy=new ReplyPolicy(),msg=normalizeEvent(event({message:[{type:'text',data:{text:'今天有个事情想聊聊'}}]}),'300001');
   assert.equal(policy.decide(msg,{...config,activeHours:[9,18]},{now:1000000,hour:22,random:()=>0}).reply,false);

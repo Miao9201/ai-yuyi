@@ -184,6 +184,8 @@ function configKind(key) {
 
 // 给人看的中文名与说明。代码里一律用英文键，界面上说人话。
 const CONFIG_LABELS = {
+  historyRecentTurns: ['近期完整对话轮数', '最近保留原文的问答轮数；一问一答算一轮。'],
+  historyOlderChars: ['较早对话截取字数', '更早的每条提问和回复各保留前多少个字符；不删除已保存的记忆。'],
   defaultPersona: ['默认人设', '她从哪份 md 人格文件里取性格'],
   allowedUsers: ['白名单用户', '只有这些人发消息她会理；空 = 谁都理'],
   chatModel: ['聊天模型', '直连 API 时用的模型名'],
