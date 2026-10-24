@@ -9,6 +9,32 @@ from companion_memory import Knowledge
 
 
 class QQContextTests(unittest.TestCase):
+    def test_generic_media_selection_varies_and_avoids_recent_confirmed_images_even_after_text_chat(self):
+        import json
+        with tempfile.TemporaryDirectory() as tmp:
+            file=Path(tmp)/'catalog.json'
+            file.write_text(json.dumps({'items':[{'id':f'e{i}','kind':'emoji','caption':'普通表情','uses':1,'safe_auto':True} for i in range(12)]}),encoding='utf8')
+            with patch('random.shuffle',side_effect=lambda items:items.reverse()):
+                first=context.media_options('发点图片给我看',[],file)
+                self.assertEqual(first['candidates'][0]['id'],'e11')
+                history=[{'mediaConfirmed':True,'media':[{'id':'e11'}]}]+[{'phase':'sent','text':'聊天'} for _ in range(20)]
+                next_options=context.media_options('发点图片给我看',history,file)
+                self.assertNotIn('e11',[i['id'] for i in next_options['candidates']])
+
+    def test_media_selection_preserves_topic_matching_and_allows_explicit_repeats(self):
+        import json
+        with tempfile.TemporaryDirectory() as tmp:
+            file=Path(tmp)/'catalog.json'
+            file.write_text(json.dumps({'items':[{'id':'happy','kind':'emoji','caption':'开心快乐','tags':['开心'],'uses':1,'safe_auto':True},{'id':'sad','kind':'emoji','caption':'伤心难过','uses':1,'safe_auto':True}]}),encoding='utf8')
+            with patch('random.shuffle',side_effect=lambda items:items.reverse()):
+                self.assertEqual(context.media_options('发个开心表情',[],file)['candidates'][0]['id'],'happy')
+                history=[{'mediaConfirmed':True,'media':[{'id':'happy'}]}]
+                self.assertEqual(context.media_options('发个开心表情',history,file)['candidates'][0]['id'],'happy','topic fit must take precedence when no other matching sticker exists')
+                repeated=context.media_options('再发上一张表情',history,file)
+                self.assertEqual(repeated['candidates'][0]['id'],'happy')
+                varied=context.media_options('发点图片',history,file)
+                self.assertEqual(varied['candidates'][0]['id'],'sad')
+
     def test_generic_image_request_can_use_allowed_stickers_but_specific_photos_do_not(self):
         import json
         with tempfile.TemporaryDirectory() as tmp:
