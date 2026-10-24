@@ -8,7 +8,7 @@ from urllib.parse import urlsplit
 from settings import DATA,atomic_write,protect
 
 DEFAULTS={'enabled':False,'wechatEnabled':True,'privateUsers':[],'groups':[],
-          'persona':'dafeiyu','groupPersona':'dafeiyu','privatePersonas':{},
+          'persona':'dafeiyu','groupPersona':'dafeiyu','groupFollowsDefault':True,'privatePersonas':{},
           'wsUrl':'ws://127.0.0.1:3001/','probability':0.1,'cooldownSeconds':5,
           'maxPerMinute':6,'keywords':['DeepSeek','deepseek','大肥鱼','肥鱼','小鲸鱼'],'quietHours':[0,7],
           'activeHours':[0,24],'emotionAware':True,
@@ -27,7 +27,7 @@ def persona(value):
 
 def validate(cfg):
     if set(cfg)!=set(DEFAULTS):raise ValueError('QQ配置包含未知字段')
-    for name in ('enabled','wechatEnabled','emotionAware'):
+    for name in ('enabled','wechatEnabled','emotionAware','groupFollowsDefault'):
         if type(cfg[name]) is not bool:raise ValueError('启用状态应为布尔值')
     for name in ('privateUsers','groups'):
         if not isinstance(cfg[name],list) or len(cfg[name])>200:raise ValueError('允许对象最多200个')
@@ -58,7 +58,9 @@ def validate(cfg):
 
 def load_config():
     file=DATA/'qq/settings.json'
-    cfg={**DEFAULTS,**(json.loads(file.read_text(encoding='utf8')) if file.exists() else {})}
+    raw=json.loads(file.read_text(encoding='utf8')) if file.exists() else {}
+    cfg={**DEFAULTS,**raw}
+    if 'groupFollowsDefault' not in raw:cfg['groupFollowsDefault']=cfg['persona']==cfg['groupPersona']
     return validate(json.loads(json.dumps(cfg)))
 
 
@@ -69,13 +71,15 @@ def public_config():
 
 def save_config(body):
     if not isinstance(body,dict) or set(body)-set(DEFAULTS):raise ValueError('QQ配置字段无效')
-    if 'groupPersona' in body:
-        group=persona(body['groupPersona'])
-        if group not in ('linmuwan','dafeiyu'):
-            from persona import load_profile
-            if not (DATA.parent/'upstream-v1.2.0/personas'/f'{group}.md').is_file():raise ValueError('群聊人设不存在')
-            if (DATA.parent/'private'/group).exists() or load_profile(group).get('real_chat_knowledge'):raise ValueError('群聊不使用私人资料')
     cfg={**load_config(),**body}
+    if 'groupPersona' in body and 'groupFollowsDefault' not in body:cfg['groupFollowsDefault']=cfg['groupPersona']==cfg['persona']
+    if cfg['groupFollowsDefault']:cfg['groupPersona']=cfg['persona']
+    if set(body)&{'persona','groupPersona','groupFollowsDefault'}:
+        group=persona(cfg['groupPersona'])
+        from persona import load_profile
+        if (DATA.parent/'private'/group).exists() or load_profile(group).get('real_chat_knowledge'):raise ValueError('私密人设只能用于私聊，请给群聊单独选择公开人设')
+        if group not in ('linmuwan','dafeiyu'):
+            if not (DATA.parent/'upstream-v1.2.0/personas'/f'{group}.md').is_file():raise ValueError('群聊人设不存在')
     if 'privateUsers' in body and 'privatePersonas' not in body and isinstance(cfg['privateUsers'],list):
         cfg['privatePersonas']={peer:role for peer,role in cfg['privatePersonas'].items() if peer in cfg['privateUsers']}
     cfg=validate(cfg)

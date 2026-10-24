@@ -7,6 +7,29 @@ import qq_settings as qq
 
 
 class QQSettingsTests(unittest.TestCase):
+    def test_legacy_private_profile_cannot_follow_into_group(self):
+        import persona
+        legacy=persona.PRIVATE.name
+        with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)/'data'),patch.object(persona,'DATA',Path(tmp)/'data'),patch.object(persona,'PROFILE',Path(tmp)/'data/persona-profile.json'),patch.object(persona,'PROFILE_DIR',Path(tmp)/'data/persona-profiles'):
+            root=Path(tmp);(root/'data').mkdir();(root/'data/persona-profile.json').write_text('{"real_chat_knowledge":true}')
+            role=root/'upstream-v1.2.0/personas'/f'{legacy}.md';role.parent.mkdir(parents=True);role.write_text('fixture')
+            with self.assertRaises(ValueError):qq.save_config({'persona':legacy,'groupFollowsDefault':True})
+
+    def test_unified_default_updates_group_but_preserves_explicit_assignments(self):
+        with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)):
+            cfg=qq.load_config();self.assertTrue(cfg['groupFollowsDefault'])
+            changed=qq.save_config({'persona':'linmuwan','privateUsers':['100001'],'privatePersonas':{'100001':'private_fixture'}})
+            self.assertEqual(changed['groupPersona'],'linmuwan');self.assertEqual(changed['privatePersonas']['100001'],'private_fixture')
+            qq.save_config({'groupFollowsDefault':False,'groupPersona':'dafeiyu'})
+            self.assertEqual(qq.save_config({'persona':'linmuwan'})['groupPersona'],'dafeiyu')
+            with self.assertRaises(ValueError):qq.save_config({'persona':'private_fixture','groupFollowsDefault':True})
+
+    def test_old_different_group_role_stays_separate_when_loading_and_editing(self):
+        with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)):
+            file=Path(tmp)/'qq/settings.json';file.parent.mkdir();file.write_text('{"persona":"linmuwan","groupPersona":"dafeiyu"}',encoding='utf8')
+            self.assertFalse(qq.load_config()['groupFollowsDefault'])
+            self.assertEqual(qq.save_config({'probability':0.2})['groupPersona'],'dafeiyu')
+
     def test_missing_custom_group_role_does_not_block_configuration_recovery(self):
         with tempfile.TemporaryDirectory() as tmp,patch.object(qq,'DATA',Path(tmp)/'data'),patch('persona.load_profile',return_value={'real_chat_knowledge':False}):
             role=Path(tmp)/'upstream-v1.2.0/personas/public_fixture.md';role.parent.mkdir(parents=True);role.write_text('fixture')

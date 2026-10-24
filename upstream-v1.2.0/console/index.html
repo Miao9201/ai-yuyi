@@ -74,6 +74,7 @@
   .kbd{background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12px}
 [hidden]{display:none!important}.btn.success{background:#278754;border-color:#36af70;color:white}.api-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.api-fields label{display:flex;flex-direction:column;gap:7px}.api-fields input{width:100%}a.btn{color:var(--txt);text-decoration:none;display:inline-block}
 .memory-split{display:grid;grid-template-columns:minmax(240px,0.85fr) minmax(300px,1.4fr);gap:14px}.memory-split textarea{width:100%;min-height:180px}.memory-item{display:block;width:100%;text-align:left;margin-bottom:8px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;color:var(--txt);cursor:pointer}.memory-item.active{border-color:var(--accent)}@media(max-width:760px){.memory-split{grid-template-columns:1fr}header{flex-wrap:wrap}.api-fields{grid-template-columns:1fr}}
+.platform-panels{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.platform-card h2,.persona-defaults h2{margin:0 0 12px;font-size:19px}.platform-card .row h2{margin:0;flex:1}.platform-facts{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px 16px;margin:20px 0}.platform-facts dt{color:var(--dim)}.platform-facts dd{margin:0;overflow-wrap:anywhere}.status-pill{font-size:12px;color:var(--accent2)}.platform-details{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}.platform-details div{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:8px}#cards{margin-top:16px}.persona-defaults{margin-bottom:18px}.persona-defaults select{flex:1;min-width:140px}.persona-defaults .note{min-height:18px}.role-tag{font-size:11px;color:var(--accent2);font-weight:400;margin-left:6px}@media(max-width:850px){.platform-panels{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -149,26 +150,43 @@
       <div class="api-fields" style="margin-top:16px">
         <label>允许私聊的QQ号<textarea id="qqPrivateUsers" aria-label="允许私聊的QQ号" style="min-height:110px" placeholder="每行一个QQ号"></textarea></label>
         <label>允许回复的群号<textarea id="qqGroups" aria-label="允许回复的群号" style="min-height:110px" placeholder="每行一个群号，留空关闭全部群聊"></textarea></label>
-        <label>QQ私聊人设<select id="qqPersona"></select></label><label>QQ群聊人设<select id="qqGroupPersona"></select></label>
       </div>
-      <p class="note">只回复名单内对象；会话记忆独立。QQ人设文件标识使用字母、数字、下划线或短横线，显示名称可用中文。</p>
+      <p class="note" id="qqUserPersonas">正在读取人设…</p><p><a class="btn sm" href="#personas">管理QQ人设</a></p>
       <button class="btn primary" id="qqSaveUsers">保存QQ设置</button>
       <details style="margin-top:16px"><summary>QQ运行环境</summary><p class="note">运行官方 NapCat OneKey 安装器后，选择包含 QQ.exe 的独立目录。<a href="https://napneko.github.io/guide/boot/Shell" target="_blank" rel="noopener">安装说明</a></p><div class="row"><input id="qqShellPath" type="text" placeholder="NapCat OneKey独立目录" style="flex:1"><button class="btn" id="qqConfigure">保存目录</button></div></details>
     </div>
   </section>
   <!-- 总览 -->
   <section id="tab-overview">
-    <div class="card" id="wechatOverview" style="margin-bottom:14px" role="status">微信 · 正在读取状态…</div>
-    <div class="card" id="qqOverview" style="margin-bottom:14px" role="status">正在读取QQ状态…</div>
-    <div class="grid cards" id="cards"></div>
-    <div class="card" style="margin-top:14px">
-      <div class="k">最近日志</div>
-      <pre id="miniLog" style="max-height:30vh;margin:6px 0 0">加载中…</pre>
+    <div class="grid platform-panels">
+      <article class="card platform-card"><div class="row"><h2>微信</h2><span id="wechatOverview" class="status-pill" role="status">读取中…</span></div>
+        <dl class="platform-facts"><dt>绑定用户</dt><dd id="wxOverviewAccount">—</dd><dt>默认人设</dt><dd id="wxOverviewPersona">—</dd><dt>回复范围</dt><dd>已授权的微信AI会话</dd></dl>
+        <div class="row"><a class="btn sm" href="#accounts">管理用户</a><a class="btn sm" href="#personas">选择人设</a></div>
+        <details class="platform-details"><summary>账号与角色详情</summary><div id="wxOverviewDetails" class="note"></div></details>
+      </article>
+      <article class="card platform-card"><div class="row"><h2>QQ</h2><span id="qqOverview" class="status-pill" role="status">读取中…</span></div>
+        <dl class="platform-facts"><dt>登录账号</dt><dd id="qqOverviewAccount">—</dd><dt>默认人设</dt><dd id="qqOverviewPersona">—</dd><dt>群聊人设</dt><dd id="qqOverviewGroup">—</dd><dt>回复范围</dt><dd id="qqOverviewScope">—</dd></dl>
+        <div class="row"><a class="btn sm" href="#accounts">管理回复对象</a><a class="btn sm" href="#personas">选择人设</a></div>
+        <details class="platform-details"><summary>账号详情</summary><div id="qqOverviewDetails" class="note"></div></details>
+      </article>
     </div>
+    <div class="grid cards" id="cards"></div>
+    <details class="card" id="overviewLogs" style="margin-top:14px">
+      <summary>最近日志</summary>
+      <pre id="miniLog" style="max-height:30vh;margin:6px 0 0">加载中…</pre>
+    </details>
   </section>
 
   <!-- 人设 -->
   <section id="tab-personas" class="hide">
+    <div class="grid platform-panels persona-defaults">
+      <article class="card"><h2>微信默认人设</h2><p class="note">用于主账号；已单独指定的用户人设保持不变。</p><div class="row"><select id="personaWechatDefault" aria-label="微信默认人设"></select><button id="personaWechatSave" class="btn primary" disabled>保存微信默认</button></div><p class="note" id="personaWechatStatus" role="status"></p></article>
+      <article class="card"><h2>QQ默认人设</h2><div class="row"><select id="qqPersona" aria-label="QQ默认人设"></select><button id="qqPersonaSave" class="btn primary" disabled>保存QQ默认</button></div>
+        <p><label><input id="qqGroupSeparate" type="checkbox">群聊单独指定人设</label></p><div id="qqGroupBlock" hidden><label>群聊人设 <select id="qqGroupPersona"></select></label></div>
+        <p class="note">默认用于私聊与群聊；私密人设只能用于私聊。</p><p class="note" id="personaQQStatus" role="status"></p>
+      </article>
+    </div>
+    <div class="row" style="margin:18px 0 12px"><h2 style="margin:0">人设编辑库</h2><span style="flex:1"></span><select id="personaFilter" aria-label="筛选人设"><option value="all">全部人设</option><option value="public">公开人设</option><option value="private">私密人设</option></select></div>
     <div class="split">
       <div>
         <div class="row" style="margin-bottom:10px">
@@ -176,7 +194,7 @@
           <button class="btn sm" id="btnReloadPersonas">刷新</button>
         </div>
         <div class="list" id="personaList"></div>
-        <p class="note">保存后用于后续回复。</p>
+        <p class="note">编辑只保存内容，不切换默认。共用同一人设的平台都会使用更新后的内容。</p>
       </div>
       <div>
         <div class="row" style="margin-bottom:8px">
@@ -186,7 +204,6 @@
         <textarea id="personaBody" placeholder="填写身份、关系和说话方式。"></textarea>
         <div class="row" style="margin-top:10px">
           <button class="btn primary" id="btnSavePersona">保存</button>
-          <button class="btn" id="btnSaveDefault">保存并设为微信默认</button>
           <button class="btn" id="btnRenamePersona">重命名</button>
           <button class="btn danger" id="btnDeletePersona">删除</button>
         </div>
@@ -517,39 +534,25 @@ async function loadState() {
     const ilink=s.desktop?.transport==='ilink';
     const wechat=s.platforms?.wechat!==false,qq=!!s.platforms?.qq;
     const qqDetail=s.qq?.worker?.detail||s.qq?.detail||'QQ尚未连接';
-    $('#wechatOverview').textContent='微信 · '+(!wechat?'未启用':!s.enabled?'已停止回复':s.desktop?.detail||'尚未连接');
+    $('#wechatOverview').textContent=!wechat?'未启用':!s.enabled?'已停止':s.desktop?.qr?'待扫码':s.desktop?.state==='listening'?'已连接':s.desktop?.state==='generating'?'正在回复':s.desktop?.detail?'连接中':'未连接';
+    const wxContact=s.desktop?.contact||'';
+    $('#wxOverviewAccount').textContent=s.desktop?.contactSource==='nickname'?wxContact:(!wxContact||wxContact==='未绑定微信'?'未绑定':'主账号已绑定');
+    $('#wxOverviewPersona').textContent=s.profile?.name||s.personas?.current||'未指定';
+    $('#wxOverviewDetails').textContent='账号标识：'+(wxContact||'未绑定')+'\n'+(s.profile?[s.profile.gender,s.profile.relationship,'称呼：'+s.profile.address].join(' · '):'')+'\n引擎版本：'+(s.desktop?.version||'1.2.0');
     $('#btnLocate').hidden=ilink;
-    $('#transportNote').textContent=!wechat&&qq?'电脑需保持开机联网，QQ无需前台。':ilink?'电脑需保持开机联网，微信无需前台。':'请保持目标微信聊天在前台。';
+    $('#transportNote').textContent='已启用平台：'+([wechat?'微信':'',qq?'QQ':''].filter(Boolean).join('、')||'无')+'。电脑需保持开机联网。';
     $('#qrPanel').hidden=!(wechat&&ilink&&s.bot.running&&s.desktop?.qr);
     if(!$('#qrPanel').hidden&&$('#loginQr').dataset.version!==String(s.desktop.qrVersion)){
       $('#loginQr').dataset.version=String(s.desktop.qrVersion);$('#loginQr').src='/api/ilink/qr?v='+encodeURIComponent(s.desktop.qrVersion);
     }
-    $('#desktopStatus').textContent = !s.enabled?'已停止回复，未发送的任务已保存':!wechat&&qq?qqDetail:qq?'微信：'+(s.desktop?.detail||'尚未连接')+'；QQ：'+qqDetail:s.desktop?.detail||'尚未启动';
+    $('#desktopStatus').textContent=!s.enabled?'自动回复已停止':'自动回复已开启';
     $('#dot').className = 'dot' + (s.bot.running ? ' on' : '');
     $('#headMeta').textContent = s.bot.running&&s.enabled ? '运行中' : s.bot.running ? '正在停止' : '已停止';
     state.replyEnabled=!!s.enabled;
     const toggle=$('#btnReplyToggle');toggle.textContent=s.enabled?'停止回复':'开始回复';toggle.className='btn sm '+(s.enabled?'danger':'success');toggle.title=s.enabled?'停止所有用户的回复':'开始所有已启用平台的回复';
     const phaseNames={queued:'等待生成',generating:'生成中',prepared:'等待发送',pasting:'正在粘贴',pasted:'核对输入',entering:'发送确认中',sending:'发送中',sent:'已发送',uncertain:'发送待核对',failed:'本轮失败'};
-    $('#cards').innerHTML = [
-      ['机器人', s.bot.running ? '运行中' : '已停止'],
-      ['人设库', `${s.personas.count} 个`],
-      [!wechat&&qq?'QQ机器人':'微信回复对象', !wechat&&qq?(s.qq?.nickname||s.qq?.bot||'QQ未登录'):(s.desktop?.contact||'未绑定微信')],
-      ['当前模型', s.config.model || '—'],
-      ['引擎版本', s.desktop?.version || '1.2.0'],
-      ['收发方式', !wechat&&qq?'QQ 后台连接':qq?'微信＋QQ 后台连接':ilink?'iLink 后台连接':'前台文字识别'],
-      ['当前／最近任务', wechat&&s.desktop?.event ? `#${s.desktop.event} · ${phaseNames[s.desktop.phase]||s.desktop.state}` : '无待发任务'],
-      ...(wechat?[['微信人设', s.profile ? `${s.profile.name} · ${s.profile.gender}` : '—'],
-      ['微信关系', s.profile ? `${s.profile.relationship} · 称呼${s.profile.address}` : '—']]:[]),
-      ...(!wechat?[]:s.companion?.mode==='role'?[
-        ['说话方式','当前人设文件'],['记忆范围','本角色的新对话'],['表情素材',`${s.companion.emoji}个内置素材`],
-      ]:s.companion?[
-        ['学习重点',`${s.companion.focus} · ${s.companion.examples}组接话范例`],
-        ['可检索的往事',`${s.companion.memories}段 · ${s.companion.messages}条记录`],
-        ['她发过的素材',`${s.companion.emoji}个表情 · ${s.companion.images}张图片`],
-      ]:[]),
-    ].map(([k, v]) => `<div class="card"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
-    const lg = await api('/api/logs?lines=24&platform='+(!wechat&&qq?'qq':wechat&&!qq?'wechat':'all'));
-    $('#miniLog').textContent = lg.text || '(空)';
+    $('#cards').innerHTML=[['回复服务',s.bot.running&&s.enabled?'已开启':'已停止'],['共享模型',s.config.model||'未配置'],['人设库',`${s.personas.count} 个`]].map(([k,v])=>`<div class="card"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
+    if($('#overviewLogs').open){const lg=await api('/api/logs?lines=24&platform='+(!wechat&&qq?'qq':wechat&&!qq?'wechat':'all'));$('#miniLog').textContent=lg.text||'(空)';}
     return s;
   } catch (e) { toast('读取状态失败：' + e.message, true); }
 }
@@ -565,21 +568,41 @@ $('#btnReplyToggle').onclick=()=>serviceAction(state.replyEnabled?'stop':'start'
 $('#btnLocate').onclick=async()=>{try{await post('/api/desktop/locate');}catch(e){toast(e.message,true);}};
 
 // ── 人设 ──
-async function loadPersonas(select) {
+let personaLoadVersion=0;
+async function loadPersonas(select,preserveEditor=false) {
+  const version=++personaLoadVersion;$('#personaWechatSave').disabled=true;
   try {
     const r = await api('/api/personas');
+    if(version!==personaLoadVersion)return;
     state.personas = r.items;
+    const picker=$('#personaWechatDefault');picker.replaceChildren();
+    for(const role of r.items){const option=document.createElement('option');option.value=role.name;option.textContent=role.title||role.name;picker.append(option);}
+    picker.value=r.items.find(p=>p.isDefault)?.name||'';
+    $('#personaWechatSave').disabled=false;
+    $('#personaWechatStatus').textContent='当前默认：'+(r.items.find(p=>p.isDefault)?.title||'未指定');
+    renderPersonaList();
+    if(preserveEditor)return;
     window.dispatchEvent(new Event('personaschange'));
-    $('#personaList').innerHTML = r.items.map((p) => `
-      <div class="item ${p.name === state.activePersona ? 'active' : ''}" data-name="${esc(p.name)}">
-        <div><div class="n">${esc(p.title || p.name)} ${p.isDefault ? '<span style="color:var(--accent)">●默认</span>' : ''}</div>
-        <div class="s">${esc(p.name)} · ${p.chars} 字</div></div>
-      </div>`).join('') || '<div class="item"><span class="s">还没有人设</span></div>';
-    $$('#personaList .item').forEach((el) => el.onclick = () => openPersona(el.dataset.name));
     const target = select || state.activePersona || (r.items.find((x) => x.isDefault) || r.items[0] || {}).name;
     if (target) await openPersona(target);
   } catch (e) { toast('读取人设失败：' + e.message, true); }
 }
+function renderPersonaList(){
+  const mode=$('#personaFilter').value||'all',q=state.qqPersonaConfig||{};
+  $('#personaList').innerHTML=state.personas.filter(p=>mode==='all'||(mode==='private'?p.isPrivate:!p.isPrivate)).map(p=>{
+    const tags=[p.isDefault?'微信默认':'',p.name===q.persona?'QQ默认':'',!q.groupFollowsDefault&&p.name===q.groupPersona?'QQ群':'',p.isPrivate?'私密':''].filter(Boolean);
+    return `<div class="item ${p.name===state.activePersona?'active':''}" data-name="${esc(p.name)}"><div><div class="n">${esc(p.title||p.name)} ${tags.map(t=>`<span class="role-tag">${esc(t)}</span>`).join('')}</div><div class="s">${esc(p.name)} · ${p.chars} 字</div></div></div>`;
+  }).join('')||'<div class="item"><span class="s">没有匹配的人设</span></div>';
+  $$('#personaList .item').forEach(el=>el.onclick=()=>openPersona(el.dataset.name));
+}
+$('#personaFilter').onchange=renderPersonaList;
+$('#personaWechatSave').onclick=async()=>{
+  const button=$('#personaWechatSave'),name=$('#personaWechatDefault').value;if(!name)return toast('请选择微信默认人设',true);
+  const version=++personaLoadVersion;button.disabled=true;
+  try{await post('/api/personas/default',{name});await loadPersonas(undefined,true);toast('已保存微信默认人设');}
+  catch(e){toast(e.message,true);if(version===personaLoadVersion)button.disabled=false;}
+};
+$('#overviewLogs').ontoggle=()=>{if($('#overviewLogs').open)loadState();};
 async function openPersona(name) {
   if (!name) return;
   try {
@@ -604,13 +627,13 @@ async function savePersona(asDefault) {
   if (!name) return toast('先起个人设名', true);
   try {
     await post('/api/personas/save', { name, content: $('#personaBody').value });
-    if (asDefault) await post('/api/personas/default', { name });
-    toast(asDefault ? '已保存并设为微信默认' : '已保存');
+
+    toast('已保存人设内容');
     await loadPersonas(name);
   } catch (e) { toast('保存失败：' + e.message, true); }
 }
 $('#btnSavePersona').onclick = () => savePersona(false);
-$('#btnSaveDefault').onclick = () => savePersona(true);
+
 $('#btnRenamePersona').onclick = async () => {
   const from = state.activePersona;
   if (!from) return toast('先选一个人设', true);
@@ -974,7 +997,13 @@ $('#logAuto').onchange = (e) => {
 function esc(s) { return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 
 loadState();
-window.addEventListener('DOMContentLoaded',()=>{const tab=location.hash.slice(1);const button=$('nav button[data-tab="'+(tab==='topics'?'memory':tab)+'"]');if(button)button.click();});
+function syncTabFromHash(){
+  const name=location.hash.slice(1),tab=name==='topics'?'memory':name;
+  if(tab===state.currentTab||!['overview','personas','memory','accounts','config','api','logs','stickers','life'].includes(tab))return;
+  const button=$('nav button[data-tab="'+tab+'"]');if(button)button.click();
+}
+window.addEventListener('DOMContentLoaded',syncTabFromHash);
+window.addEventListener('hashchange',syncTabFromHash);
 setInterval(() => { if (state.currentTab === 'overview') loadState(); }, 5000);
 setInterval(() => { if (state.currentTab === 'accounts') loadAccounts(); }, 3000);
 </script>

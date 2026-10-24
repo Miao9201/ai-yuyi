@@ -11,7 +11,8 @@ const copy=value=>JSON.parse(JSON.stringify(value));
 const settle=async()=>{for(let i=0;i<4;i++)await new Promise(resolve=>setImmediate(resolve));};
 
 async function browser({full=false,fail=[]}={}){
-  const nodes=new Map(),events=new Map(),requests=[],failures=new Set(fail),timers=[];
+  const nodes=new Map(),events=new Map(),requests=[],failures=new Set(fail),timers=[],gates=new Map();
+  const response=(path,value)=>{const gate=gates.get(path);if(gate){gates.delete(path);return gate.then(()=>value);}return value;};
   class Element{
     constructor(tag='div',id=''){this.tagName=tag.toUpperCase();this.id=id;this.children=[];this.dataset={};this.style={};this.checked=false;this.disabled=false;this.hidden=false;this._value='';this.textContent='';this.classList={add(){},remove(){},toggle(){}};}
     get value(){return this.tagName==='SELECT'?(this.children.find(x=>x.value===this._value)?.value||''):this._value;}
@@ -41,7 +42,8 @@ async function browser({full=false,fail=[]}={}){
     get innerHTML(){return this._html||'';}
   }
   for(const match of html.slice(0,html.indexOf('<script>')).matchAll(/<(\w+)\b[^>]*\bid="([^"]+)"[^>]*>/g))nodes.set(match[2],new Element(match[1],match[2]));
-  const document={body:new Element('body'),title:'',getElementById:id=>nodes.get(id)||null,createElement:tag=>new Element(tag),querySelector:selector=>selector.startsWith('#')?nodes.get(selector.slice(1))||null:null,querySelectorAll:()=>[]};
+  const nav=[...html.matchAll(/<button data-tab="([^"]+)"/g)].map(m=>{const button=new Element('button');button.dataset.tab=m[1];return button;});
+  const document={body:new Element('body'),title:'',getElementById:id=>nodes.get(id)||null,createElement:tag=>new Element(tag),querySelector:selector=>selector.startsWith('#')?nodes.get(selector.slice(1))||null:nav.find(b=>selector==='nav button[data-tab="'+b.dataset.tab+'"]')||null,querySelectorAll:selector=>selector==='nav button'?nav:selector==='main > section'?[...nodes.values()].filter(n=>n.id.startsWith('tab-')):[]};
   const data={
     qq:{enabled:true,wechatEnabled:true,privateUsers:['100001'],groups:['200001'],persona:'dafeiyu',groupPersona:'dafeiyu',probability:.1,cooldownSeconds:5,maxPerMinute:6,keywords:['大肥鱼'],quietHours:[0,7],activeHours:[0,24],emotionAware:true,replyOptions:{visionEnabled:true,sceneEnabled:true,emotionEnabled:true}},
     roles:[{name:'dafeiyu',title:'大肥鱼'},{name:'private_fixture',title:'私人人设',isPrivate:true}],
@@ -57,11 +59,14 @@ async function browser({full=false,fail=[]}={}){
       if(path==='/api/qq/config'){Object.assign(data.qq,body);return {ok:true,config:copy(data.qq)};}
       if(path==='/api/wechat/config'){Object.assign(data.wechat,body);return {ok:true,config:copy(data.wechat)};}
       if(path==='/api/config')return {ok:true,changed:Object.keys(body.patch)};
+      if(path==='/api/personas/default'){for(const r of data.roles)r.isDefault=r.name===body.name;return {ok:true,name:body.name};}
+      if(path==='/api/personas/save')return {ok:true};
       throw Error('Unexpected synthetic POST '+path);
     }
-    if(path==='/api/qq/config')return {ok:true,config:copy(data.qq)};
+    if(path==='/api/qq/config')return response(path,{ok:true,config:copy(data.qq)});
     if(path==='/api/wechat/config')return {ok:true,config:copy(data.wechat)};
-    if(path==='/api/personas')return {ok:true,items:copy(data.roles)};
+    if(path==='/api/personas')return response(path,{ok:true,items:copy(data.roles)});
+    if(path.startsWith('/api/personas/'))return {ok:true,content:'SAVED_TEMPLATE'};
     if(path==='/api/qq/state')return {ok:true,...copy(data.worker)};
     if(path==='/api/state')return {ok:true,...copy(data.state),qq:copy(data.worker)};
     if(path==='/api/config')return {ok:true,items:copy(data.items)};
@@ -69,10 +74,10 @@ async function browser({full=false,fail=[]}={}){
     throw Error('Unexpected synthetic GET '+path);
   }
   const location={hash:'#overview'};
-  const context=vm.createContext({document,location,console,setTimeout:()=>0,clearTimeout(){},setInterval:fn=>{timers.push(fn);return timers.length;},clearInterval(){},confirm:()=>true,window:{addEventListener:(name,fn)=>{if(!events.has(name))events.set(name,[]);events.get(name).push(fn);}},fetch:async(path,opts)=>({ok:true,status:200,json:()=>api(path,opts)}),api,post:(path,body)=>api(path,{method:'POST',body:JSON.stringify(body)}),toast(){}});
+  const context=vm.createContext({document,location,console,Event:class{constructor(type){this.type=type;}},setTimeout:()=>0,clearTimeout(){},setInterval:fn=>{timers.push(fn);return timers.length;},clearInterval(){},confirm:()=>true,window:{dispatchEvent:e=>{for(const fn of events.get(e.type)||[])fn(e);},addEventListener:(name,fn)=>{if(!events.has(name))events.set(name,[]);events.get(name).push(fn);}},fetch:async(path,opts)=>({ok:true,status:200,json:()=>api(path,opts)}),api,post:(path,body)=>api(path,{method:'POST',body:JSON.stringify(body)}),toast(){}});
   if(full)vm.runInContext(main,context,{filename:'index.html'});
   vm.runInContext(qq,context,{filename:'qq-ui.js'});await settle();
-  return {nodes,data,requests,failures,context,async navigate(hash){location.hash=hash;await Promise.all((events.get('hashchange')||[]).map(fn=>fn()));await settle();},async poll(){for(const fn of timers)await fn();await settle();}};
+  return {nodes,data,requests,failures,context,pauseNext(path){let release;gates.set(path,new Promise(r=>{release=r;}));return release;},async navigate(hash){location.hash=hash;await Promise.all((events.get('hashchange')||[]).map(fn=>fn()));await settle();},async poll(){for(const fn of timers)await fn();await settle();}};
 }
 
 test('QQ and WeChat save only their own platform fields',async()=>{
@@ -81,7 +86,7 @@ test('QQ and WeChat save only their own platform fields',async()=>{
   assert.deepEqual(b.requests.find(r=>r.method==='POST'&&r.path==='/api/wechat/config').body,{enabled:false});
   b.nodes.get('qqPersona').value='private_fixture';await b.nodes.get('qqSaveUsers').click();
   const users=b.requests.find(r=>r.method==='POST'&&r.path==='/api/qq/config').body;
-  assert.equal(users.persona,'private_fixture');assert.equal(users.groupPersona,'dafeiyu');assert.equal('wechatEnabled' in users,false);
+  assert.equal('persona' in users,false);assert.equal('groupPersona' in users,false);assert.equal('wechatEnabled' in users,false);
   await b.nodes.get('qqSaveParameters').click();
   const params=b.requests.filter(r=>r.method==='POST'&&r.path==='/api/qq/config').at(-1).body;
   assert.deepEqual(params.replyOptions,{visionEnabled:true,sceneEnabled:true,emotionEnabled:true});
@@ -137,5 +142,47 @@ test('WeChat parameter saves exclude API settings and the shared API table saves
   b.nodes.get('cfg_chatTemperature').value='1.1';await b.nodes.get('btnSaveSharedConfig').click();
   const api=b.requests.filter(r=>r.path==='/api/config'&&r.method==='POST').at(-1).body.patch;
   assert.equal(api.chatTemperature,1.1);assert.equal('sceneEnabled' in api,false);assert.equal('defaultPersona' in api,false);
-  assert.match(html.match(/id="btnSaveDefault"[^>]*>([^<]+)/)[1],/微信/);
+  assert.ok(b.nodes.has('personaWechatSave'));assert.ok(b.nodes.has('qqPersonaSave'));
+});
+
+test('persona defaults save independently and optional group role remains explicit',async()=>{
+  const b=await browser({full:true});
+  await b.navigate('#personas');await settle();
+  b.nodes.get('personaBody').value='UNSAVED_DRAFT';
+  b.nodes.get('personaWechatDefault').value='private_fixture';await b.nodes.get('personaWechatSave').click();await settle();
+  assert.deepEqual(b.requests.find(r=>r.path==='/api/personas/default').body,{name:'private_fixture'});
+  assert.equal(b.requests.some(r=>r.path==='/api/qq/config'&&r.method==='POST'),false);
+  b.nodes.get('qqPersona').value='dafeiyu';b.nodes.get('qqGroupSeparate').checked=false;await b.nodes.get('qqPersonaSave').click();await settle();
+  assert.deepEqual(b.requests.filter(r=>r.path==='/api/qq/config'&&r.method==='POST').at(-1).body,{persona:'dafeiyu',groupPersona:'dafeiyu',groupFollowsDefault:true});
+  b.nodes.get('qqPersona').value='private_fixture';b.nodes.get('qqGroupSeparate').checked=true;b.nodes.get('qqGroupPersona').value='dafeiyu';await b.nodes.get('qqPersonaSave').click();
+  assert.equal(b.requests.filter(r=>r.path==='/api/qq/config'&&r.method==='POST').at(-1).body.groupFollowsDefault,false,JSON.stringify({disabled:b.nodes.get('qqPersonaSave').disabled,choice:b.nodes.get('qqPersona').value,requests:b.requests.filter(r=>r.method==='POST')}));
+  assert.equal(b.requests.filter(r=>r.path==='/api/personas/default'&&r.method==='POST').length,1);
+  assert.equal(b.nodes.get('personaBody').value,'UNSAVED_DRAFT');
+  const userMarkup=html.split('id="tab-accounts"')[1].split('id="tab-overview"')[0];
+  assert.equal(userMarkup.includes('id="qqPersona"'),false);
+});
+
+test('an old QQ read cannot undo a newer saved persona choice',async()=>{
+  const b=await browser(),release=b.pauseNext('/api/qq/config');
+  const pending=b.navigate('#config');await settle();
+  await b.navigate('#accounts');
+  b.nodes.get('qqPersona').value='private_fixture';b.nodes.get('qqGroupSeparate').checked=true;
+  await b.nodes.get('qqPersonaSave').click();release();await pending;await settle();
+  assert.equal(b.data.qq.persona,'private_fixture');assert.equal(b.nodes.get('qqPersona').value,'private_fixture');
+});
+
+test('an old persona list cannot reset the saved WeChat default or the editing draft',async()=>{
+  const b=await browser({full:true});await b.navigate('#personas');
+  b.nodes.get('personaBody').value='UNSAVED_DRAFT';
+  const release=b.pauseNext('/api/personas'),pending=vm.runInContext('loadPersonas(undefined,true)',b.context);await settle();
+  await vm.runInContext('loadPersonas(undefined,true)',b.context);
+  b.nodes.get('personaWechatDefault').value='private_fixture';await b.nodes.get('personaWechatSave').click();
+  release();await pending;await settle();
+  assert.equal(b.nodes.get('personaWechatDefault').value,'private_fixture');assert.equal(b.nodes.get('personaBody').value,'UNSAVED_DRAFT');
+});
+
+test('overview management links and browser hash navigation open the requested page',async()=>{
+  const b=await browser({full:true});await b.navigate('#personas');
+  assert.equal(vm.runInContext('state.currentTab',b.context),'personas');
+  await b.navigate('#accounts');assert.equal(vm.runInContext('state.currentTab',b.context),'accounts');
 });

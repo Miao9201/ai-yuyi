@@ -34,7 +34,7 @@ class QQConsoleTests(unittest.TestCase):
         for folder in ('console','src'):shutil.copytree(ROOT/'upstream-v1.2.0'/folder,project/folder)
         (project/'personas').mkdir();shutil.copy2(ROOT/'upstream-v1.2.0/personas/linmuwan.md',project/'personas/linmuwan.md')
         shutil.copy2(ROOT/'upstream-v1.2.0/package.json',project/'package.json')
-        for name in ('settings.py','account_store.py','runtime_paths.py','qq_settings.py','qq_runtime.py'):shutil.copy2(ROOT/name,self.root/name)
+        for name in ('settings.py','account_store.py','runtime_paths.py','qq_settings.py','qq_runtime.py','persona.py','core.py'):shutil.copy2(ROOT/name,self.root/name)
         (project/'data').mkdir();(self.root/'data').mkdir()
         (project/'data/config.json').write_text(json.dumps({'desktopAdapterEnabled':True,'defaultPersona':'linmuwan'}),encoding='utf8')
         (self.root/'data/config.json').write_text(json.dumps({'transport':'ilink','enabled':True,'run_id':'fixture'}),encoding='utf8')
