@@ -20,7 +20,8 @@
   ::-webkit-scrollbar-button{display:none}
   body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.6 "Segoe UI","Microsoft YaHei",system-ui,sans-serif}
   button,input,select,textarea{font:inherit;color:inherit}
-  header{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:10}
+  .app-chrome{position:sticky;top:0;z-index:10;background:var(--bg);max-height:80dvh;overflow-y:auto}
+  header{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--panel)}
   header h1{font-size:16px;margin:0;font-weight:600;letter-spacing:.5px}
   .dot{width:9px;height:9px;border-radius:50%;background:var(--err);display:inline-block}
   .dot.on{background:var(--ok);box-shadow:0 0 8px var(--ok)}
@@ -78,6 +79,7 @@
 </style>
 </head>
 <body>
+<div class="app-chrome">
 <header>
   <span class="dot" id="dot"></span>
   <h1 id="personaTitle">语忆AI</h1>
@@ -108,6 +110,7 @@
   <button data-tab="stickers" hidden>表情包</button>
   <button data-tab="life" hidden>生活线</button>
 </nav>
+</div>
 
 <main>
 <section id="tab-api" class="hide"><div class="card">
