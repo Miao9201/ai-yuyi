@@ -13,6 +13,15 @@ import urllib.error
 from settings import ROOT,protect
 
 class QQConsoleTests(unittest.TestCase):
+    def test_health_is_independent_of_qq_login_and_returns_only_local_identity(self):
+        import hashlib
+        self.assertEqual(self.request('/api/qq/config',{'enabled':True})[0],200)
+        (self.root/'qq_runtime.py').write_text("raise RuntimeError('QQ status must not be queried by health')",encoding='utf8')
+        code,_,raw=self.request('/api/health');self.assertEqual(code,200,raw)
+        data=json.loads(raw)
+        own=hashlib.sha256(os.path.normcase(str(self.root.resolve())).encode('utf8')).hexdigest()
+        self.assertEqual(data,{'ok':True,'appId':'ai-yuyi','instanceId':own})
+
     def test_qq_referenced_persona_cannot_be_deleted_or_renamed(self):
         self.assertEqual(self.request('/api/qq/config',{'persona':'linmuwan','groupPersona':'linmuwan'})[0],200)
         for endpoint,body in [('/api/personas/delete',{'name':'linmuwan'}),('/api/personas/rename',{'from':'linmuwan','to':'renamed'})]:

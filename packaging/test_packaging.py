@@ -32,8 +32,9 @@ class PackagingTests(unittest.TestCase):
         own=hashlib.sha256(os.path.normcase(str(APP.resolve())).encode('utf-8')).hexdigest()
         for identity,expected in ((own,True),('other-installation',False),(None,False)):
             response=io.BytesIO(json.dumps({'appId':'ai-yuyi','instanceId':identity}).encode())
-            with patch.object(launcher.urllib.request,'urlopen',return_value=response):
+            with patch.object(launcher.urllib.request,'urlopen',return_value=response) as fetch:
                 self.assertEqual(launcher.ours('http://127.0.0.1:7788'),expected)
+                fetch.assert_called_once_with('http://127.0.0.1:7788/api/health',timeout=1)
 
     def test_manifest_allows_only_reviewed_unchanged_files(self):
         builder = module('portable_builder', APP / 'packaging' / 'build_portable.py')

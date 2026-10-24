@@ -556,9 +556,20 @@ $('#btnReloadAccounts').onclick=loadAccounts;
 $('#btnCloseAccountQr').onclick=()=>{state.accountQr='';$('#accountQrPanel').hidden=true;};
 
 // ── 总览 ──
+function markServiceUnavailable(){
+  state.serviceUnavailable=true;
+  $('#dot').className='dot';
+  $('#headMeta').textContent='连接异常';
+  $('#desktopStatus').textContent='无法确认后台状态';
+  $('#transportNote').textContent='本机服务连接异常。若刷新后仍未恢复，请重新打开语忆AI。';
+  $('#wechatOverview').textContent='状态未知';
+  $('#qqOverview').textContent='状态未知';
+  $('#btnReplyToggle').disabled=true;
+}
 async function loadState() {
   try {
     const s = await api('/api/state');
+    state.serviceUnavailable=false;
     $('#personaTitle').textContent='语忆AI';
     document.title='语忆AI';
     const ilink=s.desktop?.transport==='ilink';
@@ -580,18 +591,19 @@ async function loadState() {
     $('#headMeta').textContent = s.bot.running&&s.enabled ? '运行中' : s.bot.running ? '正在停止' : '已停止';
     state.replyEnabled=!!s.enabled;
     const toggle=$('#btnReplyToggle');toggle.textContent=s.enabled?'停止回复':'开始回复';toggle.className='btn sm '+(s.enabled?'danger':'success');toggle.title=s.enabled?'停止所有用户的回复':'开始所有已启用平台的回复';
+    toggle.disabled=serviceActionBusy;
     const phaseNames={queued:'等待生成',generating:'生成中',prepared:'等待发送',pasting:'正在粘贴',pasted:'核对输入',entering:'发送确认中',sending:'发送中',sent:'已发送',uncertain:'发送待核对',failed:'本轮失败'};
     $('#cards').innerHTML=[['回复服务',s.bot.running&&s.enabled?'已开启':'已停止'],['共享模型',s.config.model||'未配置'],['人设库',`${s.personas.count} 个`]].map(([k,v])=>`<div class="card"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
     if($('#overviewLogs').open){const lg=await api('/api/logs?lines=24&platform='+(!wechat&&qq?'qq':wechat&&!qq?'wechat':'all'));$('#miniLog').textContent=lg.text||'(空)';}
     return s;
-  } catch (e) { toast('读取状态失败：' + e.message, true); }
+  } catch (e) { markServiceUnavailable();toast('读取状态失败：' + e.message, true); }
 }
 let serviceActionBusy=false;
 async function serviceAction(action){
   if(serviceActionBusy)return;serviceActionBusy=true;
   $('#btnReplyToggle').disabled=true;
   try{await post('/api/bot/'+action);await loadState();toast(action==='stop'?'已停止回复':'已开始回复');}
-  catch(e){toast(e.message,true);}finally{await loadState();serviceActionBusy=false;$('#btnReplyToggle').disabled=false;}
+  catch(e){toast(e.message,true);}finally{const refreshed=await loadState();serviceActionBusy=false;$('#btnReplyToggle').disabled=!refreshed;}
 }
 $('#btnRefresh').onclick=async()=>{const s=await loadState();if(state.currentTab==='accounts')await loadAccounts();if(s)toast('状态已刷新：'+(s.enabled?(s.desktop?.detail||'运行中'):'回复已停止'));};
 $('#btnReplyToggle').onclick=()=>serviceAction(state.replyEnabled?'stop':'start');

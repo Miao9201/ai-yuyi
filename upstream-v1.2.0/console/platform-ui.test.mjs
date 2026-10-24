@@ -122,8 +122,9 @@ async function browser({full=false,fail=[]}={}){
     if(path.startsWith('/api/logs'))return {ok:true,text:'synthetic log'};
     throw Error('Unexpected synthetic GET '+path);
   }
-  const location={hash:'#overview'};
-  const context=vm.createContext({document,location,console,Event:class{constructor(type){this.type=type;}},setTimeout:()=>0,clearTimeout(){},setInterval:fn=>{timers.push(fn);return timers.length;},clearInterval(){},confirm:()=>true,window:{dispatchEvent:e=>{for(const fn of events.get(e.type)||[])fn(e);},addEventListener:(name,fn)=>{if(!events.has(name))events.set(name,[]);events.get(name).push(fn);}},fetch:async(path,opts)=>({ok:true,status:200,json:()=>api(path,opts)}),api,post:(path,body)=>api(path,{method:'POST',body:JSON.stringify(body)}),toast(){}});
+  let hash='#overview';
+  const location={get hash(){return hash;},set hash(value){hash=value?(value.startsWith('#')?value:'#'+value):'';}};
+  const context=vm.createContext({document,location,console,Event:class{constructor(type){this.type=type;}},setTimeout:()=>0,clearTimeout(){},setInterval:fn=>{timers.push(fn);return timers.length;},clearInterval(){},confirm:()=>true,window:{dispatchEvent:e=>{for(const fn of events.get(e.type)||[])fn(e);},addEventListener:(name,fn)=>{if(!events.has(name))events.set(name,[]);events.get(name).push(fn);}},fetch:async(path,opts)=>{const data=await api(path,opts);return {ok:true,status:200,json:async()=>data};},api,post:(path,body)=>api(path,{method:'POST',body:JSON.stringify(body)}),toast(){}});
   if(full)vm.runInContext(main,context,{filename:'index.html'});
   vm.runInContext(qq,context,{filename:'qq-ui.js'});await settle();
   return {nodes,data,requests,failures,context,pauseNext(path){let release;gates.set(path,new Promise(r=>{release=r;}));return release;},async navigate(hash){location.hash=hash;await Promise.all((events.get('hashchange')||[]).map(fn=>fn()));await settle();},async poll(){for(const fn of timers)await fn();await settle();}};
@@ -179,6 +180,38 @@ test('QQ status reflects its switch and the global reply stop',async()=>{
   b.data.qq.enabled=true;b.data.state.enabled=false;await b.poll();assert.match(b.nodes.get('qqStatus').textContent,/停止/);
   assert.equal(b.requests.some(r=>/\/api\/model-config\/(test|models)/.test(r.path)),false);
   assert.equal(b.requests.some(r=>r.path==='/api/qq/state'),false,'status should reuse /api/state instead of probing NapCat twice');
+});
+
+test('a lost backend clears the running header and recovery enables the reply control again',async()=>{
+  const b=await browser({full:true});
+  assert.equal(b.nodes.get('headMeta').textContent,'运行中');
+  b.failures.add('/api/state');await vm.runInContext('loadState()',b.context);
+  assert.equal(b.nodes.get('headMeta').textContent,'连接异常');
+  assert.equal(b.nodes.get('dot').className,'dot');
+  assert.equal(b.nodes.get('btnReplyToggle').disabled,true);
+  assert.match(b.nodes.get('desktopStatus').textContent,/无法确认/);
+  b.failures.clear();await vm.runInContext('loadState()',b.context);
+  assert.equal(b.nodes.get('headMeta').textContent,'运行中');
+  assert.equal(b.nodes.get('btnReplyToggle').disabled,false);
+});
+
+test('QQ waiting for login never inherits an old worker listening message',async()=>{
+  const b=await browser();b.data.worker.loggedIn=false;b.data.worker.detail='请扫码并在手机确认登录';
+  await b.poll();assert.match(b.nodes.get('qqStatus').textContent,/请扫码/);
+  assert.doesNotMatch(b.nodes.get('qqStatus').textContent,/监听/);
+  assert.equal(b.nodes.get('qqOverview').textContent,'待登录');
+});
+
+test('the users page restores its header after backend recovery without navigating away',async()=>{
+  const b=await browser({full:true});await b.navigate('#accounts');
+  b.failures.add('/api/state');await b.poll();assert.equal(b.nodes.get('headMeta').textContent,'连接异常',JSON.stringify({requests:b.requests.slice(-8),view:vm.runInContext('({tab:state.currentTab,hash:location.hash,offline:state.serviceUnavailable})',b.context),qq:b.nodes.get('qqStatus').textContent}));
+  b.failures.clear();await b.poll();assert.equal(b.nodes.get('headMeta').textContent,'运行中');
+  assert.equal(b.nodes.get('btnReplyToggle').disabled,false);
+});
+
+test('a failed reply action cannot re-enable controls while backend state is unknown',async()=>{
+  const b=await browser({full:true});b.failures.add('/api/state');
+  await b.nodes.get('btnReplyToggle').click();assert.equal(b.nodes.get('btnReplyToggle').disabled,true);
 });
 
 test('WeChat parameter saves exclude API settings and the shared API table saves them separately',async()=>{

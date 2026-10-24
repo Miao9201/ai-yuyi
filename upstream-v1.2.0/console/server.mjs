@@ -355,6 +355,10 @@ route('GET', /^\/api\/accounts\/([a-f0-9]{32})\/qr$/,async(req,res,m)=>{
   res.writeHead(200,{'content-type':'image/png','content-length':body.length,'cache-control':'no-store'});res.end(body);
 });
 
+route('GET', /^\/api\/health$/, (req, res) => json(res, 200, {
+  ok: true, appId: loadConfig().desktopAdapterEnabled ? 'ai-yuyi' : 'wx-bridge', instanceId: INSTANCE_ID
+}));
+
 route('GET', /^\/api\/state$/, async (req, res) => {
   const cfg = loadConfig();
   const p = pidAlive();

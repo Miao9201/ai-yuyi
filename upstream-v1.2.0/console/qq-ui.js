@@ -38,8 +38,9 @@
   async function status(){
     try{
       const [global,settings]=await Promise.all([api('/api/state'),api('/api/qq/config')]),data=global.qq||{},worker=data.worker;
+      if(typeof state!=='undefined'&&state.serviceUnavailable&&typeof loadState==='function')await loadState();
       const identity=data.loggedIn?(data.nickname||data.bot)+' ('+data.bot+')':'未登录';
-      const detail=!settings.config.enabled?'未启用':!global.enabled?'已停止回复':worker?.detail||data.detail;
+      const detail=!settings.config.enabled?'未启用':!global.enabled?'已停止回复':!data.loggedIn?(data.detail||'请扫码并在手机确认登录'):worker?.detail||data.detail;
       const title=name=>[...el('qqPersona').options].find(o=>o.value===name)?.textContent||name;
       el('qqOverview').textContent=!settings.config.enabled?'未启用':!global.enabled?'已停止':data.loggedIn?(worker?.state==='listening'?'已连接':worker?.state==='generating'?'正在回复':'连接中'):'待登录';
       el('qqOverviewAccount').textContent=data.loggedIn?(data.nickname||'已登录QQ'):'未登录';
@@ -50,7 +51,7 @@
       el('qqUserPersonas').textContent='QQ默认：'+title(settings.config.persona)+'；群聊：'+((settings.config.groupFollowsDefault??settings.config.persona===settings.config.groupPersona)?'跟随默认':title(settings.config.groupPersona));
       el('qqStatus').textContent=detail+(data.loggedIn?' · '+identity:'');
       if(data.loggedIn)el('qqQrPanel').hidden=true;
-    }catch{el('qqOverview').textContent='QQ · 状态暂不可用';el('qqStatus').textContent='状态暂不可用，请刷新';}
+    }catch{if(typeof markServiceUnavailable==='function')markServiceUnavailable();el('qqOverview').textContent='QQ · 状态暂不可用';el('qqStatus').textContent='状态暂不可用，请刷新';}
   }
   async function action(button,task){
     if(busy)return;busy=true;button.disabled=true;++loadVersion;

@@ -15,7 +15,7 @@ from runtime_paths import node_executable, python_executable
 
 def ours(url):
     try:
-        with urllib.request.urlopen(url+'/api/state',timeout=1) as response:
+        with urllib.request.urlopen(url+'/api/health',timeout=1) as response:
             state = json.load(response)
             identity = hashlib.sha256(os.path.normcase(str(Path(__file__).resolve().parent)).encode('utf-8')).hexdigest()
             return state.get('appId') == 'ai-yuyi' and state.get('instanceId') == identity
